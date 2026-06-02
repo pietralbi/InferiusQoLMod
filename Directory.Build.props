@@ -2,15 +2,19 @@
 
   <PropertyGroup>
     <!-- ============================================================ -->
-    <!--  UPRAV TUTO CESTU podle toho, kde máš hru nainstalovanou     -->
+    <!--  Set GameDir here or pass /p:GameDir=... if your install differs. -->
     <!-- ============================================================ -->
-    <GameDir Condition="'$(Configuration)' == 'Subnautica'">J:\SteamLibrary\steamapps\common\Subnautica</GameDir>
-    <GameDir Condition="'$(Configuration)' == 'BelowZero'">C:\Program Files (x86)\Steam\steamapps\common\SubnauticaZero</GameDir>
+    <GameDir Condition="'$(GameDir)' == '' And '$(Configuration)' == 'Subnautica' And Exists('C:\Program Files (x86)\Steam\steamapps\common\Subnautica')">C:\Program Files (x86)\Steam\steamapps\common\Subnautica</GameDir>
+    <GameDir Condition="'$(GameDir)' == '' And '$(Configuration)' == 'Subnautica'">J:\SteamLibrary\steamapps\common\Subnautica</GameDir>
+    <GameDir Condition="'$(GameDir)' == '' And '$(Configuration)' == 'BelowZero'">C:\Program Files (x86)\Steam\steamapps\common\SubnauticaZero</GameDir>
 
     <!-- Odvozené cesty — tyto už neměň -->
     <GameManagedDir Condition="'$(Configuration)' == 'Subnautica'">$(GameDir)\Subnautica_Data\Managed</GameManagedDir>
     <GameManagedDir Condition="'$(Configuration)' == 'BelowZero'">$(GameDir)\SubnauticaZero_Data\Managed</GameManagedDir>
     <BepInExDir>$(GameDir)\BepInEx</BepInExDir>
+    <PublicizedAssemblyCSharp>$(MSBuildThisFileDirectory)Dependency\Assembly-CSharp-publicized.dll</PublicizedAssemblyCSharp>
+    <AssemblyCSharpPath Condition="Exists('$(PublicizedAssemblyCSharp)')">$(PublicizedAssemblyCSharp)</AssemblyCSharpPath>
+    <AssemblyCSharpPath Condition="'$(AssemblyCSharpPath)' == ''">$(GameManagedDir)\Assembly-CSharp.dll</AssemblyCSharpPath>
 
     <Configurations>Subnautica;BelowZero</Configurations>
     
@@ -56,8 +60,7 @@
 
     <!-- Herní assembly -->
     <Reference Include="Assembly-CSharp">
-      <!--<HintPath>$(GameManagedDir)\Assembly-CSharp.dll</HintPath>-->
-      <HintPath>$(MSBuildThisFileDirectory)\Dependency\Assembly-CSharp-publicized.dll</HintPath>
+      <HintPath>$(AssemblyCSharpPath)</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">

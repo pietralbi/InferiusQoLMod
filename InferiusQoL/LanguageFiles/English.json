@@ -117,13 +117,13 @@
   "InferiusQoL.Off": "off",
 
   "InferiusSeamothTurboMK1": "Seamoth Turbo Module MK1",
-  "Tooltip_InferiusSeamothTurboMK1": "Basic speed boost while sprinting. Holds the Sprint key to activate. Deactivates above the surface. Mid-game tier.",
+  "Tooltip_InferiusSeamothTurboMK1": "Basic speed boost while sprinting. Holds the Sprint key to activate. Deactivates above the surface.",
 
   "InferiusSeamothTurboMK2": "Seamoth Turbo Module MK2",
-  "Tooltip_InferiusSeamothTurboMK2": "Improved turbo with a higher speed cap and drain. Consumes a MK1 module during crafting. Late mid-game tier.",
+  "Tooltip_InferiusSeamothTurboMK2": "Improved turbo with a higher speed cap and drain. Consumes a MK1 module during crafting.",
 
   "InferiusSeamothTurboMK3": "Seamoth Turbo Module MK3",
-  "Tooltip_InferiusSeamothTurboMK3": "Endgame turbo with the highest boost and heaviest drain. Consumes a MK2 module during crafting.",
+  "Tooltip_InferiusSeamothTurboMK3": "Advanced turbo with the highest boost and heaviest drain. Consumes a MK2 module during crafting.",
 
   "InferiusBackpackSmall": "Small Backpack",
   "Tooltip_InferiusBackpackSmall": "A compact backpack. Equip in a Chip slot to gain extra inventory rows. SlotExtender recommended.",
@@ -132,25 +132,25 @@
   "Tooltip_InferiusBackpackMedium": "Mid-tier backpack with more extra rows. Crafted in the Modification Station; consumes a Small Backpack. Equip in a Chip slot.",
 
   "InferiusBackpackLarge": "Large Backpack",
-  "Tooltip_InferiusBackpackLarge": "Endgame backpack with the most extra rows. Crafted in the Modification Station; consumes a Medium Backpack. Equip in a Chip slot.",
+  "Tooltip_InferiusBackpackLarge": "Advanced backpack with the most extra rows. Crafted in the Modification Station; consumes a Medium Backpack. Equip in a Chip slot.",
 
   "InferiusMergedTankT1": "Merged Ultra Tank T1",
   "Tooltip_InferiusMergedTankT1": "Combined oxygen tank. Capacity = 2x Plasteel Tank x T1 multiplier. Configurable in mod options.",
   "InferiusMergedTankT2": "Merged Ultra Tank T2",
   "Tooltip_InferiusMergedTankT2": "Higher-capacity merged tank. Recipe unlocked after crafting T1.",
   "InferiusMergedTankT3": "Merged Ultra Tank T3",
-  "Tooltip_InferiusMergedTankT3": "Endgame merged tank with the highest capacity. Recipe unlocked after crafting T2.",
+  "Tooltip_InferiusMergedTankT3": "Advanced merged tank with the highest capacity. Recipe unlocked after crafting T2.",
   "InferiusMergedTankT4": "Lightweight Merged Tank T4",
-  "Tooltip_InferiusMergedTankT4": "Lightweight endgame merged tank - same capacity as T3 but without swim speed penalty. Recipe unlocked after crafting T3; consumes a T3 tank.",
+  "Tooltip_InferiusMergedTankT4": "Lightweight advanced merged tank - same capacity as T3 but without swim speed penalty. Recipe unlocked after crafting T3; consumes a T3 tank.",
 
   "InferiusReinforcedBattery": "Reinforced Battery",
   "Tooltip_InferiusReinforcedBattery": "Higher-capacity battery. Crafted in the Modification Station from a vanilla Battery + Ruby + Magnetite + Wiring Kit.",
   "InferiusReinforcedPowerCell": "Reinforced Power Cell",
   "Tooltip_InferiusReinforcedPowerCell": "Higher-capacity power cell. Consumes 2 Reinforced Batteries.",
   "InferiusHyperBattery": "Hyper Battery",
-  "Tooltip_InferiusHyperBattery": "Endgame battery with the highest capacity. Consumes an Ion Battery + Magnetite + Kyanite + Aerogel.",
+  "Tooltip_InferiusHyperBattery": "Advanced battery with the highest capacity. Consumes an Ion Battery + Magnetite + Kyanite + Aerogel.",
   "InferiusHyperPowerCell": "Hyper Power Cell",
-  "Tooltip_InferiusHyperPowerCell": "Endgame power cell with the highest capacity. Consumes 2 Hyper Batteries.",
+  "Tooltip_InferiusHyperPowerCell": "Advanced power cell with the highest capacity. Consumes 2 Hyper Batteries.",
 
   "InferiusCompressor": "Inventory Compressor",
   "Tooltip_InferiusCompressor": "Advanced chip that compresses inventory items to 1x1 (except batteries, tanks, fish and eggs). Equip in a Chip slot. Compression persists after unequip.",

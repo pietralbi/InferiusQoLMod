@@ -64,7 +64,7 @@ public static class BatteryItems
         ReinforcedBattery = RegisterBattery(
             classId: "InferiusReinforcedBattery",
             displayName: "Reinforced Battery",
-            description: "Higher-capacity battery. Mid-game tier.",
+            description: "Higher-capacity battery.",
             cloneFrom: TechType.Battery,
             unlockAfter: TechType.Battery,
             capacity: cfg.ReinforcedBatteryCapacity,
@@ -85,7 +85,7 @@ public static class BatteryItems
         ReinforcedPowerCell = RegisterBattery(
             classId: "InferiusReinforcedPowerCell",
             displayName: "Reinforced Power Cell",
-            description: "Higher-capacity power cell. Mid-game tier.",
+            description: "Higher-capacity power cell.",
             cloneFrom: TechType.PowerCell,
             unlockAfter: TechType.PowerCell,
             capacity: cfg.ReinforcedPowerCellCapacity,
@@ -96,8 +96,9 @@ public static class BatteryItems
                 craftAmount = 1,
                 Ingredients = new List<Ingredient>
                 {
-                    new Ingredient(ReinforcedBattery, 2),
-                    new Ingredient(TechType.Silicone, 1),
+                    new Ingredient(TechType.PowerCell, 1),
+                    new Ingredient(TechType.AluminumOxide, 2),
+                    new Ingredient(TechType.Magnetite, 1),
                     new Ingredient(TechType.WiringKit, 1),
                 }
             });
@@ -108,7 +109,7 @@ public static class BatteryItems
         HyperBattery = RegisterBattery(
             classId: "InferiusHyperBattery",
             displayName: "Hyper Battery",
-            description: "Endgame battery. Highest capacity available.",
+            description: "Advanced battery. Highest capacity available.",
             cloneFrom: TechType.PrecursorIonBattery,
             unlockAfter: TechType.PrecursorIonBattery,
             capacity: cfg.HyperBatteryCapacity,
@@ -129,7 +130,7 @@ public static class BatteryItems
         HyperPowerCell = RegisterBattery(
             classId: "InferiusHyperPowerCell",
             displayName: "Hyper Power Cell",
-            description: "Endgame power cell. Highest capacity available.",
+            description: "Advanced power cell. Highest capacity available.",
             cloneFrom: TechType.PrecursorIonPowerCell,
             unlockAfter: TechType.PrecursorIonPowerCell,
             capacity: cfg.HyperPowerCellCapacity,
@@ -140,8 +141,9 @@ public static class BatteryItems
                 craftAmount = 1,
                 Ingredients = new List<Ingredient>
                 {
-                    new Ingredient(HyperBattery, 2),
-                    new Ingredient(TechType.Silicone, 1),
+                    new Ingredient(TechType.PrecursorIonPowerCell, 1),
+                    new Ingredient(TechType.Magnetite, 2),
+                    new Ingredient(TechType.Kyanite, 1),
                     new Ingredient(TechType.AdvancedWiringKit, 1),
                 }
             });

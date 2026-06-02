@@ -48,7 +48,7 @@ public static class SeamothTurboItems
         MK1 = RegisterTier(
             classId: "InferiusSeamothTurboMK1",
             displayName: "Seamoth Turbo Module MK1",
-            description: "Basic speed boost while sprinting. Mid-game tier.",
+            description: "Basic speed boost while sprinting.",
             iconReference: TechType.SeamothSolarCharge,
             unlockAfter: TechType.Seamoth,
             recipe: new RecipeData
@@ -90,7 +90,7 @@ public static class SeamothTurboItems
         MK3 = RegisterTier(
             classId: "InferiusSeamothTurboMK3",
             displayName: "Seamoth Turbo Module MK3",
-            description: "Endgame turbo with maximum boost. Consumes a MK2 module during crafting.",
+            description: "Advanced turbo with maximum boost. Consumes a MK2 module during crafting.",
             iconReference: TechType.SeamothSonarModule,
             unlockAfter: MK2,
             recipe: new RecipeData

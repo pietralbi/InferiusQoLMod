@@ -76,7 +76,7 @@ public static class BackpackItems
         Large = RegisterTier(
             classId: "InferiusBackpackLarge",
             displayName: "Large Backpack",
-            description: "Endgame backpack with the most inventory slots. Consumes a Medium Backpack during crafting.",
+            description: "Advanced backpack with the most inventory slots. Consumes a Medium Backpack during crafting.",
             iconReference: TechType.VehicleStorageModule,
             unlockAfter: Medium,
             recipe: new RecipeData

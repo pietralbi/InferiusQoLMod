@@ -96,7 +96,7 @@ public static class TankWelderItems
         MergedTankT3 = RegisterMergedTank(
             classId: "InferiusMergedTankT3",
             displayName: "Merged Ultra Tank T3",
-            description: "Endgame merged tank. Recipe unlocked after crafting T2.",
+            description: "Advanced merged tank. Recipe unlocked after crafting T2.",
             unlockAfter: MergedTankT2,
             multiplier: cfg.TankWelderT3Multiplier,
             lightweight: false,
@@ -115,7 +115,7 @@ public static class TankWelderItems
         MergedTankT4 = RegisterMergedTank(
             classId: "InferiusMergedTankT4",
             displayName: "Lightweight Merged Tank T4",
-            description: "Endgame lightweight merged tank without swim speed penalty.",
+            description: "Advanced lightweight merged tank without swim speed penalty.",
             unlockAfter: MergedTankT3,
             multiplier: cfg.TankWelderT4Multiplier,
             lightweight: true,
