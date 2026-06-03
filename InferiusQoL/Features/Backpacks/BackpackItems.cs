@@ -131,8 +131,9 @@ public static class BackpackItems
         // Small backpack zamerne pouziva vanilla LuggageBag sprite (bez custom PNG).
         var iconFile = classId switch
         {
-            "InferiusBackpackMedium" => "BagMK2.png",
-            "InferiusBackpackLarge" => "BagMK3.png",
+            "InferiusBackpackSmall" => "BackSmall.png",
+            "InferiusBackpackMedium" => "BackMedium.png",
+            "InferiusBackpackLarge" => "BackLarge.png",
             _ => null,
         };
         info.WithIcon(iconFile != null
