@@ -34,17 +34,23 @@ public static class InventoryResizePatch
         ApplyTo(__instance, InferiusConfig.Instance);
     }
 
-    private static bool _equipmentEventsHooked = false;
+    private static Equipment? _hookedEquipment;
 
     private static void HookEquipmentEvents(Inventory inv)
     {
-        if (_equipmentEventsHooked) return;
         if (inv?.equipment == null) return;
+        if (ReferenceEquals(_hookedEquipment, inv.equipment)) return;
 
-        inv.equipment.onEquip += OnEquipmentChanged;
-        inv.equipment.onUnequip += OnEquipmentChanged;
-        _equipmentEventsHooked = true;
-        QoLLog.Debug(Category.Inventory, "Equipment events hooked (onEquip/onUnequip)");
+        if (_hookedEquipment != null)
+        {
+            _hookedEquipment.onEquip -= OnEquipmentChanged;
+            _hookedEquipment.onUnequip -= OnEquipmentChanged;
+        }
+
+        _hookedEquipment = inv.equipment;
+        _hookedEquipment.onEquip += OnEquipmentChanged;
+        _hookedEquipment.onUnequip += OnEquipmentChanged;
+        QoLLog.Debug(Category.Inventory, "Equipment events hooked for current Inventory equipment (onEquip/onUnequip)");
     }
 
     private static void OnEquipmentChanged(string slot, InventoryItem item)
