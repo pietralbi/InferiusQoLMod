@@ -34,6 +34,9 @@ public class InferiusConfig : ConfigFile
     [Slider("  Extra columns", 0, 4, DefaultValue = 0, Step = 1, Order = 102)]
     public int InventoryExtraCols = 0;
 
+    [Slider("  ScrollableInventory max visible rows", 4, 12, DefaultValue = 8, Step = 1, Order = 103)]
+    public int ScrollableInventoryMaxVisibleRows = 8;
+
     // =====================================================================
     // Locker resize
     // =====================================================================

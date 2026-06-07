@@ -19,6 +19,10 @@
 			<Link>Assets\Icons\%(Filename)%(Extension)</Link>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
+		<Content Include="..\ScrollableInventory.bundle">
+			<Link>ScrollableInventory.bundle</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
 
 	<Target Name="DeployToGamePlugins" AfterTargets="Build" Condition="'$(DeployToGame)' == 'true' And '$(Configuration)' == 'Subnautica' And Exists('$(BepInExDir)\plugins')">
@@ -26,6 +30,7 @@
 			<_LangFiles Include="$(TargetDir)LanguageFiles\**\*.json" />
 			<_DataFiles Include="$(TargetDir)Data\**\*.json" />
 			<_IconFiles Include="$(TargetDir)Assets\Icons\*.png" />
+			<_AssetBundleFiles Include="$(TargetDir)ScrollableInventory.bundle" />
 		</ItemGroup>
 		<MakeDir Directories="$(BepInExDir)\plugins\InferiusQoL" />
 		<MakeDir Directories="$(BepInExDir)\plugins\InferiusQoL\LanguageFiles" />
@@ -36,6 +41,7 @@
 		<Copy SourceFiles="@(_LangFiles)" DestinationFolder="$(BepInExDir)\plugins\InferiusQoL\LanguageFiles\" SkipUnchangedFiles="false" />
 		<Copy SourceFiles="@(_DataFiles)" DestinationFolder="$(BepInExDir)\plugins\InferiusQoL\Data\" SkipUnchangedFiles="false" />
 		<Copy SourceFiles="@(_IconFiles)" DestinationFolder="$(BepInExDir)\plugins\InferiusQoL\Assets\Icons\" SkipUnchangedFiles="false" />
+		<Copy SourceFiles="@(_AssetBundleFiles)" DestinationFolder="$(BepInExDir)\plugins\InferiusQoL\" SkipUnchangedFiles="false" />
 		<Message Text="InferiusQoL deployed to $(BepInExDir)\plugins\InferiusQoL\" Importance="high" />
 	</Target>
 </Project>

@@ -5,6 +5,7 @@ using HarmonyLib;
 using InferiusQoL.Features.InventoryResize;
 using InferiusQoL.Features.LockerResize;
 using InferiusQoL.Features.OxygenRefill;
+using InferiusQoL.Features.ScrollableInventory;
 using InferiusQoL.Logging;
 using Nautilus.Json;
 
@@ -54,6 +55,7 @@ public static class ConfigSavePatch
         try
         {
             InventoryResizePatch.ApplyRuntime(singleton);
+            ScrollableInventoryFeature.ApplyRuntime();
             StorageContainer_Awake_Patch.ApplyRuntime();
             OxygenRefillFeature.ApplyRuntime();
         }

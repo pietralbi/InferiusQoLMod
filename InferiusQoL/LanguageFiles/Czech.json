@@ -11,6 +11,7 @@
   "Enlarge player inventory": "Zvětšit inventář hráče",
   "  Extra rows": "  Řádky navíc",
   "  Extra columns": "  Sloupce navíc",
+  "  ScrollableInventory max visible rows": "  ScrollableInventory max viditelných řádků",
 
   "Bigger locker capacity": "Větší kapacita skříní",
   "  Locker width (cols)": "  Šířka skříně (sloupce)",
@@ -104,6 +105,7 @@
   "InferiusQoL.Status.EasyCraft": "EasyCraft detekován: {0}",
   "InferiusQoL.Status.Features": "Funkce:",
   "InferiusQoL.Status.InventoryResize": "Zvětšení inventáře:",
+  "InferiusQoL.Status.ScrollableInventory": "ScrollableInventory:",
   "InferiusQoL.Status.LockerResize": "Zvětšení skříní:",
   "InferiusQoL.Status.Backpacks": "Batohy:",
   "InferiusQoL.Status.SeamothTurbo": "Seamoth Turbo:",
