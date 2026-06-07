@@ -139,7 +139,7 @@ public static class BackpackItems
         info.WithIcon(iconFile != null
             ? InferiusQoL.Assets.IconLoader.LoadOrFallback(iconFile, iconReference)
             : SpriteManager.Get(iconReference));
-        info.WithSizeInInventory(new Vector2int(1, 1));
+        info.WithSizeInInventory(new Vector2int(2, 2));
 
         var prefab = new CustomPrefab(info);
         prefab.SetGameObject(new CloneTemplate(info, TechType.LuggageBag));
