@@ -95,6 +95,7 @@
   "Enable faster oxygen refill": "Povolit rychlejší doplňování kyslíku",
   "  Refill rate (units/sec)": "  Rychlost doplňování (units/sec)",
   "  Refill all tanks in inventory": "  Doplnit i lahve v inventáři",
+  "Scanner room drillables and time capsules": "Skenerová místnost: velká ložiska a časové kapsle",
 
 
   "InferiusQoL.Status.Header": "InferiusQoL v{0}",
@@ -118,6 +119,7 @@
   "InferiusQoL.Status.AutoCraft": "AutoCraft:",
   "InferiusQoL.Status.InventoryViewer": "Přehled inventáře:",
   "InferiusQoL.Status.OxygenRefill": "Kyslík refill:",
+  "InferiusQoL.Status.ScannerRoom": "Skenerová místnost:",
 
   "InferiusQoL.Console.LogLevelCurrent": "Aktuální úroveň logu: {0}. Použití: qol_log_level <None|Info|Debug|Trace>",
   "InferiusQoL.Console.LogLevelSet": "Úroveň logu nastavena na: {0}",
@@ -125,6 +127,7 @@
 
   "InferiusQoL.On": "ZAP",
   "InferiusQoL.Off": "vyp",
+  "InferiusQoL.ScannerRoom.DrillableSuffix": "ložisko",
 
   "InferiusSeamothTurboMK1": "Seamoth Turbo Modul MK1",
   "Tooltip_InferiusSeamothTurboMK1": "Základní zrychlení při sprintu. Aktivuje se podržením klávesy Sprint. Vypnuto nad hladinou. Mid-game tier.",

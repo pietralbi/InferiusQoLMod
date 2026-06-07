@@ -6,11 +6,11 @@ using InferiusQoL.Logging;
 using UnityEngine;
 
 /// <summary>
-/// MonoBehaviour na kazdem spawnlem Teleport Beacon. Pri interakci otevre IMGUI
-/// UI (TeleportBeaconUI) se seznamem destinaci a input pro pojmenovani.
+/// MonoBehaviour on each spawned Teleport Beacon. On interaction, opens the IMGUI
+/// UI (TeleportBeaconUI) with a destination list and naming input.
 ///
-/// Per-beacon data (jmeno, efficiency tier) persistuji v TeleportBeaconSaveManager
-/// (JSON vedle DLL, key = UniqueIdentifier.Id).
+/// Per-beacon data (name, efficiency tier) persists in TeleportBeaconSaveManager,
+/// stored as JSON beside the DLL with UniqueIdentifier.Id as the key.
 /// </summary>
 public class TeleportBeaconBehavior : MonoBehaviour, IHandTarget
 {
@@ -82,7 +82,7 @@ public class TeleportBeaconBehavior : MonoBehaviour, IHandTarget
         var targetRelay = target.GetComponentInParent<PowerRelay>();
 
         // Free teleport: Creative/Freedom mode (vanilla GameModeUtils.RequiresPower
-        // = false) NEBO user-toggle TeleportAlwaysFree. Skip power check + drain.
+        // = false) OR user-toggle TeleportAlwaysFree. Skip power check + drain.
         bool freeMode = cfg.TeleportAlwaysFree || !GameModeUtils.RequiresPower();
 
         if (!freeMode)
@@ -103,7 +103,7 @@ public class TeleportBeaconBehavior : MonoBehaviour, IHandTarget
         var distanceCost = (distance / 100f) * cfg.TeleportCostPerHundredMeters;
         var baseCost = cfg.TeleportSourceCostJoules + cfg.TeleportTargetCostJoules + distanceCost;
 
-        // Aplikuj efficiency chip multiplikator (nejvyssi z obou beacons).
+        // Apply the efficiency chip multiplier, using the highest tier from either beacon.
         var maxTier = System.Math.Max(Data.efficiencyTier, target.Data.efficiencyTier);
         var efficiencyMult = cfg.GetEfficiencyMultiplier(maxTier);
         baseCost *= efficiencyMult;
@@ -117,8 +117,8 @@ public class TeleportBeaconBehavior : MonoBehaviour, IHandTarget
             DrainPower(targetRelay, totalTargetCost);
         }
 
-        // Teleport destination = kousek pred target beacon (forward), aby hrac
-        // dopadl na konzistentni misto vedle beaconu a ne do/na nej.
+        // Teleport destination = a little in front of the target beacon, so the
+        // player lands at a consistent spot beside the beacon instead of inside/on it.
         var targetT = target.transform;
         var destination = targetT.position + targetT.forward * 2f + Vector3.up * 1f;
 
@@ -130,7 +130,7 @@ public class TeleportBeaconBehavior : MonoBehaviour, IHandTarget
             // Look back toward the beacon
             player.transform.rotation = Quaternion.LookRotation(-targetT.forward);
 
-            // Detekce target sub - aby Subnautica nevedela hrac je v swim mode.
+            // Detect target sub so Subnautica knows the player is not in swim mode.
             var targetSub = FindSubAt(destination) ?? target.GetComponentInParent<SubRoot>();
             player.currentSub = targetSub;
 

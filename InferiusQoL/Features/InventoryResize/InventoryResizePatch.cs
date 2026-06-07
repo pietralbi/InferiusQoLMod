@@ -9,8 +9,8 @@ using InferiusQoL.Logging;
 [HarmonyPatch(typeof(Inventory), nameof(Inventory.Awake))]
 public static class InventoryResizePatch
 {
-    // Vanilla hodnoty. Uchovame si je, abychom mohli pri runtime toggle
-    // vratit inventar na vanilla velikost misto dalsiho zvetsovani.
+    // Vanilla values. Keep them so a runtime toggle can return the inventory to
+    // vanilla size instead of enlarging it further.
     private static int _vanillaWidth = -1;
     private static int _vanillaHeight = -1;
 
@@ -27,8 +27,8 @@ public static class InventoryResizePatch
                 $"Vanilla inventory size recorded: {_vanillaWidth}x{_vanillaHeight}");
         }
 
-        // Hook na equipment changes - aby osazeni/odsazeni batohu spustilo inventory resize
-        // bez nutnosti restartu nebo zmeny configu.
+        // Hook equipment changes so equipping/unequipping a backpack triggers an
+        // inventory resize without needing a restart or config change.
         HookEquipmentEvents(__instance);
 
         ApplyTo(__instance, InferiusConfig.Instance);
@@ -55,7 +55,7 @@ public static class InventoryResizePatch
 
     private static void OnEquipmentChanged(string slot, InventoryItem item)
     {
-        // Reagujeme jen na nase batohy - jiny equipment change nam je jedno.
+        // React only to our backpacks; other equipment changes do not matter here.
         if (item?.item == null) return;
         var tt = item.item.GetTechType();
         if (tt != Backpacks.BackpackItems.Small
@@ -101,7 +101,7 @@ public static class InventoryResizePatch
             targetH = _vanillaHeight;
         }
 
-        // Bonus z batohu osazeneho v Player equipment (Chip slot).
+        // Bonus from a backpack equipped in Player equipment (Chip slot).
         if (cfg.BackpacksEnabled && !Plugin.HasBagEquipment)
         {
             var tier = BackpackItems.GetEquippedTier();
@@ -119,13 +119,14 @@ public static class InventoryResizePatch
             return;
         }
 
-        // Proste zavolame Resize. Subnautica vanilla ItemsContainer.Resize sama hlida,
-        // zda se items vejdou - pokud ne, je no-op (no data loss). Nase stara "safety" kontrola
-        // scitala pocet itemu (napr. 12 titanium = 12) misto pocet slotu (12 titanium = 1 slot stack),
-        // coz blokovalo i legitimne shrinkove operace.
+        // Just call Resize. Subnautica's vanilla ItemsContainer.Resize checks
+        // whether items fit; if not, it is a no-op with no data loss. Our old
+        // "safety" check counted item quantity (for example 12 titanium = 12)
+        // instead of slots (12 titanium = 1 slot stack), which blocked legitimate
+        // shrink operations.
         inv.container.Resize(targetW, targetH);
 
-        // Overit, zda se resize povedla (Subnautica ji muze odmitnout pri items-wont-fit).
+        // Verify whether resize succeeded; Subnautica may reject it if items do not fit.
         var afterW = inv.container.sizeX;
         var afterH = inv.container.sizeY;
         if (afterW == targetW && afterH == targetH)

@@ -10,16 +10,18 @@ using InferiusQoL.Logging;
 using Nautilus.Json;
 
 /// <summary>
-/// Postfix na ConfigFile.Save(). Vola se kdykoliv Nautilus ulozi config po zmene
-/// slideru/toggle v Options menu (diky SaveOn = ChangeValue). Zajistuje, ze po
-/// zmene configu se runtime aplikuji featury, ktere umi zmenu absorbovat za behu.
+/// Postfix for ConfigFile.Save(). Called whenever Nautilus saves the config after
+/// a slider or toggle changes in the Options menu, thanks to SaveOn = ChangeValue.
+/// Ensures that features capable of absorbing runtime changes apply them after
+/// the config changes.
 ///
-/// DULEZITE: Nautilus pri save muze pouzit instanci configu ktera NENI nas
-/// singleton a ma DEFAULT hodnoty pro pole ktera uzivatel nemenil v tomto save.
-/// Kdybychom predali __instance do ApplyRuntime, defaults by prepsaly user-set
-/// values z singletonu (napr. posun range slideru by resetovali inventar na
-/// vanilla velikost). Proto merge: zmenene pole z __instance -> singleton,
-/// potom ApplyRuntime vola se SINGLETONEM ktery je now updated.
+/// IMPORTANT: during save, Nautilus may use a config instance that is NOT our
+/// singleton and has DEFAULT values for fields the user did not change in this
+/// save. If we passed __instance to ApplyRuntime, defaults would overwrite
+/// user-set values from the singleton. For example, moving a range slider would
+/// reset the inventory to vanilla size. So we merge changed fields from
+/// __instance into the singleton, then ApplyRuntime is called with the updated
+/// singleton.
 /// </summary>
 [HarmonyPatch(typeof(ConfigFile), nameof(ConfigFile.Save))]
 public static class ConfigSavePatch
@@ -32,8 +34,8 @@ public static class ConfigSavePatch
         var singleton = InferiusConfig.Instance;
         var isSingleton = ReferenceEquals(cfg, singleton);
 
-        // Non-singleton: reload singletonu z JSON (kterou Nautilus prave zapsal)
-        // aby singleton mel VSECHNY aktualni user hodnoty + noveho zmenene pole.
+        // Non-singleton: reload the singleton from the JSON that Nautilus just
+        // wrote so it has ALL current user values plus the newly changed field.
         if (!isSingleton)
         {
             try

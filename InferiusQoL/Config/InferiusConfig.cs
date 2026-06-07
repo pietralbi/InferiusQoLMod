@@ -6,10 +6,10 @@ using Nautilus.Json;
 using Nautilus.Options.Attributes;
 using Newtonsoft.Json;
 
-// LoadOn zamerne bez MenuOpened - reload pri kazdem otevreni menu zpusoboval
-// mizeni sliderů (nekompatibilita s nasim poctem fields). Load probehne jen
-// jednou pri startu (manualne v Plugin.Awake volame .Load()) a config soubor
-// se aktualizuje jen pri SaveOn.ChangeValue / SaveGame.
+// LoadOn intentionally omits MenuOpened: reloading every time the menu opened
+// caused sliders to disappear because of an incompatibility with our field count.
+// Load runs only once at startup, manually via .Load() in Plugin.Awake, and the
+// config file updates only on SaveOn.ChangeValue / SaveGame.
 [Menu(MyPluginInfo.PLUGIN_NAME,
     SaveOn = MenuAttribute.SaveEvents.ChangeValue | MenuAttribute.SaveEvents.SaveGame)]
 public class InferiusConfig : ConfigFile
@@ -140,15 +140,15 @@ public class InferiusConfig : ConfigFile
     public int RetrieverMinBasePowerPercent = 20;
 
     // =====================================================================
-    // Compressor (lis)
+    // Compressor
     // =====================================================================
 
     [Toggle("Enable Compressor (item press)", Order = 600)]
     public bool CompressorEnabled = true;
 
-    // Pokud false, Compressor chip nebude v craft tree a neni v PDA. TechType
-    // se stale registruje takze `spawn InferiusCompressor` v konzoli funguje.
-    // Feature je pozastavena - existujici komprimovane polozky stale dekomprimuji.
+    // If false, the Compressor chip is not in the craft tree and is not in the PDA.
+    // The TechType is still registered so `spawn InferiusCompressor` works in the
+    // console. The feature is paused; existing compressed items still decompress.
     [Toggle("  Craftable (Experimental)", Order = 603)]
     public bool CompressorCraftable = false;
 
@@ -242,8 +242,8 @@ public class InferiusConfig : ConfigFile
     [Slider("  Efficiency chip MK3 cost (%)", 5, 100, DefaultValue = 25, Step = 5, Order = 908)]
     public int TeleportEfficiencyMK3Percent = 25;
 
-    // Creative/Freedom mode = teleport zdarma automaticky (vanilla nezadava power).
-    // Survival/Hardcore = standardne plati, ale toggle ho prepne na zdarma.
+    // Creative/Freedom mode = teleport is automatically free because vanilla does
+    // not require power. Survival/Hardcore normally pay, but the toggle makes it free.
     [Toggle("  Always free (no energy cost)", Order = 909)]
     public bool TeleportAlwaysFree = false;
 
@@ -256,14 +256,14 @@ public class InferiusConfig : ConfigFile
     };
 
     // =====================================================================
-    // Locker Mover (stehovani plnych skrini)
+    // Locker Mover (moving full lockers)
     // =====================================================================
 
     [Toggle("Enable Locker Mover", Order = 1000)]
     public bool LockerMoverEnabled = true;
 
-    // KeyCode jmeno (viz UnityEngine.KeyCode). "G" = default. Pozdeji muzeme
-    // udelat proper dropdown; zatim stringova konfigurace je dostatecna.
+    // KeyCode name, see UnityEngine.KeyCode. "G" is the default. Later we can
+    // make a proper dropdown; for now string configuration is sufficient.
     [Choice("  Keybind",
         new[] { "G", "H", "J", "K", "U", "P", "X", "B", "V", "N", "M" },
         Order = 1001)]
@@ -273,7 +273,7 @@ public class InferiusConfig : ConfigFile
     public bool LockerMoverRequireEmptyHands = false;
 
     // =====================================================================
-    // Inventory Viewer (aggregate prehled napric containery)
+    // Inventory Viewer (aggregate overview across containers)
     // =====================================================================
 
     [Toggle("Enable Inventory Viewer", Order = 1300)]
@@ -291,13 +291,13 @@ public class InferiusConfig : ConfigFile
     public bool InventoryViewerIncludePlayer = true;
 
     // =====================================================================
-    // AutoCraft (integrace EasyCraft)
+    // AutoCraft (EasyCraft integration)
     // =====================================================================
 
     [Toggle("Enable AutoCraft", Order = 1100)]
     public bool AutoCraftEnabled = true;
 
-    // Range jako prvni = defaultni volba v Nautilus Choice dropdownu.
+    // Range first = default selection in the Nautilus Choice dropdown.
     [Choice("  Use nearby storage", new[] { "Range", "Inside base/pod", "Off" }, Order = 1101)]
     public string AutoCraftUseStorage = "Range";
 
@@ -316,8 +316,8 @@ public class InferiusConfig : ConfigFile
     [Slider("  Ctrl multiplier (batch)", 1, 50, DefaultValue = 10, Step = 1, Order = 1106)]
     public int AutoCraftCtrlMultiplier = 10;
 
-    // 100 = vanilla rychlost + spotreba. 200 = 2x rychlejsi + 2x spotreba. Skaluje
-    // duration (1/mult) i energy cost (mult).
+    // 100 = vanilla speed + consumption. 200 = 2x faster + 2x consumption. Scales
+    // duration (1/mult) and energy cost (mult).
     [Slider("  Craft speed (%)", 50, 500, DefaultValue = 100, Step = 10, Order = 1107)]
     public int AutoCraftSpeedPercent = 100;
 
@@ -328,7 +328,7 @@ public class InferiusConfig : ConfigFile
     [Toggle("Enable faster oxygen refill", Order = 1200)]
     public bool OxygenRefillEnabled = true;
 
-    // Vanilla = 30 units/sec pri vynoru/v base. Zvysene -> rychlejsi refill tanku.
+    // Vanilla = 30 units/sec when surfaced or in a base. Higher = faster tank refill.
     [Slider("  Refill rate (units/sec)", 30, 300, DefaultValue = 120, Step = 10, Order = 1201)]
     public int OxygenRefillRate = 120;
 
@@ -336,13 +336,20 @@ public class InferiusConfig : ConfigFile
     public bool OxygenRefillInventoryTanks = true;
 
     // =====================================================================
+    // Scanner Room
+    // =====================================================================
+
+    [Toggle("Scanner room drillables and time capsules", Order = 1400)]
+    public bool ScannerRoomDrillableScanEnabled = true;
+
+    // =====================================================================
     // Singleton
     // =====================================================================
 
     public static InferiusConfig Instance { get; } = OptionsPanelHandler.RegisterModOptions<InferiusConfig>();
 
-    // Nautilus attribute-based ConfigFile nevola On<Field>Changed handlery
-    // (konvence imperative API). Runtime reakci na zmeny v Options menu resi
-    // Harmony patch ConfigSavePatch, ktery hook-ne na ConfigFile.Save a po nem
-    // zavola feature.ApplyRuntime metody.
+    // Nautilus attribute-based ConfigFile does not call On<Field>Changed handlers,
+    // which belong to the imperative API convention. Runtime reactions to Options
+    // menu changes are handled by the ConfigSavePatch Harmony patch, which hooks
+    // ConfigFile.Save and then calls feature ApplyRuntime methods.
 }

@@ -8,16 +8,16 @@ using InferiusQoL.Logging;
 using UnityEngine;
 
 /// <summary>
-/// AutoCraft main logic. Port EasyCraft.Main s minimalnimi upravami:
-/// - namespace, references na AutoCraftSettings misto Main.Settings
-/// - logy pres QoLLog
-/// - direct field access misto reflection tam kde publicized API stalo
+/// AutoCraft main logic. EasyCraft.Main port with minimal changes:
+/// - namespace and references to AutoCraftSettings instead of Main.Settings
+/// - logs through QoLLog
+/// - direct field access instead of reflection where the publicized API allows it
 ///
-/// Tri hlavni vstupy:
-/// 1. <see cref="GhostCraft"/> - vola se z GhostCrafter.Craft prefix
-/// 2. <see cref="ConstructorCraft"/> - vola se z ConstructorInput.Craft prefix
-/// 3. <see cref="Construct"/> - vola se z Constructable.Construct prefix
-///    (auto-pulls resources z blizkych containeru pri stavbe)
+/// Three main entry points:
+/// 1. <see cref="GhostCraft"/> - called from the GhostCrafter.Craft prefix
+/// 2. <see cref="ConstructorCraft"/> - called from the ConstructorInput.Craft prefix
+/// 3. <see cref="Construct"/> - called from the Constructable.Construct prefix
+///    (auto-pulls resources from nearby containers while building)
 /// </summary>
 public static class AutoCraftMain
 {
@@ -38,8 +38,8 @@ public static class AutoCraftMain
     public static bool IsGhostCrafterCraftTree(CraftTree.Type type)
     {
         // Skip: None(0), Rocket(8), Constructor(2), SeamothUpgrades(10),
-        // Workbench? actually 4, 5 jsou asi Cyclops modules. Zachovavam EasyCraft
-        // blacklist identicky.
+        // Workbench? actually 4 and 5 are probably Cyclops modules. Keep the
+        // EasyCraft blacklist identical.
         return type != CraftTree.Type.None
             && type != CraftTree.Type.Rocket
             && type != CraftTree.Type.Constructor
@@ -49,7 +49,7 @@ public static class AutoCraftMain
     }
 
     /// <summary>
-    /// Zda lze recipe (rekurzivne) vyrobit z toho co mam v dosahu.
+    /// Whether the recipe can be crafted recursively from what is in range.
     /// </summary>
     public static bool IsCraftRecipeFulfilledAdvanced(TechType techType)
     {
@@ -84,7 +84,7 @@ public static class AutoCraftMain
             if (avail < need)
             {
                 var eqType = TechData.GetEquipmentType(ingTT);
-                // Nepokusime se rekurzivne craftit equipment - to neni kandidatpro auto-craft.
+                // Do not recursively craft equipment; it is not an auto-craft candidate.
                 if (!AutoCraftSettings.AutoCraft
                     || IsEquipmentTypeAutoCraftBlocked(eqType)
                     || AutoCraftSettings.DisabledAutoCraftRecipes.Contains(ingTT))
@@ -120,8 +120,8 @@ public static class AutoCraftMain
 
     private static bool IsEquipmentTypeAutoCraftBlocked(EquipmentType t)
     {
-        // Bloky stejne jako EasyCraft: BatteryCharger, Hand, Head, Chip, Tank,
-        // Fins, PowerCellCharger, Body, Gloves, atd.
+        // Same blocks as EasyCraft: BatteryCharger, Hand, Head, Chip, Tank,
+        // Fins, PowerCellCharger, Body, Gloves, etc.
         return t == EquipmentType.BatteryCharger
             || t == EquipmentType.Hand
             || t == EquipmentType.Head
@@ -133,8 +133,8 @@ public static class AutoCraftMain
     }
 
     /// <summary>
-    /// Core: vola se misto vanilla GhostCrafter.Craft. Resi auto-craft
-    /// sub-ingredients + consume resources + delegates animaci na vanilla
+    /// Core: called instead of vanilla GhostCrafter.Craft. Handles auto-crafting
+    /// sub-ingredients, consumes resources, and delegates animation to vanilla
     /// OnCraftingBegin.
     /// </summary>
     public static void GhostCraft(GhostCrafter crafter, TechType techType, float duration)
@@ -147,8 +147,8 @@ public static class AutoCraftMain
         float animDuration = crafter.spawnAnimationDuration;
         var crafterLogic = crafter.logic;
 
-        // Batch multiplier z Shift/Ctrl. Postupne overime ze si muzeme dovolit
-        // N crafts - pokud ne, snizime na maximum affordable.
+        // Batch multiplier from Shift/Ctrl. Verify step by step that we can afford
+        // N crafts; if not, reduce to the maximum affordable amount.
         int desiredBatch = AutoCraftSettings.GetBatchMultiplier();
         var consumable = new Dictionary<TechType, int>();
         var crafted = new Dictionary<TechType, int>();
@@ -158,7 +158,7 @@ public static class AutoCraftMain
             int actualBatch = 0;
             for (int i = 0; i < desiredBatch; i++)
             {
-                // Snapshot pro rollback kdyz iter fail.
+                // Snapshot for rollback when this iteration fails.
                 var snapshotConsumable = new Dictionary<TechType, int>(consumable);
                 var snapshotCrafted = new Dictionary<TechType, int>(crafted);
                 if (!_IsCraftRecipeFulfilledAdvanced(techType, techType, snapshotConsumable, snapshotCrafted))
@@ -191,8 +191,8 @@ public static class AutoCraftMain
 
         duration = Mathf.Clamp(duration, animDelay + animDuration, 20f);
 
-        // Craft speed multiplier: rychlejsi = kratsi duration (1/mult) + vetsi
-        // spotreba (*mult). Min duration stale limited animDelay+animDuration.
+        // Craft speed multiplier: faster = shorter duration (1/mult) + higher
+        // consumption (*mult). Minimum duration is still limited by animDelay+animDuration.
         float speedMult = AutoCraftSettings.SpeedMultiplier;
         float originalDuration = duration;
         if (speedMult > 1f)
@@ -231,7 +231,7 @@ public static class AutoCraftMain
         if (crafterLogic == null || !crafterLogic.Craft(techType, duration)) return;
         QoLLog.Debug(Category.AutoCraft, "Craft permitted");
 
-        // Batch: vynasobime numCrafted aby TryPickupAsync picknul N vice itemu.
+        // Batch: multiply numCrafted so TryPickupAsync picks up N times more items.
         if (desiredBatch > 1)
         {
             int originalNumCrafted = crafterLogic.numCrafted;
@@ -249,7 +249,7 @@ public static class AutoCraftMain
         QoLLog.Debug(Category.AutoCraft, $"Constructor Craft {techType}");
         if (crafter == null) return;
 
-        // ConstructorInput interne pouziva reflection kvuli private polim.
+        // ConstructorInput internally uses reflection because of private fields.
         var crafterLogicField = typeof(ConstructorInput)
             .GetProperty("logic", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
         var stateField = typeof(ConstructorInput)
@@ -424,8 +424,8 @@ public static class AutoCraftMain
     {
         if (!GameModeUtils.RequiresPower() || crafted.Count == 0) return true;
 
-        // Speed mult scales energy - vetsi crafted dictionary (vynasobeno)
-        // aby HasEnergy + ConsumeEnergy zohlednili zvysenou spotrebu.
+        // Speed multiplier scales energy. Use a larger crafted dictionary
+        // (multiplied) so HasEnergy + ConsumeEnergy account for the higher cost.
         Dictionary<TechType, int> effective = crafted;
         if (speedMult > 1f && speedMult <= 100f)
         {

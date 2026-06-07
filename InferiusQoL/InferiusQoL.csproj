@@ -19,8 +19,8 @@
 			<Link>Assets\Icons\%(Filename)%(Extension)</Link>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
-		<Content Include="..\ScrollableInventory.bundle">
-			<Link>ScrollableInventory.bundle</Link>
+		<Content Include="..\Assets\ScrollableInventory.bundle">
+			<Link>Assets\ScrollableInventory.bundle</Link>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
@@ -30,18 +30,19 @@
 			<_LangFiles Include="$(TargetDir)LanguageFiles\**\*.json" />
 			<_DataFiles Include="$(TargetDir)Data\**\*.json" />
 			<_IconFiles Include="$(TargetDir)Assets\Icons\*.png" />
-			<_AssetBundleFiles Include="$(TargetDir)ScrollableInventory.bundle" />
+			<_AssetBundleFiles Include="$(TargetDir)Assets\ScrollableInventory.bundle" />
 		</ItemGroup>
 		<MakeDir Directories="$(BepInExDir)\plugins\InferiusQoL" />
 		<MakeDir Directories="$(BepInExDir)\plugins\InferiusQoL\LanguageFiles" />
 		<MakeDir Directories="$(BepInExDir)\plugins\InferiusQoL\Data" />
+		<MakeDir Directories="$(BepInExDir)\plugins\InferiusQoL\Assets" />
 		<MakeDir Directories="$(BepInExDir)\plugins\InferiusQoL\Assets\Icons" />
 		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(BepInExDir)\plugins\InferiusQoL\" SkipUnchangedFiles="false" />
 		<Copy SourceFiles="$(TargetDir)$(AssemblyName).pdb" DestinationFolder="$(BepInExDir)\plugins\InferiusQoL\" SkipUnchangedFiles="false" Condition="Exists('$(TargetDir)$(AssemblyName).pdb')" />
 		<Copy SourceFiles="@(_LangFiles)" DestinationFolder="$(BepInExDir)\plugins\InferiusQoL\LanguageFiles\" SkipUnchangedFiles="false" />
 		<Copy SourceFiles="@(_DataFiles)" DestinationFolder="$(BepInExDir)\plugins\InferiusQoL\Data\" SkipUnchangedFiles="false" />
 		<Copy SourceFiles="@(_IconFiles)" DestinationFolder="$(BepInExDir)\plugins\InferiusQoL\Assets\Icons\" SkipUnchangedFiles="false" />
-		<Copy SourceFiles="@(_AssetBundleFiles)" DestinationFolder="$(BepInExDir)\plugins\InferiusQoL\" SkipUnchangedFiles="false" />
+		<Copy SourceFiles="@(_AssetBundleFiles)" DestinationFolder="$(BepInExDir)\plugins\InferiusQoL\Assets\" SkipUnchangedFiles="false" />
 		<Message Text="InferiusQoL deployed to $(BepInExDir)\plugins\InferiusQoL\" Importance="high" />
 	</Target>
 </Project>

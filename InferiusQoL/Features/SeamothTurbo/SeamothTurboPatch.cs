@@ -6,15 +6,15 @@ using InferiusQoL.Logging;
 using UnityEngine;
 
 /// <summary>
-/// Turbo boost pro Seamoth (3 tiery MK1/MK2/MK3). Postfix patch na SeaMoth.Update.
+/// Turbo boost for Seamoth (3 tiers: MK1/MK2/MK3). Postfix patch on SeaMoth.Update.
 ///
-/// - Velocity cap: pridane force jen do target speed, nikdy nad nim.
-/// - Surface falloff: boost se plynule ztlumuje, jak se Seamoth blizi k hladine
-///   (nad hladinou 0%, od SurfaceFalloffMeters a hloub 100%). Tim se
-///   elegantne resi problem se skoky z vody.
-/// - Vehicle Power Upgrade Module discount: spotreba se snizuje pokud je osazeny
-///   vanilla modul pro snizeni spotreby (0.5^pocet).
-/// - Auto-detekce nejvyssiho tieru (MK3 > MK2 > MK1), ne-stackuje se.
+/// - Velocity cap: added force only up to target speed, never above it.
+/// - Surface falloff: boost smoothly fades as the Seamoth approaches the surface
+///   (0% above the surface, 100% at SurfaceFalloffMeters and deeper). This cleanly
+///   solves the problem of jumping out of the water.
+/// - Vehicle Power Upgrade Module discount: consumption is reduced if the vanilla
+///   consumption-reduction module is equipped (0.5^count).
+/// - Auto-detects the highest tier (MK3 > MK2 > MK1); tiers do not stack.
 /// </summary>
 [HarmonyPatch(typeof(SeaMoth), nameof(SeaMoth.Update))]
 public static class SeaMoth_Update_Patch
@@ -57,9 +57,9 @@ public static class SeaMoth_Update_Patch
         var cfg = InferiusConfig.Instance;
         var (speedMult, energyMult) = SeamothTurboItems.GetTierValues(tier, cfg);
 
-        // Surface falloff: smooth snizeni boostu k hladine.
+        // Surface falloff: smooth reduction of boost near the surface.
         float falloff = GetDepthFalloff(seamoth, cfg.SeamothTurboSurfaceFalloffMeters);
-        if (falloff <= 0f) return; // nad hladinou, zadny boost
+        if (falloff <= 0f) return; // above the surface, no boost
 
         var speedBonus = (speedMult - 1f) * falloff;
         var energyBonus = (energyMult - 1f) * falloff;
@@ -89,7 +89,7 @@ public static class SeaMoth_Update_Patch
             }
         }
 
-        // Extra energy drain s PowerUpgradeModule discount.
+        // Extra energy drain with PowerUpgradeModule discount.
         if (energyBonus > 0f)
         {
             float powerMult = GetPowerUpgradeMultiplier(seamoth);
@@ -99,10 +99,10 @@ public static class SeaMoth_Update_Patch
     }
 
     /// <summary>
-    /// Vraci 0..1 podle hloubky pod hladinou.
-    /// 0 = na hladine nebo nad (zadny boost).
-    /// 1 = hlouboko pod hladinou (plny boost).
-    /// Plynuly prechod pres falloffDistance.
+    /// Returns 0..1 based on depth below the surface.
+    /// 0 = at or above the surface (no boost).
+    /// 1 = deep below the surface (full boost).
+    /// Smooth transition over falloffDistance.
     /// </summary>
     private static float GetDepthFalloff(SeaMoth seamoth, float falloffDistance)
     {
@@ -113,8 +113,8 @@ public static class SeaMoth_Update_Patch
     }
 
     /// <summary>
-    /// Aplikuje discount spotreby pokud je osazeny vanilla Vehicle Power Upgrade Module.
-    /// Kazdy osazeny modul snizuje spotrebu na polovinu (vanilla chovani).
+    /// Applies the consumption discount if the vanilla Vehicle Power Upgrade Module is equipped.
+    /// Each equipped module halves consumption, matching vanilla behavior.
     /// </summary>
     private static float GetPowerUpgradeMultiplier(SeaMoth seamoth)
     {

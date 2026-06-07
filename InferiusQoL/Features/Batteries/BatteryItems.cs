@@ -10,21 +10,21 @@ using Nautilus.Crafting;
 using UnityEngine;
 
 /// <summary>
-/// Battery rework - pridava 4 nove TechTypes:
-///   Reinforced Battery (tier mezi vanilla Battery a Ion Battery)
+/// Battery rework - adds 4 new TechTypes:
+///   Reinforced Battery (tier between vanilla Battery and Ion Battery)
 ///   Reinforced Power Cell
-///   Hyper Battery (late-game strop)
+///   Hyper Battery (late-game cap)
 ///   Hyper Power Cell
 ///
-/// Kapacita se nastavuje pri spawn prefabu pres CloneTemplate.ModifyPrefab
-/// (stejny pattern jako merged tanks - Harmony Awake patch na Battery neni
-/// spolehlivy pro clone prefab).
+/// Capacity is set when the prefab spawns through CloneTemplate.ModifyPrefab,
+/// using the same pattern as merged tanks. A Harmony Awake patch on Battery is
+/// not reliable for cloned prefabs.
 ///
 /// Recept:
 ///   Reinforced Battery: vanilla Battery + Ruby x2 + Magnetite + WiringKit
-///   Reinforced Power Cell: 2x Reinforced Battery + Silicone + WiringKit
-///   Hyper Battery: Ion Battery + Magnetite x2 + Kyanite + Aerogel
-///   Hyper Power Cell: 2x Hyper Battery + Silicone + AdvancedWiringKit
+///   Reinforced Power Cell: vanilla Power Cell + Ruby x2 + Magnetite + WiringKit
+///   Hyper Battery: Ion Battery + Magnetite x2 + Kyanite + AdvancedWiringKit
+///   Hyper Power Cell: Hyper Battery + Magnetite x2 + Kyanite + AdvancedWiringKit
 /// </summary>
 public static class BatteryItems
 {
@@ -33,8 +33,8 @@ public static class BatteryItems
     public static TechType HyperBattery { get; private set; } = TechType.None;
     public static TechType HyperPowerCell { get; private set; } = TechType.None;
 
-    // Tracking pro EnergyMixinPatch - custom battery/power cell TechTypes
-    // ktere je potreba injektovat do compatibleBatteries listu na tools/vehicles.
+    // Tracking for EnergyMixinPatch: custom battery/power cell TechTypes that
+    // need to be injected into the compatibleBatteries lists on tools/vehicles.
     public static readonly List<TechType> CustomBatteryTypes = new List<TechType>();
     public static readonly List<TechType> CustomPowerCellTypes = new List<TechType>();
 
@@ -59,7 +59,7 @@ public static class BatteryItems
         var cfg = InferiusConfig.Instance;
 
         // ============================================================
-        // Reinforced Battery (mezistupen mezi Battery a Ion Battery)
+        // Reinforced Battery (intermediate tier between Battery and Ion Battery)
         // ============================================================
         ReinforcedBattery = RegisterBattery(
             classId: "InferiusReinforcedBattery",
@@ -104,7 +104,7 @@ public static class BatteryItems
             });
 
         // ============================================================
-        // Hyper Battery/Cell (endgame strop, nad Ion)
+        // Hyper Battery/Cell (endgame cap, above Ion)
         // ============================================================
         HyperBattery = RegisterBattery(
             classId: "InferiusHyperBattery",
@@ -123,7 +123,7 @@ public static class BatteryItems
                     new Ingredient(TechType.PrecursorIonBattery, 1),
                     new Ingredient(TechType.Magnetite, 2),
                     new Ingredient(TechType.Kyanite, 1),
-                    new Ingredient(TechType.Aerogel, 1),
+                    new Ingredient(TechType.AdvancedWiringKit, 1),
                 }
             });
 
@@ -155,9 +155,9 @@ public static class BatteryItems
     }
 
     /// <summary>
-    /// Pridava nase TechTypes do statickych HashSetu BatteryCharger.compatibleTech
-    /// + PowerCellCharger.compatibleTech. Bez toho nabijecky odmitnou nase
-    /// custom baterie/clanky - vanilla check `allowedTech.Contains(tt)`.
+    /// Adds our TechTypes to the static BatteryCharger.compatibleTech and
+    /// PowerCellCharger.compatibleTech HashSets. Without this, chargers reject our
+    /// custom batteries/cells because of the vanilla `allowedTech.Contains(tt)` check.
     /// </summary>
     private static void InjectIntoChargers()
     {
@@ -211,32 +211,33 @@ public static class BatteryItems
         prefab.SetPdaGroupCategory(TechGroup.Resources, TechCategory.Electronics);
         prefab.SetUnlock(unlockAfter);
 
-        // EXPLICITNI EquipmentType - Nautilus CloneTemplate nezkopíruje TechData
-        // entries (equipmentType per TT). Bez toho `Equipment.AddItem` slot
-        // type check selze a charger nas item odmitne i kdyz je v allowedTech.
+        // EXPLICIT EquipmentType: Nautilus CloneTemplate does not copy TechData
+        // entries (equipmentType per TechType). Without this, the `Equipment.AddItem`
+        // slot type check fails and the charger rejects our item even if it is in allowedTech.
         prefab.SetEquipment(isPowerCell ? EquipmentType.PowerCellCharger : EquipmentType.BatteryCharger);
 
         var crafting = prefab.SetRecipe(recipe).WithCraftingTime(5f);
 
         if (isHyper)
         {
-            // Hyper tier = endgame v Modification Station. S radial menu modem
-            // do BatteryUpgradesMenu tabu, jinak primo do rootu Workbenchu.
+            // Hyper tier = endgame in the Modification Station. With a radial menu
+            // mod, place it in the BatteryUpgradesMenu tab; otherwise directly in
+            // the Workbench root.
             var hyperCrafting = crafting.WithFabricatorType(CraftTree.Type.Workbench);
             if (Plugin.HasRadialMenu)
                 hyperCrafting.WithStepsToFabricatorTab("BatteryUpgradesMenu");
         }
         else
         {
-            // Reinforced tier = standardni Fabricator, Resources/Electronics
-            // (vedle vanilla Battery/PowerCell). Vanilla taby - vzdy ok.
+            // Reinforced tier = standard Fabricator, Resources/Electronics, next
+            // to vanilla Battery/PowerCell. Vanilla tabs are always OK.
             crafting.WithFabricatorType(CraftTree.Type.Fabricator)
                 .WithStepsToFabricatorTab("Resources", "Electronics");
         }
 
         prefab.Register();
 
-        // Track pro EnergyMixinPatch - batterie do BatteryTypes, power cells do PowerCellTypes.
+        // Track for EnergyMixinPatch: batteries into BatteryTypes, power cells into PowerCellTypes.
         if (isPowerCell)
             CustomPowerCellTypes.Add(info.TechType);
         else

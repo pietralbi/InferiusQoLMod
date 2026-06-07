@@ -5,12 +5,12 @@ using InferiusQoL.Logging;
 using UnityEngine;
 
 /// <summary>
-/// IMGUI overlay pro Teleport Beacon. Zobrazi se pri kliku na beacon:
-/// - Text input pro pojmenovani beaconu
-/// - Seznam vsech ostatnich beaconu se jmenem, vzdalenosti, cenou
-/// - Tlacitka Teleport / Close
+/// IMGUI overlay for Teleport Beacon. Shown when clicking a beacon:
+/// - Text input for naming the beacon
+/// - List of all other beacons with name, distance, and cost
+/// - Teleport / Close buttons
 ///
-/// Pouziva OnGUI callback Unity - rychle ale visually jednoduche.
+/// Uses Unity's OnGUI callback: quick, but visually simple.
 /// </summary>
 public class TeleportBeaconUI : MonoBehaviour
 {
@@ -168,7 +168,7 @@ public class TeleportBeaconUI : MonoBehaviour
             return;
         }
 
-        // Najdi Pickupable instanci a odstran z inv.
+        // Find the Pickupable instance and remove it from inventory.
         var items = new System.Collections.Generic.List<InventoryItem>();
         foreach (var it in inv.container)
         {
@@ -209,7 +209,7 @@ public class TeleportBeaconUI : MonoBehaviour
             return;
         }
 
-        // Remove = destroy chip (hrac si vyrobi novy pokud ho potrebuje znovu).
+        // Remove = destroy chip; the player crafts a new one if needed again.
         var data = _beacon.Data;
         data.efficiencyTier = 0;
         TeleportBeaconSaveManager.Update(data);

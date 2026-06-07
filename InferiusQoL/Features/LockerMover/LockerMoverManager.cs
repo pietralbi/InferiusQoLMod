@@ -6,19 +6,20 @@ using InferiusQoL.Logging;
 using UnityEngine;
 
 /// <summary>
-/// Globalni MonoBehaviour na DontDestroyOnLoad host GO. V Update() detekuje
-/// keybind + cil hracova cursoru. Pokud cursor miri na podporovany StorageContainer
-/// a clipboard je v odpovidajicim stavu (prazdny -> grab plne skrine; plny ->
-/// place do prazdne skrine stejneho techType), provede akci.
+/// Global MonoBehaviour on a DontDestroyOnLoad host GameObject. In Update(), detects
+/// the keybind and the target under the player's cursor. If the cursor points at a
+/// supported StorageContainer and the clipboard is in the corresponding state
+/// (empty -> grab a full locker; full -> place into an empty locker of the same
+/// TechType), performs the action.
 ///
-/// Vanilla vyber co lze stehovat:
-/// - Locker (velky locker)
+/// Vanilla selection of what can be moved:
+/// - Locker (large locker)
 /// - SmallLocker (Wall Locker)
-/// - SmallStorage (Waterproof Locker - carryable, ale lze i na stene)
+/// - SmallStorage (Waterproof Locker: carryable, but can also be on a wall)
 /// - LuggageBag (Carryall)
 ///
-/// Vehicle storage, Nuclear Reactor, Bioreactor a dalsi specialni kontejnery
-/// nejsou podporovany (specialni logika nebo fixed umisteni).
+/// Vehicle storage, Nuclear Reactor, Bioreactor, and other special containers are
+/// not supported because they have special logic or fixed placement.
 /// </summary>
 public class LockerMoverManager : MonoBehaviour
 {
@@ -42,7 +43,7 @@ public class LockerMoverManager : MonoBehaviour
 
             if (cfg.LockerMoverRequireEmptyHands && !HasEmptyHands(player))
             {
-                ShowToast("Locker Mover: odlozte nastroj z ruky");
+                ShowToast("Locker Mover: put away the tool in your hand");
                 return;
             }
 
@@ -125,12 +126,12 @@ public class LockerMoverManager : MonoBehaviour
         bool clipboardEmpty = LockerMoverClipboard.IsEmpty;
         bool containerEmpty = target.Container.container.count == 0;
 
-        // Rozhodovaci tabulka:
-        //   clipboard | container | akce
+        // Decision table:
+        //   clipboard | container | action
         //   empty     | empty     | nothing (silent)
         //   empty     | full      | Grab
-        //   full      | empty     | Place (jen stejny techType)
-        //   full      | full      | nothing (toast: nejdriv place jinde nebo zrus)
+        //   full      | empty     | Place (same TechType only)
+        //   full      | full      | nothing (toast: place elsewhere or cancel first)
 
         if (clipboardEmpty && containerEmpty) return;
 
@@ -146,7 +147,7 @@ public class LockerMoverManager : MonoBehaviour
             return;
         }
 
-        ShowToast($"Locker Mover: clipboard obsazen ({LockerMoverClipboard.ItemCount} itemu, {LockerMoverClipboard.SourceTechType}). Vyprazdnete ho nejdriv.");
+        ShowToast($"Locker Mover: clipboard occupied ({LockerMoverClipboard.ItemCount} items, {LockerMoverClipboard.SourceTechType}). Empty it first.");
     }
 
     private static void DoGrab(HoverTarget target)
@@ -154,14 +155,14 @@ public class LockerMoverManager : MonoBehaviour
         var sc = target.Container;
         int count = LockerMoverClipboard.Grab(sc.container, target.TechType, sc.width, sc.height);
         if (count > 0)
-            ShowToast($"Locker Mover: {count} itemu presunuto do clipboardu");
+            ShowToast($"Locker Mover: {count} items moved to clipboard");
     }
 
     private static void DoPlace(HoverTarget target)
     {
         if (LockerMoverClipboard.SourceTechType != target.TechType)
         {
-            ShowToast($"Locker Mover: jiny typ skrine (clipboard: {LockerMoverClipboard.SourceTechType}, target: {target.TechType})");
+            ShowToast($"Locker Mover: different locker type (clipboard: {LockerMoverClipboard.SourceTechType}, target: {target.TechType})");
             return;
         }
 
@@ -171,9 +172,9 @@ public class LockerMoverManager : MonoBehaviour
         int placed = before - after;
 
         if (allPlaced)
-            ShowToast($"Locker Mover: {placed} itemu umisteno");
+            ShowToast($"Locker Mover: {placed} items placed");
         else
-            ShowToast($"Locker Mover: umisteno {placed}/{before}, {after} zbyva (malo mista?)");
+            ShowToast($"Locker Mover: placed {placed}/{before}, {after} remaining (not enough room?)");
     }
 
     private static void ShowToast(string msg)

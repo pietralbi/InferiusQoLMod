@@ -48,6 +48,7 @@ public static class ConsoleCommands
         sb.AppendLine($"  {L.Get("InferiusQoL.Status.AutoCraft"),-18} {OnOff(c.AutoCraftEnabled)} (storage: {c.AutoCraftUseStorage}, return: {c.AutoCraftReturnSurplus}, tooltips: {OnOff(c.AutoCraftBetterTooltips)})");
         sb.AppendLine($"  {L.Get("InferiusQoL.Status.InventoryViewer"),-18} {OnOff(c.InventoryViewerEnabled)} (key {c.InventoryViewerKey}, range {c.InventoryViewerRangeMeters}m)");
         sb.AppendLine($"  {L.Get("InferiusQoL.Status.OxygenRefill"),-18} {OnOff(c.OxygenRefillEnabled)} ({c.OxygenRefillRate} units/s)");
+        sb.AppendLine($"  {L.Get("InferiusQoL.Status.ScannerRoom"),-18} {OnOff(c.ScannerRoomDrillableScanEnabled)} (drillable deposits, time capsules)");
         return sb.ToString();
     }
 
@@ -77,13 +78,14 @@ public static class ConsoleCommands
     public static string QolMigrateBatteries() => L.Get("InferiusQoL.Console.NotImplemented", "battery_rework");
 
     /// <summary>
-    /// Bezpecne dekomprimuje vsechny komprimovane polozky: najde je v inventari
-    /// hrace + vsech StorageContainer v scene, vyjme z kontejneru, dropne jako
-    /// world loot u hrace, vymaze marker. Pri nasledujicim pickupu se vlozi
-    /// vanilla velikosti.
+    /// Safely decompresses every compressed item: finds them in the player's
+    /// inventory plus every StorageContainer in the scene, removes them from the
+    /// container, drops them as world loot near the player, and clears the marker.
+    /// On the next pickup, they are inserted at vanilla size.
     ///
-    /// Pouzit PRED uninstalem modu - jinak vanilla Subnautica nevi o markerech
-    /// a komprimovane polozky se pri loadu nemusi vejit na puvodni misto.
+    /// Use BEFORE uninstalling the mod. Otherwise vanilla Subnautica does not know
+    /// about the markers, and compressed items may not fit in their original place
+    /// during load.
     /// </summary>
     [ConsoleCommand("qol_compressor_decompress_all")]
     public static string QolCompressorDecompressAll()

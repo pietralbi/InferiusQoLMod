@@ -18,6 +18,7 @@ Modularni QoL balicek pro Subnauticu. Jeden mod obsahuje vsechna zlepseni nize -
 | **AutoCraft** *(od v0.3.0, port EasyCraft)* | Fabricator/Workbench/Modification Station/Habitat Builder cerpaji suroviny z okolnich skrini (default Range 100m, konfigurovatelne 50-500m). Rekurzivni auto-craft chybejicich sub-ingredienci (hloubka 5). Lepsi ingredient tooltipy s aktualnim pockem. Shift+klik = x5 batch, Ctrl+klik = x10 batch. Craft speed slider 50-500% (zrychleni = vyssi spotreba). Return surplus do inventare nebo Auto-sorter lockeru. |
 | **Oxygen Auto-Refill** *(od v0.3.0)* | Rychlejsi doplneni O2 tanku pri vynoru nad hladinu nebo v moonpoolu/habitatu. Konfigurovatelna rate (vanilla 30/s, default 120/s). Toggle pro refill vsech lahvi v inventari (ne jen equipnute). |
 | **Inventory Viewer** *(od v0.4.1)* | Aggregate prehled napric inventarem + okolnimi skrinemi. Hotkey toggle (default `I`). Filter, count per TechType, count containeru. Iteruje i inactive Carryally drzene v inventari. |
+| **Scanner Room drillables + Time Capsules** | Integrace DrillableScan: skenerova mistnost rozlisuje male sbiratelne suroviny od 14 velkych vrtatelnych lozisek, vcetne Kyanite, a umi vyhledavat Time Capsules. |
 
 ## Detekce konfliktu
 
@@ -79,6 +80,7 @@ Subnautica podporuje vice jazyku. Vsechny texty modu (nazvy itemu, tooltipy, kon
 | Locker Mover | [LockerMoverFeature.cs](InferiusQoL/Features/LockerMover/LockerMoverFeature.cs), [LockerMoverManager.cs](InferiusQoL/Features/LockerMover/LockerMoverManager.cs), [LockerMoverClipboard.cs](InferiusQoL/Features/LockerMover/LockerMoverClipboard.cs) |
 | AutoCraft | [AutoCraftMain.cs](InferiusQoL/Features/AutoCraft/AutoCraftMain.cs), [AutoCraftPatches.cs](InferiusQoL/Features/AutoCraft/AutoCraftPatches.cs), [ClosestItemContainers.cs](InferiusQoL/Features/AutoCraft/ClosestItemContainers.cs), [ClosestFabricators.cs](InferiusQoL/Features/AutoCraft/ClosestFabricators.cs) |
 | Oxygen Refill | [OxygenRefillPatch.cs](InferiusQoL/Features/OxygenRefill/OxygenRefillPatch.cs) |
+| Scanner Room drillables | [DrillableScanFeature.cs](InferiusQoL/Features/ScannerRoom/DrillableScanFeature.cs) |
 
 ## Changelog
 

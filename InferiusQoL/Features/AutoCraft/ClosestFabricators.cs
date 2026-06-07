@@ -6,9 +6,9 @@ using System.Linq;
 using UnityEngine;
 
 /// <summary>
-/// Blizke fabricatory (Fabricator, Workbench, ...) - pouziva se pro
-/// 1. pri auto-craftu rekurzivne zjistit ze recipe je vyrobitelny
-/// 2. spocist energy consumption pri batch-craftu napric vicero fabricatory
+/// Nearby fabricators (Fabricator, Workbench, ...) used to:
+/// 1. recursively determine whether a recipe is craftable during auto-craft
+/// 2. calculate energy consumption for batch crafting across multiple fabricators
 /// </summary>
 public static class ClosestFabricators
 {

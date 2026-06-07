@@ -8,18 +8,18 @@ using Newtonsoft.Json;
 using UnityEngine;
 
 /// <summary>
-/// Centralni helper pro lokalizaci. Vsechny texty modu se nacitaji z LanguageFiles/*.json.
-/// Pouziti: L.Get("InferiusQoL.Key") nebo L.Get("InferiusQoL.Key", arg1, arg2).
+/// Central helper for localization. All mod text is loaded from LanguageFiles/*.json.
+/// Usage: L.Get("InferiusQoL.Key") or L.Get("InferiusQoL.Key", arg1, arg2).
 /// </summary>
 public static class L
 {
-    /// <summary>Prefix pro vsechny klice naseho modu (prevence kolize s vanilla klici).</summary>
+    /// <summary>Prefix for all keys in our mod, preventing collisions with vanilla keys.</summary>
     public const string Prefix = "InferiusQoL.";
 
-    /// <summary>Cache: klic -> jestli je registrovany (pro fallback detekci).</summary>
+    /// <summary>Cache: key -> whether it is registered, for fallback detection.</summary>
     private static readonly HashSet<string> _registeredKeys = new HashSet<string>();
 
-    /// <summary>Nacte vsechny JSON soubory z LanguageFiles/ vedle DLL a zaregistruje je v Subnautica Language systemu.</summary>
+    /// <summary>Loads every JSON file from LanguageFiles/ beside the DLL and registers it in the Subnautica Language system.</summary>
     public static void LoadAll()
     {
         var dllDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -60,22 +60,22 @@ public static class L
         }
     }
 
-    /// <summary>Vrati lokalizovany text pro klic. Pokud klic neni zaregistrovany, vrati klic samotny (pro debug).</summary>
+    /// <summary>Returns localized text for a key. If the key is not registered, returns the key itself for debugging.</summary>
     public static string Get(string key)
     {
         if (Language.main == null)
         {
-            // Pred inicializaci Language systemu (typicky v Awake nekterych pluginu).
+            // Before Language system initialization, typically in Awake of some plugins.
             return key;
         }
         var translated = Language.main.Get(key);
-        // Language.Get vraci klic pokud preklad chybi. Detekujeme to a logujeme v debug.
+        // Language.Get returns the key if translation is missing. Detect that and log in debug.
         if (translated == key && !_registeredKeys.Contains(key))
             QoLLog.Debug(Category.Config, $"Missing translation key: {key}");
         return translated;
     }
 
-    /// <summary>Vrati lokalizovany text s formatovanim (string.Format).</summary>
+    /// <summary>Returns localized text with formatting (string.Format).</summary>
     public static string Get(string key, params object[] args)
     {
         var template = Get(key);
@@ -91,14 +91,14 @@ public static class L
         }
     }
 
-    /// <summary>Je klic zaregistrovany v nekterem jazyce?</summary>
+    /// <summary>Is the key registered in any language?</summary>
     public static bool HasKey(string key) => _registeredKeys.Contains(key);
 
     /// <summary>
-    /// Prelozi klic pomoci Language systemu. Pokud klic neni nalezen (nebo
-    /// Language.main jeste neni ready), vrati <paramref name="englishFallback"/>.
-    /// Pouzit pro CraftTree tab labels, ktere se rendruji primo bez Language lookupu
-    /// - musime label rozhodnout imperativne pri registraci.
+    /// Translates a key through the Language system. If the key is not found, or
+    /// Language.main is not ready yet, returns <paramref name="englishFallback"/>.
+    /// Use for CraftTree tab labels, which render directly without Language lookup;
+    /// we must decide the label imperatively during registration.
     /// </summary>
     public static string GetOrFallback(string key, string englishFallback)
     {

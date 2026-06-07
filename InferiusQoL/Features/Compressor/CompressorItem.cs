@@ -9,9 +9,9 @@ using Nautilus.Assets.PrefabTemplates;
 using Nautilus.Crafting;
 
 /// <summary>
-/// Compressor chip - po osazeni do Chip slotu zmensi velikost vsech items v
-/// inventari na 1x1 (kromě items z CompressorBlacklist). Recept v Modification
-/// Station, mid-late game tier.
+/// Compressor chip: when equipped in the Chip slot, reduces the size of all
+/// inventory items to 1x1 except items from CompressorBlacklist. Recipe is in the
+/// Modification Station as a mid-late game tier.
 /// </summary>
 public static class CompressorItem
 {
@@ -25,7 +25,7 @@ public static class CompressorItem
             "Inventory Compressor",
             "Advanced chip that compresses most inventory items to 1x1. Equip in a Chip slot.");
 
-        // Placeholder ikona: Scanner (nejblizsi tool look).
+        // Placeholder icon: Scanner, the closest tool look.
         info.WithIcon(InferiusQoL.Assets.IconLoader.LoadOrFallback("Lis.png", TechType.Scanner));
         info.WithSizeInInventory(new Vector2int(1, 1));
 
@@ -71,9 +71,9 @@ public static class CompressorItem
 
     public static void RegisterTabs()
     {
-        // Tab registrujeme jen kdyz je chip craftable - jinak prazdny tab v Workbench.
+        // Register the tab only when the chip is craftable; otherwise it is an empty Workbench tab.
         if (!InferiusConfig.Instance.CompressorCraftable) return;
-        // Bez radial menu modu Workbench taby prekryvaji - skip.
+        // Without a radial menu mod, Workbench tabs overlap; skip.
         if (!Plugin.HasRadialMenu) return;
 
         var label = InferiusQoL.Localization.L.GetOrFallback(
@@ -88,7 +88,7 @@ public static class CompressorItem
             SpriteManager.Get(TechType.Scanner));
     }
 
-    /// <summary>Je chip osazen v Player equipment Chip slotu?</summary>
+    /// <summary>Is the chip equipped in the Player equipment Chip slot?</summary>
     public static bool IsEquipped()
     {
         if (TechType == TechType.None) return false;

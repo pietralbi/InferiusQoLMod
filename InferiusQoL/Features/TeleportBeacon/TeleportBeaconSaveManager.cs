@@ -8,11 +8,11 @@ using InferiusQoL.Logging;
 using Newtonsoft.Json;
 
 /// <summary>
-/// Perzistence per-beacon dat: jmeno, efficiency tier. Klic = UniqueIdentifier.Id
-/// (stejny napric save/load, unikatni per instance).
+/// Persistence for per-beacon data: name, efficiency tier. Key = UniqueIdentifier.Id,
+/// stable across save/load and unique per instance.
 ///
-/// Serializace do beacons.json vedle DLL. Global napric vsemi save hrami -
-/// ale UniqueIdentifier.Id je unikatni per-base build, tak se nekolizuje.
+/// Serialized to beacons.json beside the DLL. Global across all save games, but
+/// UniqueIdentifier.Id is unique per base build, so it does not collide.
 /// </summary>
 public static class TeleportBeaconSaveManager
 {

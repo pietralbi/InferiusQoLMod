@@ -6,10 +6,10 @@ using InferiusQoL.Logging;
 using UnityEngine;
 
 /// <summary>
-/// Facade pro registraci LockerMover feature. Manager MonoBehaviour
-/// zavesujeme az na Player.Awake (postfix patch nize) protoze GO vytvoreny
-/// v BepInEx Plugin.Awake pred scene loadem se ocitne v DontDestroyOnLoad
-/// limbu - Awake fire ale Update netika.
+/// Facade for registering the LockerMover feature. Attach the manager MonoBehaviour
+/// only on Player.Awake (postfix patch below), because a GameObject created in
+/// BepInEx Plugin.Awake before scene load ends up in DontDestroyOnLoad limbo:
+/// Awake fires, but Update does not tick.
 /// </summary>
 public static class LockerMoverFeature
 {
@@ -17,9 +17,9 @@ public static class LockerMoverFeature
 
     public static void Init()
     {
-        // Samotne vytvoreni manageru deferuje Harmony patch na Player.Awake.
-        // GO vytvoreny v BepInEx Plugin.Awake pred scene loadem skonci v
-        // DontDestroyOnLoad limbu - Awake fire ale Update netika.
+        // The actual manager creation is deferred to the Harmony patch on Player.Awake.
+        // A GameObject created in BepInEx Plugin.Awake before scene load ends up in
+        // DontDestroyOnLoad limbo: Awake fires, but Update does not tick.
     }
 
     internal static void EnsureManager()

@@ -10,8 +10,9 @@ using Nautilus.Crafting;
 using Nautilus.Handlers;
 
 /// <summary>
-/// 3 efficiency chipy pro Teleport Beacon. Hrac je vyrobi ve Modification Station,
-/// v UI beaconu je osadi - snizi energy cost teleportu. Multiplikator v configu
+/// 3 efficiency chips for Teleport Beacon. The player crafts them in the
+/// Modification Station and installs them in the beacon UI to reduce teleport
+/// energy cost. Multiplier is in config
 /// (default 75%/50%/25%).
 /// </summary>
 public static class TeleportEfficiencyChips
@@ -103,7 +104,7 @@ public static class TeleportEfficiencyChips
         var crafting = prefab.SetRecipe(recipe)
             .WithFabricatorType(CraftTree.Type.Workbench)
             .WithCraftingTime(5f);
-        // CompressorMenu tab existuje jen s radial menu - jinak root.
+        // CompressorMenu tab exists only with a radial menu; otherwise use root.
         if (Plugin.HasRadialMenu && InferiusConfig.Instance.CompressorCraftable)
             crafting.WithStepsToFabricatorTab("CompressorMenu");
 
@@ -111,7 +112,7 @@ public static class TeleportEfficiencyChips
         return info.TechType;
     }
 
-    /// <summary>Najde nejvyssi MK chip v Player inventari. Vraci TechType.None pokud nic.</summary>
+    /// <summary>Finds the highest MK chip in the Player inventory. Returns TechType.None if none.</summary>
     public static (int tier, TechType techType) FindHighestInInventory()
     {
         var inv = Inventory.main;

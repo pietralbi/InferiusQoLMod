@@ -5,20 +5,20 @@ using InferiusQoL.Config;
 using UnityEngine;
 
 /// <summary>
-/// Per-instance komprese pres 4 synchronizovane patches:
+/// Per-instance compression through 4 synchronized patches:
 ///
-/// 1. InventoryItem(Pickupable) constructor postfix - pokud instance ma marker,
-///    nastavi _width=1, _height=1 (per-instance layout marker).
+/// 1. InventoryItem(Pickupable) constructor postfix: if the instance has a marker,
+///    set _width=1, _height=1 (per-instance layout marker).
 ///
-/// 2. ItemsContainer.AddItem prefix/postfix - nastavi ThreadStatic kontext na
-///    Pickupable. Tim behem container layout decisions (free space search,
-///    grid placement) TechData.GetItemSize vrati 1x1 pokud je markered.
+/// 2. ItemsContainer.AddItem prefix/postfix: set ThreadStatic context to the
+///    Pickupable. During container layout decisions (free space search, grid
+///    placement), TechData.GetItemSize returns 1x1 if the instance is marked.
 ///
-/// 3. uGUI_ItemsContainer.OnAddItem prefix/postfix - nastavi kontext na
-///    InventoryItem pro UI sprite rendering.
+/// 3. uGUI_ItemsContainer.OnAddItem prefix/postfix: set context to the
+///    InventoryItem for UI sprite rendering.
 ///
-/// 4. TechData.GetItemSize postfix - cte kontext a vrati 1x1 pokud markered
-///    instance. Pokud neni kontext, necha vanilla.
+/// 4. TechData.GetItemSize postfix: read context and return 1x1 if the instance
+///    is marked. If there is no context, leave vanilla behavior.
 /// </summary>
 internal static class CompressorRenderContext
 {
@@ -40,7 +40,7 @@ internal static class CompressorRenderContext
         set => _currentPickupable = value;
     }
 
-    /// <summary>Vrati aktuální Pickupable v kontextu (primarne pres CurrentPickupable, fallback InventoryItem.item).</summary>
+    /// <summary>Returns the current Pickupable in context, primarily through CurrentPickupable with InventoryItem.item as fallback.</summary>
     public static Pickupable? EffectivePickupable =>
         _currentPickupable ?? _currentInventoryItem?.item;
 }
@@ -60,8 +60,8 @@ public static class InventoryItem_Constructor_Patch
         if (uid == null || string.IsNullOrEmpty(uid.Id)) return;
         if (!CompressorSaveManager.IsInstanceCompressed(uid.Id)) return;
 
-        // Self-cleanup: pokud TT je nyni v blacklistu (napr. user pridal nase
-        // custom items az dodatecne), smazeme marker a vratime vanilla velikost.
+        // Self-cleanup: if the TechType is now blacklisted, for example because the
+        // user added our custom items later, delete the marker and restore vanilla size.
         var tt = pickupable.GetTechType();
         if (CompressorBlacklist.IsBlacklisted(tt))
         {
@@ -80,7 +80,7 @@ public static class ItemsContainer_AddItem_Patch
     [HarmonyPrefix]
     public static void Prefix(Pickupable pickupable)
     {
-        // Nestartuj kontext pokud je blacklisted - vanilla velikost je spravna.
+        // Do not start context if blacklisted; vanilla size is correct.
         if (pickupable != null && CompressorBlacklist.IsBlacklisted(pickupable.GetTechType()))
         {
             CompressorRenderContext.CurrentPickupable = null;
@@ -125,7 +125,7 @@ public static class TechData_GetItemSize_Patch
         var pickupable = CompressorRenderContext.EffectivePickupable;
         if (pickupable == null) return;
 
-        // Sanity: kontext techtype musi odpovidat volanemu.
+        // Sanity: context TechType must match the requested one.
         if (pickupable.GetTechType() != techType) return;
 
         var uid = pickupable.GetComponent<UniqueIdentifier>();

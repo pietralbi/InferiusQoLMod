@@ -18,7 +18,8 @@ public enum Category
     Teleport,
     Oxygen,
     LockerMover,
-    AutoCraft
+    AutoCraft,
+    ScannerRoom
 }
 
 public enum Verbosity

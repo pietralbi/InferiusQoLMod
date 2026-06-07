@@ -20,16 +20,16 @@ public enum MergedTankTier
 }
 
 /// <summary>
-/// 4 merged oxygen tank tiery. Kazdy je klonovany z PlasteelTank (Ultra High
-/// Capacity Tank) a jeho kapacita se nastavuje pri prefab spawnu pres
-/// CloneTemplate.ModifyPrefab delegate (Harmony patch na Oxygen.Awake
-/// neprojizdel na clone prefab).
+/// 4 merged oxygen tank tiers. Each is cloned from PlasteelTank (Ultra High
+/// Capacity Tank), and its capacity is set when the prefab spawns through the
+/// CloneTemplate.ModifyPrefab delegate. A Harmony patch on Oxygen.Awake did not
+/// run on the cloned prefab.
 ///
 /// Progression:
-///   T1 - odemceny pri PlasteelTank blueprintu (2x Plasteel + WiringKit)
-///   T2 - odemceny po craftu T1        (2x Plasteel + AdvWiring + Magnetite)
-///   T3 - odemceny po craftu T2        (2x Plasteel + AdvWiring + Polyaniline + Kyanite)
-///   T4 - odemceny po craftu T3, lightweight bez speed penalty
+///   T1 - unlocked with the PlasteelTank blueprint (2x Plasteel + WiringKit)
+///   T2 - unlocked after crafting T1        (2x Plasteel + AdvWiring + Magnetite)
+///   T3 - unlocked after crafting T2        (2x Plasteel + AdvWiring + Polyaniline + Kyanite)
+///   T4 - unlocked after crafting T3, lightweight with no speed penalty
 /// </summary>
 public static class TankWelderItems
 {
@@ -131,8 +131,8 @@ public static class TankWelderItems
                 }
             });
 
-        // T1 odemceny od startu (recept stejne vyzaduje 2x PlasteelTank takze progres je gated
-        // materialy, ne unlock gates).
+        // T1 is unlocked from the start. The recipe still requires 2x PlasteelTank,
+        // so progression is gated by materials, not unlock gates.
         KnownTechHandler.UnlockOnStart(MergedTankT1);
 
         QoLLog.Info(Category.TankWelder,
@@ -161,8 +161,8 @@ public static class TankWelderItems
             ? InferiusQoL.Assets.IconLoader.LoadOrFallback(iconFile, TechType.PlasteelTank)
             : SpriteManager.Get(TechType.PlasteelTank));
 
-        // Explicitni velikost v inventari (vanilla PlasteelTank = 3x3). Bez tohoto
-        // Nautilus defaultuje na 1x1 pro custom TechType.
+        // Explicit inventory size (vanilla PlasteelTank = 3x3). Without this,
+        // Nautilus defaults to 1x1 for custom TechTypes.
         info.WithSizeInInventory(new Vector2int(3, 3));
 
         var prefab = new CustomPrefab(info);

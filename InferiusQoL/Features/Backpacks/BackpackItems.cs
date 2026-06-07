@@ -17,9 +17,9 @@ public enum BackpackTier
 }
 
 /// <summary>
-/// 3 tiery batohu (Small/Medium/Large). Batoh je 1x1 item v inventari -
-/// pokud je pritomny, aplikuje se bonus extra radku v InventoryResizePatch.
-/// Detekce nejvyssiho tieru, ne-stackuje se.
+/// 3 backpack tiers (Small/Medium/Large). A backpack is a 2x2 inventory item.
+/// When present, InventoryResizePatch applies the extra-row bonus. Detects the
+/// highest tier and does not stack.
 /// </summary>
 public static class BackpackItems
 {
@@ -29,9 +29,9 @@ public static class BackpackItems
 
     public static void Register()
     {
-        // Bez radial menu modu se Workbench taby prekryvaji - place upgrady
-        // do rootu (prazdny tabPath = root). Small backpack je vzdy ve Fabricatoru
-        // Personal/Equipment (tab existuje vanilla).
+        // Without a radial menu mod, Workbench tabs overlap. Place upgrades in
+        // the root (empty tabPath = root). Small backpack is always in the
+        // Fabricator Personal/Equipment tab, which exists in vanilla.
         var workbenchTab = Plugin.HasRadialMenu ? new[] { "BackpackMenu" } : new string[0];
 
         Small = RegisterTier(
@@ -98,13 +98,13 @@ public static class BackpackItems
     }
 
     /// <summary>
-    /// Musime pridat vlastni tab do Modification Station pro Medium/Large backpack.
-    /// Volat drive nez Register().
+    /// Must add a custom tab to the Modification Station for Medium/Large backpacks.
+    /// Call before Register().
     /// </summary>
     public static void RegisterTabs()
     {
-        // Bez radial menu modu Workbench taby prekryvaji - skip tab creation,
-        // upgrady jdou do rootu Workbenchu.
+        // Without a radial menu mod, Workbench tabs overlap. Skip tab creation;
+        // upgrades go to the Workbench root.
         if (!Plugin.HasRadialMenu) return;
 
         var label = InferiusQoL.Localization.L.GetOrFallback(
@@ -128,7 +128,7 @@ public static class BackpackItems
         string[] tabPath)
     {
         var info = PrefabInfo.WithTechType(classId, displayName, description);
-        // Small backpack zamerne pouziva vanilla LuggageBag sprite (bez custom PNG).
+        // Small backpack intentionally uses the vanilla LuggageBag sprite, with no custom PNG.
         var iconFile = classId switch
         {
             "InferiusBackpackSmall" => "BackSmall.png",
@@ -147,7 +147,7 @@ public static class BackpackItems
         if (unlockAfter != TechType.None)
             prefab.SetUnlock(unlockAfter);
         else
-            prefab.SetUnlock(TechType.Scanner); // Scanner je default-unlocked = item je dostupny hned od startu
+            prefab.SetUnlock(TechType.Scanner); // Scanner is default-unlocked, so the item is available from the start.
 
         var crafting = prefab.SetRecipe(recipe)
             .WithFabricatorType(fabricator)
@@ -155,9 +155,9 @@ public static class BackpackItems
         if (tabPath.Length > 0)
             crafting.WithStepsToFabricatorTab(tabPath);
 
-        // Chip slot = vanilla Player ma jeden Chip slot (obvykle Compass).
-        // Pokud je nainstalovany SlotExtender, pridava dalsi Chip sloty,
-        // takze hrac nemusi obetovat Compass.
+        // Chip slot = vanilla Player has one Chip slot, usually Compass.
+        // If SlotExtender is installed, it adds more Chip slots, so the player
+        // does not have to sacrifice Compass.
         prefab.SetEquipment(EquipmentType.Chip)
             .WithQuickSlotType(QuickSlotType.Passive);
 
@@ -166,8 +166,8 @@ public static class BackpackItems
     }
 
     /// <summary>
-    /// Nejvyssi tier batohu osazeny v Player equipment Chip slotu
-    /// (priorita Large > Medium > Small).
+    /// Highest backpack tier equipped in the Player equipment Chip slot
+    /// (priority Large > Medium > Small).
     /// </summary>
     public static BackpackTier GetEquippedTier()
     {
@@ -179,7 +179,7 @@ public static class BackpackItems
         return BackpackTier.None;
     }
 
-    /// <summary>Pocet extra radku pro dany tier z aktualniho configu.</summary>
+    /// <summary>Number of extra rows for the given tier from the current config.</summary>
     public static int GetTierRows(BackpackTier tier, InferiusConfig cfg)
     {
         return tier switch

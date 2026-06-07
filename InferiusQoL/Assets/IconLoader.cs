@@ -7,10 +7,11 @@ using Nautilus.Utility;
 using UnityEngine;
 
 /// <summary>
-/// Nacita custom PNG ikony z Assets/Icons/ slozky vedle DLL. Pokud soubor neexistuje
-/// nebo se nepodari nacist, vrati null a caller musi pouzit fallback (vanilla sprite).
+/// Loads custom PNG icons from the Assets/Icons/ folder beside the DLL. If the file
+/// does not exist or cannot be loaded, returns null and the caller must use a
+/// fallback, usually a vanilla sprite.
 ///
-/// Icons se deployuji pres csproj Target do BepInEx/plugins/InferiusQoL/Assets/Icons/.
+/// Icons are deployed by the csproj Target to BepInEx/plugins/InferiusQoL/Assets/Icons/.
 /// </summary>
 public static class IconLoader
 {
@@ -43,14 +44,14 @@ public static class IconLoader
         }
     }
 
-    /// <summary>Nacte ikonu nebo vrati vanilla sprite jako fallback.</summary>
+    /// <summary>Loads an icon or returns a vanilla sprite as fallback.</summary>
     public static Sprite LoadOrFallback(string fileName, TechType fallback)
     {
         var s = Load(fileName);
         return s ?? SpriteManager.Get(fallback);
     }
 
-    /// <summary>Nacte PNG jako Texture2D pro pouziti v materialu 3D modelu.</summary>
+    /// <summary>Loads a PNG as Texture2D for use in a 3D model material.</summary>
     public static Texture2D? LoadTexture(string fileName)
     {
         var dllDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);

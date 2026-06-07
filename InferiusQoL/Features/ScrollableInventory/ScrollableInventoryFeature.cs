@@ -122,7 +122,7 @@ public static class ScrollableInventoryFeature
         if (!_loadAttempted)
         {
             _loadAttempted = true;
-            _assets = FindLoadedBundle() ?? AssetBundle.LoadFromFile(Path.Combine(ModDirectory, BundleFileName));
+            _assets = FindLoadedBundle() ?? AssetBundle.LoadFromFile(Path.Combine(ModDirectory, "Assets", BundleFileName));
             if (_assets != null)
             {
                 _scrollPrefab = _assets.LoadAsset<GameObject>(ScrollViewAssetName);
@@ -137,7 +137,7 @@ public static class ScrollableInventoryFeature
         {
             _loadErrorLogged = true;
             QoLLog.Warning(Category.Inventory,
-                $"ScrollableInventory asset bundle missing or incomplete. Expected '{BundleFileName}' beside InferiusQoL.dll.");
+                $"ScrollableInventory asset bundle missing or incomplete. Expected 'Assets/{BundleFileName}' beside InferiusQoL.dll.");
         }
         return false;
     }

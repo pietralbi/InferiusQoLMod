@@ -87,6 +87,7 @@
   "Enable faster oxygen refill": "Enable faster oxygen refill",
   "  Refill rate (units/sec)": "  Refill rate (units/sec)",
   "  Refill all tanks in inventory": "  Refill all tanks in inventory",
+  "Scanner room drillables and time capsules": "Scanner room drillables and time capsules",
 
 
   "InferiusQoL.Status.Header": "InferiusQoL v{0}",
@@ -110,6 +111,7 @@
   "InferiusQoL.Status.AutoCraft": "AutoCraft:",
   "InferiusQoL.Status.InventoryViewer": "InventoryViewer:",
   "InferiusQoL.Status.OxygenRefill": "OxygenRefill:",
+  "InferiusQoL.Status.ScannerRoom": "ScannerRoom:",
 
   "InferiusQoL.Console.LogLevelCurrent": "Current log level: {0}. Usage: qol_log_level <None|Info|Debug|Trace>",
   "InferiusQoL.Console.LogLevelSet": "Log level set to: {0}",
@@ -117,6 +119,7 @@
 
   "InferiusQoL.On": "ON",
   "InferiusQoL.Off": "off",
+  "InferiusQoL.ScannerRoom.DrillableSuffix": "deposit",
 
   "InferiusSeamothTurboMK1": "Seamoth Turbo Module MK1",
   "Tooltip_InferiusSeamothTurboMK1": "Basic speed boost while sprinting. Holds the Sprint key to activate. Deactivates above the surface.",

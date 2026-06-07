@@ -7,9 +7,9 @@ using InferiusQoL.Logging;
 using UnityEngine;
 
 /// <summary>
-/// Kes blizkych ItemsContainer (Inventory + okolni skrine). Podle
-/// AutoCraftSettings.UseStorage urcuje rozsah (Off / Inside / Range100).
-/// Ceche 0.5s aby se neiterovalo scenu kazdy frame.
+/// Cache of nearby ItemsContainers (Inventory + surrounding lockers). Determines
+/// the scope from AutoCraftSettings.UseStorage (Off / Inside / Range100).
+/// Caches for 0.5s so the scene is not iterated every frame.
 /// </summary>
 public static class ClosestItemContainers
 {
@@ -90,8 +90,8 @@ public static class ClosestItemContainers
             if (sc.container.containerType != 0) continue;
             if (sc.storageLabel != null && sc.storageLabel.StartsWith("Aquarium")) continue;
 
-            // Asterisk-prefixed labels - filter pres label string (storageLabel
-            // end with asterisk oznacuje "do not use"). Fallback bez TMPro reference.
+            // Asterisk-prefixed labels: filter through the label string. A storageLabel
+            // ending with an asterisk means "do not use". Fallback without a TMPro reference.
             if (sc.storageLabel != null && sc.storageLabel.EndsWith(ASTERISK)) continue;
 
             var constructable = sc.GetComponent<Constructable>();
@@ -156,7 +156,7 @@ public static class ClosestItemContainers
                         break;
                     }
                 }
-                // Fallback: invertar i kdyz byl skipnut
+                // Fallback: inventory, even if it was skipped.
                 if (AutoCraftSettings.ReturnSurplus == ReturnSurplus.Lockers && !added
                     && Inventory.main?.container?.AddItem(pickupable) != null)
                 {

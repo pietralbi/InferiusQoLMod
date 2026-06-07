@@ -17,10 +17,10 @@ public enum TurboTier
 }
 
 /// <summary>
-/// Registrace vsech tri tieru Seamoth Turbo modulu (MK1, MK2, MK3).
-/// Kazdy tier ma vlastni recipe s upgrade path: MK2 vyzaduje 1x MK1, MK3 vyzaduje 1x MK2.
-/// Kazdy tier ma v configu vlastni slidery pro rychlost a spotrebu.
-/// Ikony jsou zatim placeholdery z vanilla Seamoth modulu, nahradime je pozdeji.
+/// Registers all three Seamoth Turbo module tiers (MK1, MK2, MK3).
+/// Each tier has its own recipe with an upgrade path: MK2 requires 1x MK1,
+/// and MK3 requires 1x MK2. Each tier has its own config sliders for speed and
+/// energy consumption. Icons are currently placeholders from vanilla Seamoth modules.
 /// </summary>
 public static class SeamothTurboItems
 {
@@ -30,8 +30,8 @@ public static class SeamothTurboItems
 
     public static void Register()
     {
-        // Vlastni tab v Modification Station (Workbench) pro MK2/MK3 - jen
-        // pokud je radial menu mod, jinak Workbench taby prekryvaji.
+        // Custom tab in the Modification Station (Workbench) for MK2/MK3 only
+        // when a radial menu mod is present; otherwise Workbench tabs overlap.
         if (Plugin.HasRadialMenu)
         {
             var label = InferiusQoL.Localization.L.GetOrFallback(
@@ -44,7 +44,7 @@ public static class SeamothTurboItems
                 SpriteManager.Get(TechType.SeamothElectricalDefense));
         }
 
-        // MK1 - ve Vehicle Upgrade Console (Moonpool), vedle vanilla Seamoth modulu.
+        // MK1: in the Vehicle Upgrade Console (Moonpool), next to vanilla Seamoth modules.
         MK1 = RegisterTier(
             classId: "InferiusSeamothTurboMK1",
             displayName: "Seamoth Turbo Module MK1",
@@ -65,7 +65,7 @@ public static class SeamothTurboItems
             fabricator: CraftTree.Type.SeamothUpgrades,
             fabricatorTab: "SeamothModules");
 
-        // MK2 - ve Modification Station, vlastni tab.
+        // MK2: in the Modification Station, custom tab.
         MK2 = RegisterTier(
             classId: "InferiusSeamothTurboMK2",
             displayName: "Seamoth Turbo Module MK2",
@@ -86,7 +86,7 @@ public static class SeamothTurboItems
             fabricator: CraftTree.Type.Workbench,
             fabricatorTab: "SeamothTurboMenu");
 
-        // MK3 - ve Modification Station, vlastni tab.
+        // MK3: in the Modification Station, custom tab.
         MK3 = RegisterTier(
             classId: "InferiusSeamothTurboMK3",
             displayName: "Seamoth Turbo Module MK3",
@@ -140,8 +140,8 @@ public static class SeamothTurboItems
         var crafting = prefab.SetRecipe(recipe)
             .WithFabricatorType(fabricator)
             .WithCraftingTime(5f);
-        // SeamothTurboMenu je nas custom Workbench tab - pouzijeme jen kdyz radial menu.
-        // Vehicle Upgrade Console (MK1) ma vanilla taby, ty pouzivame vzdy.
+        // SeamothTurboMenu is our custom Workbench tab; use it only with a radial menu.
+        // Vehicle Upgrade Console (MK1) has vanilla tabs, which we always use.
         if (fabricator != CraftTree.Type.Workbench || Plugin.HasRadialMenu)
             crafting.WithStepsToFabricatorTab(fabricatorTab);
         prefab.SetEquipment(EquipmentType.VehicleModule)
@@ -151,7 +151,7 @@ public static class SeamothTurboItems
         return info.TechType;
     }
 
-    /// <summary>Vrati nejvyssi osazeny tier v danem Seamoth (priorita MK3 > MK2 > MK1).</summary>
+    /// <summary>Returns the highest equipped tier in the given Seamoth (priority MK3 > MK2 > MK1).</summary>
     public static TurboTier GetEquippedTier(SeaMoth seamoth)
     {
         if (seamoth == null || seamoth.modules == null) return TurboTier.None;
@@ -161,7 +161,7 @@ public static class SeamothTurboItems
         return TurboTier.None;
     }
 
-    /// <summary>Rychlostni a energeticky nasobitel pro dany tier (z aktualniho configu).</summary>
+    /// <summary>Speed and energy multiplier for the given tier from the current config.</summary>
     public static (float speedMult, float energyMult) GetTierValues(TurboTier tier, InferiusConfig cfg)
     {
         return tier switch

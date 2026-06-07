@@ -12,6 +12,7 @@ using InferiusQoL.Features.Batteries;
 using InferiusQoL.Features.Compressor;
 using InferiusQoL.Features.InventoryViewer;
 using InferiusQoL.Features.LockerMover;
+using InferiusQoL.Features.ScannerRoom;
 using InferiusQoL.Features.SeamothTurbo;
 using InferiusQoL.Features.TankWelder;
 using InferiusQoL.Features.TeleportBeacon;
@@ -56,27 +57,30 @@ public class Plugin : BaseUnityPlugin
         L.LoadAll();
         QoLLog.Info(Category.Config, "Localization loaded");
 
+        if (cfg.ScannerRoomDrillableScanEnabled)
+            DrillableScanFeature.EnsureTimeCapsuleWorldEntity();
+
         ConsoleCommands.Register();
         QoLLog.Info(Category.Core, "Console commands registered");
 
-        // Eager radial-menu detekce - DetectExternalMods bezi az ve Start(), ale
-        // tab registrace v Awake potrebuje vedet jestli ma vytvaret tabs nebo
-        // umistit upgrady primo do rootu (Workbench bez radialiho menu prekryva
-        // tabs). Eager check nemusi videt vsechny pluginy ale radial menu mody
-        // se obvykle loadi brzo.
+        // Eager radial-menu detection: DetectExternalMods runs in Start(), but
+        // tab registration in Awake needs to know whether to create tabs or
+        // place upgrades directly in the root. Workbench without a radial menu
+        // covers tabs. The eager check may not see every plugin, but radial menu
+        // mods usually load early.
         HasRadialMenu = FindPlugin(new[] { "radialtabs", "radialcrafting", "bettercraftmenu", "guibetter" }, out var rmEarlyInfo);
         QoLLog.Info(Category.Core, $"Eager radial menu detection: {(HasRadialMenu ? rmEarlyInfo : "not found, will flatten Workbench tabs")}");
 
-        // Registrace custom TechTypes (musi byt v Awake, drive nez hra vytvori craft tree).
+        // Register custom TechTypes in Awake, before the game creates the craft tree.
         if (cfg.SeamothTurboEnabled)
             SeamothTurboItems.Register();
 
         if (cfg.BackpacksEnabled && !HasBagEquipment)
         {
-            // Detekce BagEquipment probiha az ve Start(); zde volame optimisticky
-            // registraci. Pokud BagEquipment je pozdeji detekovan, nase batohy
-            // stale existuji v craft tree, ale neaplikuji se (gate v
-            // InventoryResizePatch.ApplyTo).
+            // BagEquipment detection runs later in Start(), so register
+            // optimistically here. If BagEquipment is detected later, our
+            // backpacks still exist in the craft tree but do not apply because
+            // InventoryResizePatch.ApplyTo gates them.
             BackpackItems.RegisterTabs();
             BackpackItems.Register();
         }
@@ -118,20 +122,20 @@ public class Plugin : BaseUnityPlugin
             InventoryViewerFeature.Init();
         }
 
-        QoLLog.Info(Category.Core, "Awake completed (detekce cizich modu probehne v Start())");
+        QoLLog.Info(Category.Core, "Awake completed (external mod detection will run in Start())");
     }
 
     private void Start()
     {
-        // Start() bezi az po vsech Awake() ostatnich pluginu, takze Chainloader.PluginInfos
-        // je uz kompletni. V Awake je detekce neuplna - nekteri pluginy se nacitaji pozdeji.
+        // Start() runs after every other plugin's Awake(), so Chainloader.PluginInfos
+        // is complete. Detection in Awake is incomplete because some plugins load later.
         DetectExternalMods();
 
-        // Per-class try/catch misto jednoho velkeho Harmony.PatchAll.
-        // Pokud jeden patch selze (napr. target metoda neexistuje), ostatni
-        // patche se stale nasadi. Puvodne: jedno PatchAll -> jeden exception ->
-        // zbytek patchu nenabehne -> Compressor + InventoryResize tichem selzou
-        // -> ztrata komprimovanych polozek (nefit pri vanilla size).
+        // Per-class try/catch instead of one large Harmony.PatchAll.
+        // If one patch fails, such as when the target method does not exist,
+        // the other patches still apply. Previously: one PatchAll -> one exception ->
+        // the rest of the patches never ran -> Compressor + InventoryResize failed
+        // silently -> compressed items were lost because they did not fit at vanilla size.
         int ok = 0, failed = 0;
         foreach (var type in typeof(Plugin).Assembly.GetTypes())
         {
@@ -163,13 +167,13 @@ public class Plugin : BaseUnityPlugin
 
         LogDetection("CustomizedStorage", "locker resize", HasCustomizedStorage, csInfo);
         LogDetection("AdvancedInventory", "scrollable container", HasAdvancedInventory, aiInfo);
-        LogDetection("BagEquipment", "batohy", HasBagEquipment, beInfo);
-        // EasyCraft: mame vlastni port (AutoCraft). Pokud je puvodni EasyCraft
-        // nainstalovan, upozornime usera - ma odinstalovat puvodni.
+        LogDetection("BagEquipment", "backpacks", HasBagEquipment, beInfo);
+        // EasyCraft: we have our own port (AutoCraft). If the original EasyCraft
+        // is installed, warn the user that they should uninstall the original.
         if (HasEasyCraft)
             QoLLog.Warning(Category.Core,
-                $"Original EasyCraft detected: {ecInfo}. Nase AutoCraft je port EasyCraftu - "
-                + "odinstaluj puvodni EasyCraft at se patche nebiji.");
+                $"Original EasyCraft detected: {ecInfo}. Our AutoCraft is an EasyCraft port - "
+                + "uninstall the original EasyCraft so the patches do not conflict.");
         else
             QoLLog.Info(Category.Core, "EasyCraft not detected (our AutoCraft port is active).");
         if (HasSlotExtender)
@@ -204,7 +208,7 @@ public class Plugin : BaseUnityPlugin
     {
         if (found)
             QoLLog.Warning(Category.Core,
-                $"{label} detected: {info} -> vlastni {featureDesc} se nezapne (konflikt).");
+                $"{label} detected: {info} -> our {featureDesc} feature will not enable (conflict).");
         else
             QoLLog.Info(Category.Core, $"{label} not detected.");
     }

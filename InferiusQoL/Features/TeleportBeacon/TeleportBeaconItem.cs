@@ -10,9 +10,9 @@ using Nautilus.Handlers;
 using UnityEngine;
 
 /// <summary>
-/// Teleport Beacon - buildable interior piece klonovany z vanilla StarshipSouvenir
-/// (minimodel Aurory). Buildable v Habitat Builder, stacionarni po umisteni.
-/// Klik na beacon spusti teleport na nejblizsi jiny beacon.
+/// Teleport Beacon: buildable interior piece cloned from vanilla StarshipSouvenir
+/// (Aurora minimodel). Buildable with the Habitat Builder and stationary after
+/// placement. Clicking the beacon starts teleport to the nearest other beacon.
 /// </summary>
 public static class TeleportBeaconItem
 {
@@ -30,21 +30,22 @@ public static class TeleportBeaconItem
 
         var prefab = new CustomPrefab(info);
 
-        // StarshipSouvenir v teto verzi Subnauticy neni buildable (je jen pickupable
-        // decoration). Klonujeme Bench - spolehlivy buildable interior piece.
-        // Custom model (Aurora mini) by vyzadoval asset bundle, zvazeno pozdeji.
+        // StarshipSouvenir is not buildable in this Subnautica version; it is only
+        // pickupable decoration. Clone Bench instead, a reliable buildable interior
+        // piece. A custom Aurora mini model would require an asset bundle and was
+        // deferred for later.
         var cloneTemplate = new CloneTemplate(info, TechType.Bench)
         {
             ModifyPrefab = (obj) =>
             {
-                // Odstrante vanilla Bench komponentu (sit interakce), aby si nase
-                // TeleportBeaconBehavior mohla prevzit IHandTarget hook.
+                // Remove the vanilla Bench component (sit interaction) so our
+                // TeleportBeaconBehavior can take over the IHandTarget hook.
                 var bench = obj.GetComponent<Bench>();
                 if (bench != null)
                     Object.DestroyImmediate(bench);
 
-                // Odstranit sit-related objekty (trigger collider pro sit, sit points).
-                // Pokud existuje child "SitPoint", odstranit.
+                // Remove sit-related objects (trigger collider for sitting, sit points).
+                // If a "SitPoint" child exists, remove it.
                 var sitPoint = obj.transform.Find("SitPoint");
                 if (sitPoint != null)
                     Object.DestroyImmediate(sitPoint.gameObject);
@@ -52,7 +53,7 @@ public static class TeleportBeaconItem
                 if (obj.GetComponent<TeleportBeaconBehavior>() == null)
                     obj.AddComponent<TeleportBeaconBehavior>();
 
-                // Prepsat TechTag + Constructable techType na nas custom (clone zdedil vanilla).
+                // Override TechTag + Constructable techType to our custom type; the clone inherited vanilla.
                 var techTag = obj.GetComponent<TechTag>();
                 if (techTag != null)
                     techTag.type = info.TechType;
@@ -81,9 +82,10 @@ public static class TeleportBeaconItem
 
         prefab.SetPdaGroupCategory(TechGroup.InteriorPieces, TechCategory.InteriorPiece);
 
-        // Habitat Builder buildable - NEPOUZIVAT WithFabricatorType.
-        // CraftTree.Type.Constructor = Mobile Vehicle Bay (omyl driv), interior pieces
-        // se do Habitat Builderu pridavaji automaticky pres TechGroup.InteriorPieces.
+        // Habitat Builder buildable: DO NOT USE WithFabricatorType.
+        // CraftTree.Type.Constructor = Mobile Vehicle Bay, which was an earlier
+        // mistake. Interior pieces are added to the Habitat Builder automatically
+        // through TechGroup.InteriorPieces.
         prefab.SetRecipe(new RecipeData
         {
             craftAmount = 1,
@@ -100,7 +102,7 @@ public static class TeleportBeaconItem
         prefab.Register();
         TechType = info.TechType;
 
-        // Odemknuti od startu (bez Analysis).
+        // Unlocked from the start, without Analysis.
         KnownTechHandler.UnlockOnStart(TechType);
 
         QoLLog.Info(Category.Teleport, $"Registered Teleport Beacon as {TechType} (unlocked on start)");

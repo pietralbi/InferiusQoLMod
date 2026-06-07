@@ -7,8 +7,8 @@ public enum NeighboringStorage { Off, Inside, Range100 }
 public enum ReturnSurplus { Inventory, Lockers }
 
 /// <summary>
-/// Facade nad InferiusConfig pro AutoCraft. Prevadi string volby z Choice
-/// dropdown na enumy + drzi globalni seznam disabled auto-craft recipes.
+/// Facade over InferiusConfig for AutoCraft. Converts string choices from the
+/// Choice dropdown to enums and keeps the global list of disabled auto-craft recipes.
 /// </summary>
 internal static class AutoCraftSettings
 {
@@ -45,7 +45,7 @@ internal static class AutoCraftSettings
     public static float SpeedMultiplier =>
         System.Math.Max(1, InferiusConfig.Instance.AutoCraftSpeedPercent) / 100f;
 
-    /// <summary>Vrati nasobitel pro batch craft dle stisknuteho modifieru.</summary>
+    /// <summary>Returns the batch crafting multiplier based on the pressed modifier.</summary>
     public static int GetBatchMultiplier()
     {
         if (UnityEngine.Input.GetKey(UnityEngine.KeyCode.LeftControl)

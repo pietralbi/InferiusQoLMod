@@ -6,8 +6,9 @@ using InferiusQoL.Logging;
 using UnityEngine;
 
 /// <summary>
-/// Init pres Harmony postfix na Player.Awake (stejny pattern jako LockerMover) -
-/// GO vytvoreny v BepInEx Plugin.Awake by skoncil v DontDestroyOnLoad limbu.
+/// Init through Harmony postfix on Player.Awake, using the same pattern as
+/// LockerMover. A GameObject created in BepInEx Plugin.Awake would end up in
+/// DontDestroyOnLoad limbo.
 /// </summary>
 public static class InventoryViewerFeature
 {

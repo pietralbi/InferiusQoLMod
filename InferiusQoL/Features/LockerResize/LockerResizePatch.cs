@@ -56,8 +56,8 @@ public static class StorageContainer_Awake_Patch
                 w = cfg.VehicleStorageWidth; h = cfg.VehicleStorageHeight; return true;
         }
 
-        // Vehicle storage slots nemaji TechType na GameObject StorageContaineru.
-        // Detekujeme je pres SeamothStorageContainer component nebo pres parent Vehicle.
+        // Vehicle storage slots do not have TechType on the StorageContainer GameObject.
+        // Detect them through the SeamothStorageContainer component or parent Vehicle.
         if (IsVehicleStorageSlot(sc))
         {
             w = cfg.VehicleStorageWidth; h = cfg.VehicleStorageHeight; return true;
@@ -72,14 +72,15 @@ public static class StorageContainer_Awake_Patch
         if (sc.GetComponent<SeamothStorageContainer>() != null) return true;
         if (sc.GetComponentInParent<SeamothStorageContainer>() != null) return true;
 
-        // Prawn/Exosuit storage slot: StorageContainer je primo deep-child Exosuit prefabu.
-        // Overime ze parent je Vehicle (Exosuit/Seamoth) a ze to neni hlavni upgrade slot.
+        // Prawn/Exosuit storage slot: StorageContainer is a direct deep child of the
+        // Exosuit prefab. Verify that the parent is a Vehicle (Exosuit/Seamoth) and
+        // that this is not the main upgrade slot.
         var vehicle = sc.GetComponentInParent<Vehicle>();
         if (vehicle != null)
         {
-            // Vylouci batery a upgrade sloty, ktere take maji Vehicle parent,
-            // ale nejsou StorageContainer (tohle je uz filtrovane typem ale pro jistotu).
-            // GameObject name typicky obsahuje "Storage" pro uloziste
+            // Exclude battery and upgrade slots, which also have a Vehicle parent but
+            // are not StorageContainer. This is already filtered by type, but keep it
+            // for safety. GameObject name typically contains "Storage" for storage.
             var name = sc.gameObject.name;
             if (name.IndexOf("storage", System.StringComparison.OrdinalIgnoreCase) >= 0)
                 return true;
@@ -119,8 +120,8 @@ public static class StorageContainer_Awake_Patch
     }
 
     /// <summary>
-    /// Iteruje vsechny StorageContainer v scene a aplikuje aktualni config velikost.
-    /// Vola se pri zmene configu v Options (ConfigSavePatch).
+    /// Iterates all StorageContainers in the scene and applies the current config size.
+    /// Called when config changes in Options (ConfigSavePatch).
     /// </summary>
     public static void ApplyRuntime()
     {

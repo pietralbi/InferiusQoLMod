@@ -7,15 +7,15 @@ using HarmonyLib;
 using InferiusQoL.Config;
 
 /// <summary>
-/// Harmony patche pro AutoCraft. Vsechny gate-nute pres AutoCraftEnabled, takze
-/// vypnuti feature v Options okamzite prevede chovani zpet na vanilla.
+/// Harmony patches for AutoCraft. All are gated through AutoCraftEnabled, so
+/// disabling the feature in Options immediately returns behavior to vanilla.
 ///
-/// Ekvivalent 4 patchu z EasyCraftu:
+/// Equivalent to the EasyCraft patches:
 /// - GhostCrafter.Craft (Fabricator, Workbench, ...)
 /// - ConstructorInput.Craft (Mobile Vehicle Bay)
-/// - Constructable.Construct (base-building zeleni ghost objekt)
-/// - uGUI_CraftingMenu.ActionAvailable (zbarveni tlacitek v menu)
-/// - TooltipFactory.WriteIngredients (ingredient counts v tooltipu)
+/// - Constructable.Construct (green ghost object during base building)
+/// - uGUI_CraftingMenu.ActionAvailable (button coloring in the menu)
+/// - TooltipFactory.WriteIngredients (ingredient counts in the tooltip)
 /// </summary>
 [HarmonyPatch(typeof(GhostCrafter), "Craft", new[] { typeof(TechType), typeof(float) })]
 internal static class AutoCraft_GhostCrafter_Craft_Patch

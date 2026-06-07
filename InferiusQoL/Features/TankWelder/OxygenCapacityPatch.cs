@@ -4,14 +4,15 @@ using HarmonyLib;
 using InferiusQoL.Logging;
 
 /// <summary>
-/// Postfix patch na UnderwaterMotor.AlterMaxSpeed. Kdyz ma hrac osazeny T4 merged tank
-/// (lightweight varianta), pridame zpet vanilla Plasteel speed penalty ke kompenzaci -
-/// efektivne zrusime speed reduction od osazene lahve.
+/// Postfix patch on UnderwaterMotor.AlterMaxSpeed. When the player has the T4
+/// merged tank equipped (lightweight variant), add back the vanilla Plasteel speed
+/// penalty as compensation, effectively canceling the speed reduction from the
+/// equipped tank.
 /// </summary>
 [HarmonyPatch(typeof(UnderwaterMotor), nameof(UnderwaterMotor.AlterMaxSpeed))]
 public static class UnderwaterMotor_AlterMaxSpeed_Patch
 {
-    /// <summary>Vanilla PlasteelTank speed penalty (m/s). Odhad - upresnuje se testem.</summary>
+    /// <summary>Vanilla PlasteelTank speed penalty (m/s). Estimate, refined by testing.</summary>
     private const float PlasteelTankSpeedPenalty = 0.45f;
 
     [HarmonyPostfix]

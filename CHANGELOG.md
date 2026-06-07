@@ -7,10 +7,12 @@ Vsechny zmeny v Inferius Quality of Life modu.
 ### Pridano
 - **Inventory Viewer** - aggregate prehled vsech polozek napric Inventory + StorageContainery (lockery, carryally vc. drzenych v inventari) v dosahu. Hotkey toggle (default `I`, konfigurovatelny v Options). IMGUI okno s filtrem, refreshem, pocty per TechType + pocty containeru. Iteruje pres `Resources.FindObjectsOfTypeAll<StorageContainer>` aby zachytil i inactive instances.
 - **Teleport zdarma v Creative/Freedom modu** - automaticky detekuje pres `GameModeUtils.RequiresPower()`, skip energy check + drain. Take novy toggle `Always free (no energy cost)` v Options pro Survival/Hardcore (default OFF).
+- **Scanner Room drillable deposits + Time Capsules** - integrovany DrillableScan jako samostatne konfigurovatelna feature. Skenerova mistnost rozlisuje male sbiratelne suroviny od velkych vrtatelnych lozisek, umi vyhledavat Time Capsules a pouziva vlastni ikony.
 
 ### Opraveno
 - **Teleport Beacon byl navic v Mobile Vehicle Bay** - smazan `WithFabricatorType(CraftTree.Type.Constructor)` ktery duplikoval beacon do MVB craft tree. Habitat Builder zahrnuti zustava pres `TechGroup.InteriorPieces`.
 - **Cursor unlock pri otevreni Inventory Viewer okna** - prvotne pouzite `Cursor.lockState` nestacilo (Subnautica FPS input modul re-locknul kazdy frame). Fix: `UWE.Utils.lockCursor` flag (stejny pattern jako vanilla PDA / TeleportBeaconUI).
+- **DrillableScan Kyanite bug** - puvodni mod pouzival pevny rozsah enum hodnot a preskocil `DrillableKyanite`, ktere ma v aktualni assembly hodnotu 85. Nahradeno explicitni mapou 14 existujicich velkych lozisek. Mercury je cut content a Sulfur nema velke lozisko, proto nejsou v seznamu.
 
 ## v0.3.3
 
