@@ -2,6 +2,7 @@ namespace InferiusQoL.Config;
 
 using System.Reflection;
 using HarmonyLib;
+using InferiusQoL.Features.InventoryStacking;
 using InferiusQoL.Features.InventoryResize;
 using InferiusQoL.Features.LockerResize;
 using InferiusQoL.Features.OxygenRefill;
@@ -57,6 +58,7 @@ public static class ConfigSavePatch
         try
         {
             InventoryResizePatch.ApplyRuntime(singleton);
+            InventoryStackingFeature.ApplyRuntime();
             ScrollableInventoryFeature.ApplyRuntime();
             StorageContainer_Awake_Patch.ApplyRuntime();
             OxygenRefillFeature.ApplyRuntime();

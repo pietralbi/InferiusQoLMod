@@ -32,6 +32,9 @@ public static class LockerMoverClipboard
     public static int ItemCount => _order.Count;
     public static bool IsEmpty => _order.Count == 0;
 
+    public static bool IsClipboardContainer(ItemsContainer? container) =>
+        _buffer != null && ReferenceEquals(container, _buffer);
+
     /// <summary>
     /// Presune obsah container do skryteho bufferu.
     /// </summary>

@@ -10,6 +10,7 @@ using InferiusQoL.Console;
 using InferiusQoL.Features.Backpacks;
 using InferiusQoL.Features.Batteries;
 using InferiusQoL.Features.Compressor;
+using InferiusQoL.Features.InventoryStacking;
 using InferiusQoL.Features.InventoryViewer;
 using InferiusQoL.Features.LockerMover;
 using InferiusQoL.Features.ScannerRoom;
@@ -37,6 +38,7 @@ public class Plugin : BaseUnityPlugin
 
     internal static bool HasCustomizedStorage { get; private set; }
     internal static bool HasAdvancedInventory { get; private set; }
+    internal static bool HasInventoryStacking { get; private set; }
     internal static bool HasBagEquipment { get; private set; }
     internal static bool HasSlotExtender { get; private set; }
     internal static bool HasEasyCraft { get; private set; }
@@ -130,6 +132,7 @@ public class Plugin : BaseUnityPlugin
         // Start() runs after every other plugin's Awake(), so Chainloader.PluginInfos
         // is complete. Detection in Awake is incomplete because some plugins load later.
         DetectExternalMods();
+        InventoryStackingFeature.Init();
 
         // Per-class try/catch instead of one large Harmony.PatchAll.
         // If one patch fails, such as when the target method does not exist,
@@ -140,6 +143,10 @@ public class Plugin : BaseUnityPlugin
         foreach (var type in typeof(Plugin).Assembly.GetTypes())
         {
             if (!type.IsClass) continue;
+            if (!InventoryStackingFeature.IsEnabled
+                && type.FullName?.StartsWith("InferiusQoL.Features.InventoryStacking.", System.StringComparison.Ordinal) == true)
+                continue;
+
             try
             {
                 var processor = Harmony.CreateClassProcessor(type);
@@ -154,12 +161,14 @@ public class Plugin : BaseUnityPlugin
             }
         }
         QoLLog.Info(Category.Core, $"Harmony patches applied (ok={ok}, failed={failed})");
+        InventoryStackingFeature.AfterHarmonyPatched();
     }
 
     private static void DetectExternalMods()
     {
         HasCustomizedStorage = FindPlugin(new[] { "customizedstorage" }, out var csInfo);
         HasAdvancedInventory = FindPlugin(new[] { "advancedinventory" }, out var aiInfo);
+        HasInventoryStacking = FindPlugin(new[] { "mades.redo.inventorystacking", "mr_inventorystacking", "inventory stacking" }, out var stackInfo);
         HasBagEquipment = FindPlugin(new[] { "bagequipment" }, out var beInfo);
         HasSlotExtender = FindPlugin(new[] { "slotextender" }, out var seInfo);
         HasEasyCraft = FindPlugin(new[] { "easycraft" }, out var ecInfo);
@@ -167,6 +176,7 @@ public class Plugin : BaseUnityPlugin
 
         LogDetection("CustomizedStorage", "locker resize", HasCustomizedStorage, csInfo);
         LogDetection("AdvancedInventory", "scrollable container", HasAdvancedInventory, aiInfo);
+        LogDetection("MR_InventoryStacking", "inventory stacking", HasInventoryStacking, stackInfo);
         LogDetection("BagEquipment", "backpacks", HasBagEquipment, beInfo);
         // EasyCraft: we have our own port (AutoCraft). If the original EasyCraft
         // is installed, warn the user that they should uninstall the original.

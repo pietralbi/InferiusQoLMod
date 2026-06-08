@@ -1,8 +1,10 @@
 namespace InferiusQoL.Config;
 
 using InferiusQoL.Logging;
+using InferiusQoL.Features.InventoryStacking;
 using Nautilus.Handlers;
 using Nautilus.Json;
+using Nautilus.Options;
 using Nautilus.Options.Attributes;
 using Newtonsoft.Json;
 
@@ -36,6 +38,36 @@ public class InferiusConfig : ConfigFile
 
     [Slider("  ScrollableInventory max visible rows", 4, 12, DefaultValue = 8, Step = 1, Order = 103)]
     public int ScrollableInventoryMaxVisibleRows = 8;
+
+    [Toggle("Enable inventory stacking", Order = 150)]
+    public bool InventoryStackingEnabled = true;
+
+    [Slider("  Max stack size", 2, 100, DefaultValue = 10, Step = 1, Order = 151)]
+    public int InventoryStackingMaxStackSize = 10;
+
+    [Slider("  Split merge protection (seconds)", 2f, 60f, DefaultValue = 10f, Step = 1f, Order = 152)]
+    public float InventoryStackingSplitMergeProtectionSeconds = 10f;
+
+    [Choice("  Split stack modifier", new[] { "LeftAlt", "RightAlt", "LeftControl", "RightControl", "LeftShift", "RightShift" }, Order = 153)]
+    public string InventoryStackingSplitPromptKey = "LeftAlt";
+
+    [Choice("  Move half-stack modifier", new[] { "LeftControl", "RightControl", "LeftAlt", "RightAlt", "LeftShift", "RightShift" }, Order = 154)]
+    public string InventoryStackingMoveHalfKey = "LeftControl";
+
+    [Choice("  Merge matching stacks modifier", new[] { "LeftShift", "RightShift", "LeftAlt", "RightAlt", "LeftControl", "RightControl" }, Order = 155)]
+    public string InventoryStackingMergeAllKey = "LeftShift";
+
+    [Toggle("  Consumables stackable", Order = 156)]
+    public bool InventoryStackingConsumablesStackable = false;
+
+    [Toggle("  Vehicle upgrades stackable", Order = 157)]
+    public bool InventoryStackingVehicleUpgradesStackable = false;
+
+    [Button("  Restore stacking from backup (up to 100 saves)", Order = 158)]
+    public void RestoreInventoryStackingFromBackup(ButtonClickedEventArgs e)
+    {
+        StackRestorePreviewUi.TryShow();
+    }
 
     // =====================================================================
     // Locker resize

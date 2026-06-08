@@ -30,12 +30,14 @@ public static class ConsoleCommands
         sb.AppendLine($"  {L.Get("InferiusQoL.Status.Verbosity", QoLLog.CurrentVerbosity)}");
         sb.AppendLine($"  {L.Get("InferiusQoL.Status.CustomizedStorage", Plugin.HasCustomizedStorage)}");
         sb.AppendLine($"  {L.Get("InferiusQoL.Status.AdvancedInventory", Plugin.HasAdvancedInventory)}");
+        sb.AppendLine($"  {L.Get("InferiusQoL.Status.InventoryStackingExternal", Plugin.HasInventoryStacking)}");
         sb.AppendLine($"  {L.Get("InferiusQoL.Status.BagEquipment", Plugin.HasBagEquipment)}");
         sb.AppendLine($"  {L.Get("InferiusQoL.Status.EasyCraft", Plugin.HasEasyCraft)}");
         sb.AppendLine($"  SlotExtender detected:      {Plugin.HasSlotExtender}");
         sb.AppendLine(L.Get("InferiusQoL.Status.Features"));
         sb.AppendLine($"  {L.Get("InferiusQoL.Status.InventoryResize"),-18} {OnOff(c.InventoryResizeEnabled)} (+{c.InventoryExtraRows}R/+{c.InventoryExtraCols}C)");
         sb.AppendLine($"  {L.Get("InferiusQoL.Status.ScrollableInventory"),-18} {(Plugin.HasAdvancedInventory ? "external AdvancedInventory" : OnOff(true))} (max visible rows {c.ScrollableInventoryMaxVisibleRows})");
+        sb.AppendLine($"  {L.Get("InferiusQoL.Status.InventoryStacking"),-18} {(Plugin.HasInventoryStacking ? "external MR_InventoryStacking" : OnOff(c.InventoryStackingEnabled))} (max stack {c.InventoryStackingMaxStackSize})");
         sb.AppendLine($"  {L.Get("InferiusQoL.Status.LockerResize"),-18} {OnOff(c.LockerResizeEnabled)} ({c.LockerWidth}x{c.LockerHeight}, wall {c.WallLockerWidth}x{c.WallLockerHeight})");
         sb.AppendLine($"  {L.Get("InferiusQoL.Status.Backpacks"),-18} {OnOff(c.BackpacksEnabled)} (S/M/L rows = {c.BackpackSmallRows}/{c.BackpackMediumRows}/{c.BackpackLargeRows})");
         sb.AppendLine($"  {L.Get("InferiusQoL.Status.SeamothTurbo"),-18} {OnOff(c.SeamothTurboEnabled)} (MK1 {c.SeamothTurboMK1SpeedMultiplier:0.0}x/{c.SeamothTurboMK1EnergyMultiplier:0.0}x, MK2 {c.SeamothTurboMK2SpeedMultiplier:0.0}x/{c.SeamothTurboMK2EnergyMultiplier:0.0}x, MK3 {c.SeamothTurboMK3SpeedMultiplier:0.0}x/{c.SeamothTurboMK3EnergyMultiplier:0.0}x)");
