@@ -22,8 +22,6 @@ internal static class Inventory_DestroyItem_ReactorRodSingleUnit_Patch
 	[HarmonyPrefix]
 	private static bool Prefix(TechType destroyTechType, bool allowGenerics, Inventory __instance, ref bool __result)
 	{
-		//IL_0000: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0003: Invalid comparison between Unknown and I4
 		if ((int)destroyTechType != 64)
 		{
 			return true;

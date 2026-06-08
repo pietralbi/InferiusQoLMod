@@ -39,10 +39,6 @@ internal static class CraftingCounts
 
 	public static int PickupUnitsForCraft(Inventory inventory, TechType tech)
 	{
-		//IL_0009: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0021: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0057: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0046: Unknown result type (might be due to invalid IL or missing references)
 		if ((Object)(object)inventory == (Object)null)
 		{
 			return CraftFromContainersCompat.NearbyUnits(tech);
@@ -67,7 +63,6 @@ internal static class CraftingCounts
 
 	public static int UnitsInContainer(Inventory inventory, TechType tech)
 	{
-		//IL_0013: Unknown result type (might be due to invalid IL or missing references)
 		ItemsContainer val = ((inventory != null) ? inventory.container : null);
 		if (val == null)
 		{
@@ -78,8 +73,6 @@ internal static class CraftingCounts
 
 	public static int UnitsIn(ItemsContainer container, TechType tech)
 	{
-		//IL_000d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0025: Unknown result type (might be due to invalid IL or missing references)
 		if (container == null)
 		{
 			return 0;

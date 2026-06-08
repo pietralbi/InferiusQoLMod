@@ -12,8 +12,6 @@ internal static class ItemsContainer_UnsafeAdd_Patch
 	[HarmonyPriority(0)]
 	private static void Postfix(InventoryItem item, ItemsContainer __instance)
 	{
-		//IL_001a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0021: Invalid comparison between Unknown and I4
 		if ((Object)(object)((item != null) ? item.item : null) != (Object)null && ((int)item.item.GetTechType() == 64 || ReactorFeedHelper.IsLikelyPlantableItem(item.item)))
 		{
 			ReactorFeedHelper.NormalizeInsertedStackToOne(item, __instance);

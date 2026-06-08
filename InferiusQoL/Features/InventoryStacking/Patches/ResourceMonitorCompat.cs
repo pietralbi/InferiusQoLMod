@@ -133,15 +133,13 @@ internal static class ResourceMonitorCompat
 
 	internal static void TryApplyLatePatches(Harmony harmony, ManualLogSource log)
 	{
-		//IL_0083: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0091: Expected O, but got Unknown
 		if (!IsAvailable || AttemptToTakeItemMethod == null)
 		{
 			return;
 		}
 		MethodInfo attemptToTakeItemMethod = AttemptToTakeItemMethod;
 		HarmonyLib.Patches patchInfo = Harmony.GetPatchInfo((MethodBase)attemptToTakeItemMethod);
-		if (patchInfo != null && patchInfo.Prefixes?.Any((Patch p) => p.owner == global::InferiusQoL.Plugin.HarmonyId) == true)
+		if (patchInfo != null && patchInfo.Prefixes?.Any((Patch p) => p.owner == Plugin.HarmonyId) == true)
 		{
 			return;
 		}
@@ -190,7 +188,6 @@ internal static class ResourceMonitorCompat
 
 	internal static void EndBulkPull(object logic, TechType item, bool reconcile)
 	{
-		//IL_001f: Unknown result type (might be due to invalid IL or missing references)
 		if (BulkPullDepth > 0)
 		{
 			BulkPullDepth--;
@@ -203,12 +200,6 @@ internal static class ResourceMonitorCompat
 
 	internal static void ReconcileAndRefresh(object logic, TechType item)
 	{
-		//IL_0046: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0055: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00ae: Unknown result type (might be due to invalid IL or missing references)
-		//IL_012d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0105: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0111: Unknown result type (might be due to invalid IL or missing references)
 		if (logic == null || TrackedResourcesProperty == null || AmountProperty == null || ContainersProperty == null)
 		{
 			return;
@@ -283,7 +274,6 @@ internal static class ResourceMonitorCompat
 
 	private static void RefreshDisplay(object logic, TechType item, int amount)
 	{
-		//IL_004d: Unknown result type (might be due to invalid IL or missing references)
 		object obj = ResolveDisplay(logic);
 		obj?.GetType().GetMethod("ItemModified", BindingFlags.Instance | BindingFlags.Public, null, new Type[2]
 		{

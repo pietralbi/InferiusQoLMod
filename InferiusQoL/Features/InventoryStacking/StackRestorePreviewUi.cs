@@ -74,9 +74,6 @@ internal sealed class StackRestorePreviewUi : MonoBehaviour
 
 	private static void EnsureInstance()
 	{
-		//IL_0013: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0018: Unknown result type (might be due to invalid IL or missing references)
-		//IL_001e: Expected O, but got Unknown
 		if (!((Object)(object)s_instance != (Object)null))
 		{
 			GameObject val = new GameObject("StackRestorePreview");
@@ -112,14 +109,6 @@ internal sealed class StackRestorePreviewUi : MonoBehaviour
 
 	private void Update()
 	{
-		//IL_0073: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0078: Unknown result type (might be due to invalid IL or missing references)
-		//IL_007d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0084: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0099: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00b6: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00d3: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00f6: Unknown result type (might be due to invalid IL or missing references)
 		if ((Object)(object)_root == (Object)null || !_root.activeSelf)
 		{
 			return;
@@ -183,7 +172,6 @@ internal sealed class StackRestorePreviewUi : MonoBehaviour
 
 	private static bool ContainsScreenPoint(RectTransform rt, Vector2 screenPoint)
 	{
-		//IL_0017: Unknown result type (might be due to invalid IL or missing references)
 		if ((Object)(object)rt != (Object)null && ((Component)rt).gameObject.activeInHierarchy)
 		{
 			return RectTransformUtility.RectangleContainsScreenPoint(rt, screenPoint, (Camera)null);
@@ -222,37 +210,6 @@ internal sealed class StackRestorePreviewUi : MonoBehaviour
 
 	private void BuildUi(StackRestorePlayerPage current, StackRestorePlayerPage backup, StackBackupRing.BackupInfo backupInfo)
 	{
-		//IL_000b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0015: Expected O, but got Unknown
-		//IL_0070: Unknown result type (might be due to invalid IL or missing references)
-		//IL_008a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_008f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00a8: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0111: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0120: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0139: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0151: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0161: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01cc: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01db: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01ea: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01f9: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0217: Unknown result type (might be due to invalid IL or missing references)
-		//IL_022b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_024c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0260: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0284: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0293: Unknown result type (might be due to invalid IL or missing references)
-		//IL_029f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_02ac: Unknown result type (might be due to invalid IL or missing references)
-		//IL_02c6: Unknown result type (might be due to invalid IL or missing references)
-		//IL_02d5: Unknown result type (might be due to invalid IL or missing references)
-		//IL_02e4: Unknown result type (might be due to invalid IL or missing references)
-		//IL_02f3: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0326: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0335: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0344: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0353: Unknown result type (might be due to invalid IL or missing references)
 		EnsureFont();
 		_root = new GameObject("Root");
 		_root.transform.SetParent(((Component)this).transform, false);
@@ -293,28 +250,6 @@ internal sealed class StackRestorePreviewUi : MonoBehaviour
 
 	private void AddBackupNavBar(RectTransform parent, StackBackupRing.BackupInfo backupInfo)
 	{
-		//IL_0027: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0036: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0045: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0054: Unknown result type (might be due to invalid IL or missing references)
-		//IL_009a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00a9: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00b8: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00de: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00ed: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00fc: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01bd: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01d2: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01e7: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01fc: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0210: Unknown result type (might be due to invalid IL or missing references)
-		//IL_022a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0265: Unknown result type (might be due to invalid IL or missing references)
-		//IL_027a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_028f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_02a4: Unknown result type (might be due to invalid IL or missing references)
-		//IL_02b8: Unknown result type (might be due to invalid IL or missing references)
-		//IL_02d2: Unknown result type (might be due to invalid IL or missing references)
 		int num = backupInfo.InventoryItemCount;
 		if (num <= 0)
 		{
@@ -366,11 +301,6 @@ internal sealed class StackRestorePreviewUi : MonoBehaviour
 
 	private static void AddTitle(RectTransform parent, string text)
 	{
-		//IL_0022: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0037: Unknown result type (might be due to invalid IL or missing references)
-		//IL_004c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0061: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0075: Unknown result type (might be due to invalid IL or missing references)
 		RectTransform rectTransform = ((TMP_Text)CreateTmp((Transform)(object)parent, "Title", text, 26f, (FontStyles)1)).rectTransform;
 		rectTransform.anchorMin = new Vector2(0.5f, 1f);
 		rectTransform.anchorMax = new Vector2(0.5f, 1f);
@@ -381,12 +311,6 @@ internal sealed class StackRestorePreviewUi : MonoBehaviour
 
 	private static void AddSubtitle(RectTransform parent, string text)
 	{
-		//IL_0023: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0038: Unknown result type (might be due to invalid IL or missing references)
-		//IL_004d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0062: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0076: Unknown result type (might be due to invalid IL or missing references)
-		//IL_008f: Unknown result type (might be due to invalid IL or missing references)
 		TextMeshProUGUI obj = CreateTmp((Transform)(object)parent, "Subtitle", text, 15f, (FontStyles)0);
 		RectTransform rectTransform = ((TMP_Text)obj).rectTransform;
 		rectTransform.anchorMin = new Vector2(0.5f, 1f);
@@ -399,11 +323,6 @@ internal sealed class StackRestorePreviewUi : MonoBehaviour
 
 	private static void AddColumnHeader(RectTransform parent, string text)
 	{
-		//IL_0022: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0037: Unknown result type (might be due to invalid IL or missing references)
-		//IL_004c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0061: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0075: Unknown result type (might be due to invalid IL or missing references)
 		RectTransform rectTransform = ((TMP_Text)CreateTmp((Transform)(object)parent, "Header", text, 18f, (FontStyles)1)).rectTransform;
 		rectTransform.anchorMin = new Vector2(0.5f, 1f);
 		rectTransform.anchorMax = new Vector2(0.5f, 1f);
@@ -414,12 +333,6 @@ internal sealed class StackRestorePreviewUi : MonoBehaviour
 
 	private static void AddColumnSubheader(RectTransform parent, string text)
 	{
-		//IL_0023: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0038: Unknown result type (might be due to invalid IL or missing references)
-		//IL_004d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0062: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0076: Unknown result type (might be due to invalid IL or missing references)
-		//IL_008f: Unknown result type (might be due to invalid IL or missing references)
 		TextMeshProUGUI obj = CreateTmp((Transform)(object)parent, "Subheader", text, 14f, (FontStyles)0);
 		RectTransform rectTransform = ((TMP_Text)obj).rectTransform;
 		rectTransform.anchorMin = new Vector2(0.5f, 1f);
@@ -432,23 +345,6 @@ internal sealed class StackRestorePreviewUi : MonoBehaviour
 
 	private static RectTransform CreateNavButton(RectTransform parent, string label, Vector2 anchorMin, Vector2 anchorMax, Vector2 anchoredPosition, bool enabled)
 	{
-		//IL_0010: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0015: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0022: Unknown result type (might be due to invalid IL or missing references)
-		//IL_002a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0031: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0042: Unknown result type (might be due to invalid IL or missing references)
-		//IL_004d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_005f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0069: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00a3: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0088: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00d0: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00db: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00e6: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00f0: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0114: Unknown result type (might be due to invalid IL or missing references)
-		//IL_010d: Unknown result type (might be due to invalid IL or missing references)
 		GameObject val = new GameObject(label.Replace(" ", ""));
 		val.transform.SetParent((Transform)(object)parent, false);
 		RectTransform val2 = val.AddComponent<RectTransform>();
@@ -472,13 +368,6 @@ internal sealed class StackRestorePreviewUi : MonoBehaviour
 
 	private static void BuildGrid(RectTransform column, StackRestorePlayerPage page, StackRestorePlayerPage other, float gridW, float gridH, float topOffset, bool isBackupColumn)
 	{
-		//IL_0005: Unknown result type (might be due to invalid IL or missing references)
-		//IL_000a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0028: Unknown result type (might be due to invalid IL or missing references)
-		//IL_003d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0052: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0065: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0073: Unknown result type (might be due to invalid IL or missing references)
 		GameObject val = new GameObject("Grid");
 		val.transform.SetParent((Transform)(object)column, false);
 		RectTransform val2 = val.AddComponent<RectTransform>();
@@ -501,38 +390,6 @@ internal sealed class StackRestorePreviewUi : MonoBehaviour
 
 	private static void CreateCell(RectTransform grid, int x, int y, StackRestoreSlot slot, bool differs, bool isBackupColumn)
 	{
-		//IL_0016: Unknown result type (might be due to invalid IL or missing references)
-		//IL_001c: Expected O, but got Unknown
-		//IL_004e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0063: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0078: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0086: Unknown result type (might be due to invalid IL or missing references)
-		//IL_009a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00bc: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01b2: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01e7: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01fc: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0211: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0226: Unknown result type (might be due to invalid IL or missing references)
-		//IL_023a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00f6: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00db: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00fb: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0103: Unknown result type (might be due to invalid IL or missing references)
-		//IL_029e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_02b3: Unknown result type (might be due to invalid IL or missing references)
-		//IL_02c8: Unknown result type (might be due to invalid IL or missing references)
-		//IL_02dd: Unknown result type (might be due to invalid IL or missing references)
-		//IL_02f1: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0328: Unknown result type (might be due to invalid IL or missing references)
-		//IL_011b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0136: Unknown result type (might be due to invalid IL or missing references)
-		//IL_013b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_014d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0154: Unknown result type (might be due to invalid IL or missing references)
-		//IL_015f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0174: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0188: Unknown result type (might be due to invalid IL or missing references)
 		GameObject val = new GameObject($"Cell_{x}_{y}");
 		val.transform.SetParent((Transform)(object)grid, false);
 		RectTransform obj = val.AddComponent<RectTransform>();
@@ -599,9 +456,8 @@ internal sealed class StackRestorePreviewUi : MonoBehaviour
 		}
 	}
 
-	private unsafe static string GetItemLabel(TechType tech)
+	private static string GetItemLabel(TechType tech)
 	{
-		//IL_0012: Unknown result type (might be due to invalid IL or missing references)
 		try
 		{
 			if ((Object)(object)Language.main != (Object)null)
@@ -616,7 +472,7 @@ internal sealed class StackRestorePreviewUi : MonoBehaviour
 		catch
 		{
 		}
-		return ((object)(*(TechType*)(&tech))/*cast due to constrained. prefix*/).ToString();
+		return tech.ToString();
 	}
 
 	private void ExecuteRestore()
@@ -632,22 +488,6 @@ internal sealed class StackRestorePreviewUi : MonoBehaviour
 
 	private static RectTransform CreateActionButton(RectTransform parent, string label, Vector2 anchorX, Color color)
 	{
-		//IL_0001: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0006: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0013: Unknown result type (might be due to invalid IL or missing references)
-		//IL_001b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0026: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0031: Unknown result type (might be due to invalid IL or missing references)
-		//IL_003c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0051: Unknown result type (might be due to invalid IL or missing references)
-		//IL_005c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0071: Unknown result type (might be due to invalid IL or missing references)
-		//IL_007b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0082: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00ab: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00b6: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00c1: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00cb: Unknown result type (might be due to invalid IL or missing references)
 		GameObject val = new GameObject(label);
 		val.transform.SetParent((Transform)(object)parent, false);
 		RectTransform val2 = val.AddComponent<RectTransform>();
@@ -671,13 +511,6 @@ internal sealed class StackRestorePreviewUi : MonoBehaviour
 
 	private static RectTransform CreatePanel(Transform parent, string name, Vector2 anchorMin, Vector2 anchorMax, Color color)
 	{
-		//IL_0001: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0007: Expected O, but got Unknown
-		//IL_001b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0022: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0029: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0034: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0045: Unknown result type (might be due to invalid IL or missing references)
 		GameObject val = new GameObject(name);
 		val.transform.SetParent(parent, false);
 		RectTransform obj = val.AddComponent<RectTransform>();
@@ -693,13 +526,6 @@ internal sealed class StackRestorePreviewUi : MonoBehaviour
 
 	private static RectTransform CreateStretchRegion(RectTransform parent, string name, Vector2 anchorMin, Vector2 anchorMax, Vector2 offsetMin, Vector2 offsetMax)
 	{
-		//IL_0001: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0007: Expected O, but got Unknown
-		//IL_001b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0022: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0029: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0031: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0053: Unknown result type (might be due to invalid IL or missing references)
 		GameObject val = new GameObject(name);
 		val.transform.SetParent((Transform)(object)parent, false);
 		RectTransform obj = val.AddComponent<RectTransform>();
@@ -715,10 +541,6 @@ internal sealed class StackRestorePreviewUi : MonoBehaviour
 
 	private static TextMeshProUGUI CreateTmp(Transform parent, string name, string text, float fontSize, FontStyles style)
 	{
-		//IL_0001: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0006: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0040: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0048: Unknown result type (might be due to invalid IL or missing references)
 		GameObject val = new GameObject(name);
 		val.transform.SetParent(parent, false);
 		TextMeshProUGUI val2 = val.AddComponent<TextMeshProUGUI>();

@@ -46,28 +46,18 @@ internal static class Flare_Throw_StackedSplit_Patch
 		}
 		Pickupable srcP = ((PlayerTool)source).pickupable;
 		TechType tech = srcP.GetTechType();
-		TaskResult<GameObject> result = new TaskResult<GameObject>();
+		var spawned = new StackedPrefab<Flare>();
 		MRStack.SuppressMerge = true;
-		yield return CraftData.InstantiateFromPrefabAsync(tech, (IOut<GameObject>)(object)result, false);
-		GameObject val = result.Get();
-		if ((Object)(object)val == (Object)null)
+		yield return StackedPrefabFactory.Instantiate(tech, 1, spawned);
+		Flare component = spawned.Component;
+		Pickupable spawnedPickup = spawned.Pickupable;
+		if ((Object)(object)component == (Object)null || (Object)(object)spawnedPickup == (Object)null)
 		{
 			MRStack.SuppressMerge = false;
 			ResetHeldFlareUseState(source);
 			yield break;
 		}
-		Flare component = val.GetComponent<Flare>();
-		Pickupable val2 = (((Object)(object)component != (Object)null) ? ((PlayerTool)component).pickupable : null);
-		if ((Object)(object)component == (Object)null || (Object)(object)val2 == (Object)null)
-		{
-			Object.Destroy((Object)(object)val);
-			MRStack.SuppressMerge = false;
-			ResetHeldFlareUseState(source);
-			yield break;
-		}
-		CrafterLogic.NotifyCraftEnd(val, tech);
-		MRStack.SetAmount(val2, 1);
-		ThrowSingletonFlare(component, val2);
+		ThrowSingletonFlare(component, spawnedPickup);
 		MRStack.Add(srcP, -1);
 		MRStack.SuppressMerge = false;
 		StackIconRefresher.Trigger();
@@ -76,28 +66,17 @@ internal static class Flare_Throw_StackedSplit_Patch
 
 	private static void ThrowSingletonFlare(Flare flare, Pickupable pickupable)
 	{
-		//IL_0026: Unknown result type (might be due to invalid IL or missing references)
-		//IL_002b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_002d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0032: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0042: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0047: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0088: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0089: Unknown result type (might be due to invalid IL or missing references)
-		//IL_008f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00e7: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00ed: Unknown result type (might be due to invalid IL or missing references)
-		Transform val = (((Object)(object)MainCameraControl.main != (Object)null) ? ((Component)MainCameraControl.main).transform : null);
-		if (!((Object)(object)val == (Object)null))
+		Transform cameraTransform = (((Object)(object)MainCameraControl.main != (Object)null) ? ((Component)MainCameraControl.main).transform : null);
+		if (!((Object)(object)cameraTransform == (Object)null))
 		{
-			Vector3 forward = val.forward;
-			Vector3 val2 = Inventory.RayCast(val.position, forward, 10f, 0.75f, 1.5f);
+			Vector3 forward = cameraTransform.forward;
+			Vector3 dropPosition = Inventory.RayCast(cameraTransform.position, forward, 10f, 0.75f, 1.5f);
 			if (IsThrowingField != null)
 			{
 				IsThrowingField.SetValue(flare, true);
 			}
 			SetFlareActiveStateMethod?.Invoke(flare, new object[1] { true });
-			pickupable.Drop(val2, forward * 8f, false);
+			pickupable.Drop(dropPosition, forward * 8f, false);
 			WorldForces component = ((Component)flare).GetComponent<WorldForces>();
 			if ((Object)(object)component != (Object)null)
 			{
@@ -130,10 +109,10 @@ internal static class Flare_Throw_StackedSplit_Patch
 			}
 			SetFlareActiveStateMethod?.Invoke(source, new object[1] { false });
 			object obj = SequenceField?.GetValue(source);
-			Sequence val = (Sequence)((obj is Sequence) ? obj : null);
-			if (val != null)
+			Sequence sequence = (Sequence)((obj is Sequence) ? obj : null);
+			if (sequence != null)
 			{
-				val.Reset();
+				sequence.Reset();
 			}
 		}
 	}

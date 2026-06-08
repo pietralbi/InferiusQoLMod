@@ -17,8 +17,6 @@ internal static class StackSplitPrompt
 
 	public static void TryOpen(InventoryItem source)
 	{
-		//IL_00d6: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00e0: Expected O, but got Unknown
 		if (s_open)
 		{
 			return;

@@ -566,10 +566,6 @@ internal static class StackUidPersistence
 		return owners;
 		void Consider(Object o)
 		{
-			//IL_0030: Unknown result type (might be due to invalid IL or missing references)
-			//IL_0035: Unknown result type (might be due to invalid IL or missing references)
-			//IL_0040: Unknown result type (might be due to invalid IL or missing references)
-			//IL_0045: Unknown result type (might be due to invalid IL or missing references)
 			if (!(o == (Object)null) && seen.Add(o.GetInstanceID()))
 			{
 				Component val = (Component)(object)((o is Component) ? o : null);
@@ -656,8 +652,6 @@ internal static class StackUidPersistence
 
 	private static void CapturePlayerTechStacks(SaveData data, ItemsContainer pocket)
 	{
-		//IL_0040: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0047: Expected I4, but got Unknown
 		if (data == null || pocket == null)
 		{
 			return;
@@ -692,10 +686,6 @@ internal static class StackUidPersistence
 
 	private static string BuildSlotKey(ItemsContainer container, InventoryItem ii)
 	{
-		//IL_0026: Unknown result type (might be due to invalid IL or missing references)
-		//IL_002b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0040: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0042: Expected I4, but got Unknown
 		if (container == null || (Object)(object)((ii != null) ? ii.item : null) == (Object)null)
 		{
 			return null;
@@ -870,8 +860,6 @@ internal static class StackUidPersistence
 
 	private static void PruneStalePlayerSlotMappings()
 	{
-		//IL_0092: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0098: Invalid comparison between Unknown and I4
 		if (s_loadedSlot.Count == 0)
 		{
 			return;
@@ -993,8 +981,6 @@ internal static class StackUidPersistence
 
 	private static void ApplyRestorePlayerTechStacksFallback(ItemsContainer pocket)
 	{
-		//IL_0093: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0099: Invalid comparison between Unknown and I4
 		if (pocket == null || s_restorePlayerTechStacks.Count == 0)
 		{
 			return;
@@ -1054,8 +1040,6 @@ internal static class StackUidPersistence
 
 	private static void ApplyPlayerPocketTechFallback(ItemsContainer pocket)
 	{
-		//IL_0155: Unknown result type (might be due to invalid IL or missing references)
-		//IL_015c: Expected I4, but got Unknown
 		if (pocket == null || s_loadedSlot.Count == 0)
 		{
 			return;

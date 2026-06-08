@@ -41,11 +41,6 @@ internal static class PartialTransferOne
 
 	public static bool TryConsumeOneFromStack(InventoryItem source, ItemAction action)
 	{
-		//IL_0000: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0002: Invalid comparison between Unknown and I4
-		//IL_0004: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0006: Invalid comparison between Unknown and I4
-		//IL_0054: Unknown result type (might be due to invalid IL or missing references)
 		if ((int)action != 2 && (int)action != 1)
 		{
 			return false;
@@ -159,33 +154,24 @@ internal static class PartialTransferOne
 		ItemsContainer mainContainer = Inventory.main.container;
 		bool destIsMain = (object)destContainer == mainContainer;
 		TechType tech = srcP.GetTechType();
-		TaskResult<GameObject> result = new TaskResult<GameObject>();
+		var spawned = new StackedPrefab<Pickupable>();
 		MRStack.SuppressMerge = true;
-		yield return CraftData.InstantiateFromPrefabAsync(tech, (IOut<GameObject>)(object)result, false);
-		GameObject val = result.Get();
-		if ((Object)(object)val == (Object)null)
-		{
-			MRStack.SuppressMerge = false;
-			yield break;
-		}
-		Pickupable component = val.GetComponent<Pickupable>();
+		yield return StackedPrefabFactory.InstantiatePickup(tech, moveCount, spawned);
+		Pickupable component = spawned.Pickupable;
 		if ((Object)(object)component == (Object)null)
 		{
-			Object.Destroy((Object)(object)val);
 			MRStack.SuppressMerge = false;
 			yield break;
 		}
-		CrafterLogic.NotifyCraftEnd(val, tech);
-		MRStack.Ensure(component, moveCount);
 		if (!Inventory.main.Pickup(component, false))
 		{
-			Object.Destroy((Object)(object)val);
+			Object.Destroy((Object)(object)spawned.GameObject);
 			ErrorMessage.AddError(Language.main.Get("InventoryFull"));
 			MRStack.SuppressMerge = false;
 			yield break;
 		}
-		InventoryItem val2 = FindItemForPickup(mainContainer, component);
-		if (val2 == null)
+		InventoryItem movedItem = FindItemForPickup(mainContainer, component);
+		if (movedItem == null)
 		{
 			MRStack.SuppressMerge = false;
 			yield break;
@@ -200,12 +186,12 @@ internal static class PartialTransferOne
 		MRStack.SuppressMerge = false;
 		if (destIsMain)
 		{
-			StackConsolidation.AfterUnsafeAdd(val2, mainContainer);
+			StackConsolidation.AfterUnsafeAdd(movedItem, mainContainer);
 		}
 		else if (ReactorFeedHelper.IsReactorContainer(destContainer))
 		{
-			Inventory.main.ExecuteItemAction(val2, 0);
-			if (val2.container != null && (object)val2.container == mainContainer)
+			Inventory.main.ExecuteItemAction(movedItem, 0);
+			if (movedItem.container != null && (object)movedItem.container == mainContainer)
 			{
 				MRStack.SuppressMerge = true;
 				MRStack.Add(srcP, moveCount);
@@ -216,7 +202,7 @@ internal static class PartialTransferOne
 				yield break;
 			}
 		}
-		else if (!Inventory.AddOrSwap(val2, destContainer))
+		else if (!Inventory.AddOrSwap(movedItem, destContainer))
 		{
 			MRStack.SuppressMerge = true;
 			MRStack.Add(srcP, moveCount);
@@ -270,8 +256,8 @@ internal static class PartialTransferOne
 		{
 			return true;
 		}
-		ItemsContainer val = (ItemsContainer)(object)((container is ItemsContainer) ? container : null);
-		if (val != null && IsNuclearRodOnlyContainer(val))
+		ItemsContainer itemsContainer = (ItemsContainer)(object)((container is ItemsContainer) ? container : null);
+		if (itemsContainer != null && IsNuclearRodOnlyContainer(itemsContainer))
 		{
 			return true;
 		}
@@ -280,28 +266,28 @@ internal static class PartialTransferOne
 			return true;
 		}
 		IItemsContainer obj = ((container is ItemsContainer) ? container : null);
-		Transform val2 = ((obj != null) ? ((ItemsContainer)obj).tr : null);
+		Transform transform = ((obj != null) ? ((ItemsContainer)obj).tr : null);
 		int num = 0;
-		while ((Object)(object)val2 != (Object)null && num < 12)
+		while ((Object)(object)transform != (Object)null && num < 12)
 		{
-			if (ContainsReactorToken(((Object)val2).name))
+			if (ContainsReactorToken(((Object)transform).name))
 			{
 				return true;
 			}
 			for (int i = 0; i < ReactorTypes.Length; i++)
 			{
 				Type type = ReactorTypes[i];
-				if (type != null && (Object)(object)((Component)val2).GetComponent(type) != (Object)null)
+				if (type != null && (Object)(object)((Component)transform).GetComponent(type) != (Object)null)
 				{
 					return true;
 				}
 			}
-			Component[] components = ((Component)val2).GetComponents<Component>();
-			foreach (Component val3 in components)
+			Component[] components = ((Component)transform).GetComponents<Component>();
+			foreach (Component component in components)
 			{
-				if (!((Object)(object)val3 == (Object)null))
+				if (!((Object)(object)component == (Object)null))
 				{
-					Type type2 = ((object)val3).GetType();
+					Type type2 = ((object)component).GetType();
 					string fullName = type2.FullName;
 					string name = type2.Name;
 					if (ContainsReactorToken(fullName) || ContainsReactorToken(name))
@@ -310,7 +296,7 @@ internal static class PartialTransferOne
 					}
 				}
 			}
-			val2 = val2.parent;
+			transform = transform.parent;
 			num++;
 		}
 		return false;
@@ -348,39 +334,30 @@ internal static class PartialTransferOne
 		Pickupable srcP = source.item;
 		ItemsContainer mainContainer = Inventory.main.container;
 		TechType tech = srcP.GetTechType();
-		TaskResult<GameObject> result = new TaskResult<GameObject>();
+		var spawned = new StackedPrefab<Pickupable>();
 		MRStack.SuppressMerge = true;
-		yield return CraftData.InstantiateFromPrefabAsync(tech, (IOut<GameObject>)(object)result, false);
-		GameObject val = result.Get();
-		if ((Object)(object)val == (Object)null)
-		{
-			MRStack.SuppressMerge = false;
-			yield break;
-		}
-		Pickupable component = val.GetComponent<Pickupable>();
+		yield return StackedPrefabFactory.InstantiatePickup(tech, 1, spawned);
+		Pickupable component = spawned.Pickupable;
 		if ((Object)(object)component == (Object)null)
 		{
-			Object.Destroy((Object)(object)val);
 			MRStack.SuppressMerge = false;
 			yield break;
 		}
-		CrafterLogic.NotifyCraftEnd(val, tech);
-		MRStack.Ensure(component, 1);
 		if (!Inventory.main.Pickup(component, false))
 		{
-			Object.Destroy((Object)(object)val);
+			Object.Destroy((Object)(object)spawned.GameObject);
 			MRStack.SuppressMerge = false;
 			yield break;
 		}
-		InventoryItem val2 = FindItemForPickup(mainContainer, component);
-		if (val2 == null)
+		InventoryItem droppedItem = FindItemForPickup(mainContainer, component);
+		if (droppedItem == null)
 		{
 			MRStack.SuppressMerge = false;
 			yield break;
 		}
 		MRStack.Add(srcP, -1);
 		MRStack.SuppressMerge = false;
-		Inventory.main.ExecuteItemAction((ItemAction)128, val2);
+		Inventory.main.ExecuteItemAction((ItemAction)128, droppedItem);
 		StackIconRefresher.Trigger();
 	}
 
@@ -388,55 +365,41 @@ internal static class PartialTransferOne
 	{
 		if (!((Object)(object)stackPickup == (Object)null))
 		{
-			MRStackData[] components = ((Component)stackPickup).gameObject.GetComponents<MRStackData>();
-			int num = 1;
-			num = ((components == null || components.Length == 0 || !((Object)(object)components[0] != (Object)null) || components[0].amount < 1) ? MRStack.CountOf(stackPickup) : components[0].amount);
-			MRStack.Ensure(stackPickup, Mathf.Max(1, num - 1));
+			MRStack.Add(stackPickup, -1);
 		}
 	}
 
 	private static IEnumerator RunConsumeOneFromStack(InventoryItem source, ItemAction action)
 	{
-		//IL_000e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_000f: Unknown result type (might be due to invalid IL or missing references)
 		Pickupable srcP = source.item;
 		ItemsContainer mainContainer = Inventory.main.container;
 		TechType tech = srcP.GetTechType();
-		TaskResult<GameObject> result = new TaskResult<GameObject>();
+		var spawned = new StackedPrefab<Pickupable>();
 		MRStack.SuppressMerge = true;
-		yield return CraftData.InstantiateFromPrefabAsync(tech, (IOut<GameObject>)(object)result, false);
-		GameObject val = result.Get();
-		if ((Object)(object)val == (Object)null)
-		{
-			MRStack.SuppressMerge = false;
-			yield break;
-		}
-		Pickupable component = val.GetComponent<Pickupable>();
+		yield return StackedPrefabFactory.InstantiatePickup(tech, 1, spawned);
+		Pickupable component = spawned.Pickupable;
 		if ((Object)(object)component == (Object)null)
 		{
-			Object.Destroy((Object)(object)val);
 			MRStack.SuppressMerge = false;
 			yield break;
 		}
-		CrafterLogic.NotifyCraftEnd(val, tech);
-		MRStack.Ensure(component, 1);
 		float splitMergeProtectionSeconds = StackConfig.SplitMergeProtectionSeconds;
 		StackConsolidation.ProtectFromMerge(srcP, splitMergeProtectionSeconds);
 		StackConsolidation.ProtectFromMerge(component, splitMergeProtectionSeconds);
 		if (!Inventory.main.Pickup(component, false))
 		{
-			Object.Destroy((Object)(object)val);
+			Object.Destroy((Object)(object)spawned.GameObject);
 			MRStack.SuppressMerge = false;
 			yield break;
 		}
-		InventoryItem val2 = FindItemForPickup(mainContainer, component);
-		if (val2 == null)
+		InventoryItem singletonItem = FindItemForPickup(mainContainer, component);
+		if (singletonItem == null)
 		{
 			MRStack.SuppressMerge = false;
 			yield break;
 		}
-		Pickupable singletonForEatOrUse = val2.item;
-		Inventory.main.ExecuteItemAction(action, val2);
+		Pickupable singletonForEatOrUse = singletonItem.item;
+		Inventory.main.ExecuteItemAction(action, singletonItem);
 		yield return null;
 		if ((Object)(object)singletonForEatOrUse != (Object)null)
 		{
@@ -461,28 +424,19 @@ internal static class PartialTransferOne
 			yield break;
 		}
 		TechType tech = srcP.GetTechType();
-		TaskResult<GameObject> result = new TaskResult<GameObject>();
+		var spawned = new StackedPrefab<Pickupable>();
 		MRStack.SuppressMerge = true;
 		int ticket = ++s_mergeSuppressTicket;
-		yield return CraftData.InstantiateFromPrefabAsync(tech, (IOut<GameObject>)(object)result, false);
-		GameObject val = result.Get();
-		if ((Object)(object)val == (Object)null)
-		{
-			ReleaseMergeSuppression(ticket);
-			yield break;
-		}
-		Pickupable component = val.GetComponent<Pickupable>();
+		yield return StackedPrefabFactory.InstantiatePickup(tech, moveCount, spawned);
+		Pickupable component = spawned.Pickupable;
 		if ((Object)(object)component == (Object)null)
 		{
-			Object.Destroy((Object)(object)val);
 			ReleaseMergeSuppression(ticket);
 			yield break;
 		}
-		CrafterLogic.NotifyCraftEnd(val, tech);
-		MRStack.Ensure(component, moveCount);
 		if (!Inventory.main.Pickup(component, false))
 		{
-			Object.Destroy((Object)(object)val);
+			Object.Destroy((Object)(object)spawned.GameObject);
 			ReleaseMergeSuppression(ticket);
 			ErrorMessage.AddError(Language.main.Get("InventoryFull"));
 			yield break;

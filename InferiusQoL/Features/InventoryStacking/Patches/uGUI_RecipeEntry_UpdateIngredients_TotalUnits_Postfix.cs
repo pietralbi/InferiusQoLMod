@@ -14,14 +14,6 @@ internal static class uGUI_RecipeEntry_UpdateIngredients_TotalUnits_Postfix
 	[HarmonyPostfix]
 	private static void Postfix(uGUI_RecipeEntry __instance, ItemsContainer container, bool ping)
 	{
-		//IL_000e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_011f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_005e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00f2: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00ca: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00bd: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00cf: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00e3: Unknown result type (might be due to invalid IL or missing references)
 		if ((Object)(object)__instance == (Object)null || container == null)
 		{
 			return;

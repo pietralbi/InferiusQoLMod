@@ -88,9 +88,6 @@ internal static class WaterParkStorageScope
 
 	public static void EnforceSingleUnitInHabitat(InventoryItem item, ItemsContainer container)
 	{
-		//IL_0034: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0039: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0066: Unknown result type (might be due to invalid IL or missing references)
 		if ((Object)(object)((item != null) ? item.item : null) == (Object)null || !IsCreatureHabitatContainer(container))
 		{
 			return;
@@ -111,31 +108,21 @@ internal static class WaterParkStorageScope
 
 	private static IEnumerator ReturnExtrasToPlayer(TechType tech, int extraCount)
 	{
-		//IL_0007: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0008: Unknown result type (might be due to invalid IL or missing references)
 		if (extraCount <= 0 || (Object)(object)Inventory.main == (Object)null)
 		{
 			yield break;
 		}
-		TaskResult<GameObject> result = new TaskResult<GameObject>();
-		yield return CraftData.InstantiateFromPrefabAsync(tech, (IOut<GameObject>)(object)result, false);
-		GameObject val = result.Get();
-		if ((Object)(object)val == (Object)null)
-		{
-			yield break;
-		}
-		Pickupable component = val.GetComponent<Pickupable>();
+		var spawned = new StackedPrefab<Pickupable>();
+		yield return StackedPrefabFactory.InstantiatePickup(tech, extraCount, spawned);
+		Pickupable component = spawned.Pickupable;
 		if ((Object)(object)component == (Object)null)
 		{
-			Object.Destroy((Object)(object)val);
 			yield break;
 		}
-		CrafterLogic.NotifyCraftEnd(val, tech);
-		MRStack.Ensure(component, extraCount);
 		if (!Inventory.main.Pickup(component, false))
 		{
-			Vector3 val2 = ((Component)Player.main).transform.position + ((Component)Player.main).transform.forward * 1.2f;
-			component.Drop(val2, default(Vector3), true);
+			Vector3 dropPosition = ((Component)Player.main).transform.position + ((Component)Player.main).transform.forward * 1.2f;
+			component.Drop(dropPosition, default(Vector3), true);
 		}
 		StackIconRefresher.Trigger();
 	}

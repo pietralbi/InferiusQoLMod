@@ -28,7 +28,6 @@ internal static class InferiusQoLCraftingPatches
 	[HarmonyPriority(0)]
 	private static bool Prefix(TechType techType, ref int __result)
 	{
-		//IL_0021: Unknown result type (might be due to invalid IL or missing references)
 		ItemsContainer[] containers = InferiusQoLCompat.GetContainers();
 		if (containers == null || containers.Length == 0)
 		{

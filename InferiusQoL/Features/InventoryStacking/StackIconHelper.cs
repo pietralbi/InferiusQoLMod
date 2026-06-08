@@ -113,7 +113,6 @@ internal static class StackIconHelper
 
 	private static void ApplyCountToBadge(Transform badgeRoot, int count)
 	{
-		//IL_004c: Unknown result type (might be due to invalid IL or missing references)
 		if ((Object)(object)badgeRoot == (Object)null)
 		{
 			return;
@@ -164,18 +163,6 @@ internal static class StackIconHelper
 
 	private static void CreateFallbackTextBadge(uGUI_ItemIcon icon, int count)
 	{
-		//IL_0005: Unknown result type (might be due to invalid IL or missing references)
-		//IL_000a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_001b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0039: Unknown result type (might be due to invalid IL or missing references)
-		//IL_004e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0063: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0078: Unknown result type (might be due to invalid IL or missing references)
-		//IL_008c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0096: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00be: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00f5: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0109: Unknown result type (might be due to invalid IL or missing references)
 		GameObject val = new GameObject("StackCountBadge")
 		{
 			layer = ((Component)icon).gameObject.layer
@@ -202,11 +189,6 @@ internal static class StackIconHelper
 
 	public static void UpdateForPickup(uGUI_ItemIcon icon, Pickupable p)
 	{
-		//IL_0076: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00c6: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00e5: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0153: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0119: Unknown result type (might be due to invalid IL or missing references)
 		if ((Object)(object)icon == (Object)null || (Object)(object)p == (Object)null)
 		{
 			return;

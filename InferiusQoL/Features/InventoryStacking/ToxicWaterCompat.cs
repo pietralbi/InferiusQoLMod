@@ -60,9 +60,6 @@ internal static class ToxicWaterCompat
 
 	internal static int CountSerumStackUnits(ItemsContainer container, TechType targetType)
 	{
-		//IL_0003: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0034: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0039: Unknown result type (might be due to invalid IL or missing references)
 		if (container == null || (int)targetType == 0)
 		{
 			return 0;
@@ -127,12 +124,6 @@ internal static class ToxicWaterCompat
 
 	private static TechType ResolvePickupTechType(Pickupable pickupable)
 	{
-		//IL_000c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0011: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0031: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0023: Unknown result type (might be due to invalid IL or missing references)
-		//IL_002b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0030: Unknown result type (might be due to invalid IL or missing references)
 		if ((Object)(object)pickupable == (Object)null)
 		{
 			return (TechType)0;

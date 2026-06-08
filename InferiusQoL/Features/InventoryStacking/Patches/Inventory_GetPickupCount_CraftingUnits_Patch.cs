@@ -12,7 +12,6 @@ internal static class Inventory_GetPickupCount_CraftingUnits_Patch
 	[HarmonyPriority(0)]
 	private static bool Prefix(TechType pickupType, ref int __result)
 	{
-		//IL_001c: Unknown result type (might be due to invalid IL or missing references)
 		if (!CraftingCounts.InCraftingQuery || (Object)(object)Inventory.main == (Object)null)
 		{
 			return true;

@@ -68,11 +68,6 @@ internal static class StackConsolidation
 
 	internal static void TryMerge(InventoryItem added, ItemsContainer container)
 	{
-		//IL_0066: Unknown result type (might be due to invalid IL or missing references)
-		//IL_006b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0089: Unknown result type (might be due to invalid IL or missing references)
-		//IL_010e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0113: Unknown result type (might be due to invalid IL or missing references)
 		if (MRStack.SuppressMerge || (Object)(object)((added != null) ? added.item : null) == (Object)null || !StackRules.CanStack(added.item) || container == null || IsMergeProtected(added.item) || ShouldSkipContainerMerge(container))
 		{
 			return;

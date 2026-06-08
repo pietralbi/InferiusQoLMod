@@ -16,11 +16,6 @@ internal static class ReactorFeedHelper
 
 	public static void NormalizeInsertedStackToOne(InventoryItem item, ItemsContainer container)
 	{
-		//IL_0036: Unknown result type (might be due to invalid IL or missing references)
-		//IL_003b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_003c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_003f: Invalid comparison between Unknown and I4
-		//IL_0093: Unknown result type (might be due to invalid IL or missing references)
 		if ((Object)(object)((item != null) ? item.item : null) == (Object)null || container == null || s_isReturningExtras || !StackRules.CanStack(item.item))
 		{
 			return;
@@ -46,8 +41,6 @@ internal static class ReactorFeedHelper
 
 	public static bool IsLikelyPlantableItem(Pickupable pickupable)
 	{
-		//IL_002e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0033: Unknown result type (might be due to invalid IL or missing references)
 		if ((Object)(object)pickupable == (Object)null)
 		{
 			return false;
@@ -56,7 +49,7 @@ internal static class ReactorFeedHelper
 		{
 			return true;
 		}
-		string text = ((object)pickupable.GetTechType()/*cast due to constrained. prefix*/).ToString();
+		string text = pickupable.GetTechType().ToString();
 		if (string.IsNullOrEmpty(text))
 		{
 			return false;
@@ -70,33 +63,23 @@ internal static class ReactorFeedHelper
 
 	private static IEnumerator ReturnExtrasToPlayer(TechType tech, int extraCount)
 	{
-		//IL_0007: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0008: Unknown result type (might be due to invalid IL or missing references)
 		if (extraCount <= 0 || (Object)(object)Inventory.main == (Object)null)
 		{
 			yield break;
 		}
-		TaskResult<GameObject> result = new TaskResult<GameObject>();
+		var spawned = new StackedPrefab<Pickupable>();
 		s_isReturningExtras = true;
-		yield return CraftData.InstantiateFromPrefabAsync(tech, (IOut<GameObject>)(object)result, false);
-		GameObject val = result.Get();
+		yield return StackedPrefabFactory.InstantiatePickup(tech, extraCount, spawned);
 		s_isReturningExtras = false;
-		if ((Object)(object)val == (Object)null)
-		{
-			yield break;
-		}
-		Pickupable component = val.GetComponent<Pickupable>();
+		Pickupable component = spawned.Pickupable;
 		if ((Object)(object)component == (Object)null)
 		{
-			Object.Destroy((Object)(object)val);
 			yield break;
 		}
-		CrafterLogic.NotifyCraftEnd(val, tech);
-		MRStack.Ensure(component, extraCount);
 		if (!Inventory.main.Pickup(component, false))
 		{
-			Vector3 val2 = ((Component)Player.main).transform.position + ((Component)Player.main).transform.forward * 1.2f;
-			component.Drop(val2, default(Vector3), true);
+			Vector3 dropPosition = ((Component)Player.main).transform.position + ((Component)Player.main).transform.forward * 1.2f;
+			component.Drop(dropPosition, default(Vector3), true);
 		}
 		StackIconRefresher.Trigger();
 	}

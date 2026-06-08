@@ -25,8 +25,6 @@ internal sealed class StackRestorePlayerPage
 
 	public void Set(int x, int y, TechType tech, int count)
 	{
-		//IL_0010: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0021: Unknown result type (might be due to invalid IL or missing references)
 		if (x >= 0 && x < 6 && y >= 0 && y < 4 && (int)tech != 0 && count >= 1)
 		{
 			_cells[x, y] = new StackRestoreSlot(tech, count);

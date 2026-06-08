@@ -67,13 +67,6 @@ internal static class CraftFromContainersCompat
 
 	public static int NearbyUnits(TechType tech)
 	{
-		//IL_0070: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0075: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00d9: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00de: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00df: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00e4: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00f4: Unknown result type (might be due to invalid IL or missing references)
 		EnsureResolved();
 		if (!_present || _modEnabled == null || !_modEnabled() || _cachedContainers == null)
 		{

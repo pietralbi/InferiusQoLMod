@@ -17,16 +17,6 @@ internal static class ItemsContainer_RemoveItem_ReactorRodSplit_Patch
 	[HarmonyPostfix]
 	private static void Postfix(ItemsContainer __instance, TechType techType, ref Pickupable __result)
 	{
-		//IL_0000: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0003: Invalid comparison between Unknown and I4
-		//IL_008e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_009d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00a7: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00ac: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00b1: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00b4: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00b8: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00be: Unknown result type (might be due to invalid IL or missing references)
 		if ((int)techType != 64 || __instance == null || (Object)(object)__result == (Object)null)
 		{
 			return;

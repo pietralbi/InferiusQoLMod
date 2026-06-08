@@ -12,7 +12,6 @@ internal static class ItemsContainer_DestroyItem_Patch
 	[HarmonyPrefix]
 	private static bool Prefix(TechType techType, ItemsContainer __instance, ref bool __result)
 	{
-		//IL_0024: Unknown result type (might be due to invalid IL or missing references)
 		if ((Object)(object)Inventory.main != (Object)null && __instance == Inventory.main.container && uGUI.isIntro)
 		{
 			return true;

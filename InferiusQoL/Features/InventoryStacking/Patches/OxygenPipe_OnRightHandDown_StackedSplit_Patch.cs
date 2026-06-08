@@ -16,9 +16,6 @@ internal static class OxygenPipe_OnRightHandDown_StackedSplit_Patch
 	[HarmonyPrefix]
 	private static bool Prefix(OxygenPipe __instance, ref bool __result)
 	{
-		//IL_008a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_008f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0097: Unknown result type (might be due to invalid IL or missing references)
 		if ((Object)(object)__instance == (Object)null || (Object)(object)((PlayerTool)__instance).pickupable == (Object)null)
 		{
 			return true;
@@ -41,13 +38,13 @@ internal static class OxygenPipe_OnRightHandDown_StackedSplit_Patch
 			return true;
 		}
 		object obj = GhostModelField?.GetValue(null);
-		OxygenPipe val = (OxygenPipe)((obj is OxygenPipe) ? obj : null);
-		if ((Object)(object)val == (Object)null || val.GetParent() == null)
+		OxygenPipe ghostPipe = (OxygenPipe)((obj is OxygenPipe) ? obj : null);
+		if ((Object)(object)ghostPipe == (Object)null || ghostPipe.GetParent() == null)
 		{
 			return true;
 		}
-		IPipeConnection parent = val.GetParent();
-		Vector3 position = ((Component)val).transform.position;
+		IPipeConnection parent = ghostPipe.GetParent();
+		Vector3 position = ((Component)ghostPipe).transform.position;
 		((MonoBehaviour)Player.main).StartCoroutine(CoSplitAndPlacePipe(__instance, parent, position));
 		__result = true;
 		return false;
@@ -55,37 +52,26 @@ internal static class OxygenPipe_OnRightHandDown_StackedSplit_Patch
 
 	private static IEnumerator CoSplitAndPlacePipe(OxygenPipe source, IPipeConnection parent, Vector3 placePos)
 	{
-		//IL_0015: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0016: Unknown result type (might be due to invalid IL or missing references)
 		if ((Object)(object)source == (Object)null || (Object)(object)((PlayerTool)source).pickupable == (Object)null || parent == null)
 		{
 			yield break;
 		}
 		Pickupable srcP = ((PlayerTool)source).pickupable;
 		TechType tech = srcP.GetTechType();
-		TaskResult<GameObject> result = new TaskResult<GameObject>();
+		var spawned = new StackedPrefab<OxygenPipe>();
 		MRStack.SuppressMerge = true;
-		yield return CraftData.InstantiateFromPrefabAsync(tech, (IOut<GameObject>)(object)result, false);
-		GameObject val = result.Get();
-		if ((Object)(object)val == (Object)null)
+		yield return StackedPrefabFactory.Instantiate(tech, 1, spawned);
+		OxygenPipe component = spawned.Component;
+		Pickupable spawnedPickup = spawned.Pickupable;
+		if ((Object)(object)component == (Object)null || (Object)(object)spawnedPickup == (Object)null)
 		{
 			MRStack.SuppressMerge = false;
 			yield break;
 		}
-		OxygenPipe component = val.GetComponent<OxygenPipe>();
-		Pickupable val2 = (((Object)(object)component != (Object)null) ? ((PlayerTool)component).pickupable : null);
-		if ((Object)(object)component == (Object)null || (Object)(object)val2 == (Object)null)
-		{
-			Object.Destroy((Object)(object)val);
-			MRStack.SuppressMerge = false;
-			yield break;
-		}
-		CrafterLogic.NotifyCraftEnd(val, tech);
-		MRStack.SetAmount(val2, 1);
 		((Component)component).transform.position = placePos;
-		val2.SetVisible(true);
-		val2.attached = false;
-		val2.droppedEvent.Trigger(val2);
+		spawnedPickup.SetVisible(true);
+		spawnedPickup.attached = false;
+		spawnedPickup.droppedEvent.Trigger(spawnedPickup);
 		((Component)component).gameObject.SendMessage("OnDrop", (SendMessageOptions)1);
 		component.SetParent(parent);
 		if ((Object)(object)component.rigidBody != (Object)null)
@@ -93,10 +79,10 @@ internal static class OxygenPipe_OnRightHandDown_StackedSplit_Patch
 			InventoryStackingUnity.SetIsKinematicAndUpdateInterpolation(component.rigidBody, true, false);
 		}
 		object obj = GhostModelField?.GetValue(null);
-		OxygenPipe val3 = (OxygenPipe)((obj is OxygenPipe) ? obj : null);
-		if ((Object)(object)val3 != (Object)null)
+		OxygenPipe ghostPipe = (OxygenPipe)((obj is OxygenPipe) ? obj : null);
+		if ((Object)(object)ghostPipe != (Object)null)
 		{
-			((Component)val3).gameObject.SetActive(false);
+			((Component)ghostPipe).gameObject.SetActive(false);
 		}
 		MRStack.Add(srcP, -1);
 		MRStack.SuppressMerge = false;

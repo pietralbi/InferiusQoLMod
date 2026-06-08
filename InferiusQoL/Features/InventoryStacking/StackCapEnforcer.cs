@@ -101,24 +101,16 @@ internal static class StackCapEnforcer
 			yield break;
 		}
 		TechType tech = source.GetTechType();
-		TaskResult<GameObject> result = new TaskResult<GameObject>();
-		yield return CraftData.InstantiateFromPrefabAsync(tech, (IOut<GameObject>)(object)result, false);
-		GameObject val = result.Get();
-		if ((Object)(object)val == (Object)null)
-		{
-			yield break;
-		}
-		Pickupable component = val.GetComponent<Pickupable>();
+		var spawned = new StackedPrefab<Pickupable>();
+		yield return StackedPrefabFactory.InstantiatePickup(tech, moveCount, spawned);
+		Pickupable component = spawned.Pickupable;
 		if ((Object)(object)component == (Object)null)
 		{
-			Object.Destroy((Object)(object)val);
 			yield break;
 		}
-		CrafterLogic.NotifyCraftEnd(val, tech);
-		MRStack.SetAmount(component, moveCount, clampToConfigMax: true);
 		if (container.AddItem(component) == null)
 		{
-			Object.Destroy((Object)(object)val);
+			Object.Destroy((Object)(object)spawned.GameObject);
 			yield break;
 		}
 		MRStack.SetAmount(source, have - moveCount);

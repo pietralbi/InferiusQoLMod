@@ -29,7 +29,6 @@ internal static class ResourceMonitor_TrackerReconcile_Patch
 	[HarmonyPostfix]
 	private static void Postfix(object __instance, TechType item)
 	{
-		//IL_000a: Unknown result type (might be due to invalid IL or missing references)
 		if (ResourceMonitorCompat.BulkPullDepth <= 0)
 		{
 			ResourceMonitorCompat.ReconcileAndRefresh(__instance, item);

@@ -28,13 +28,6 @@ internal static class ResourceMonitor_AttemptToTakeItem_PerLockerPull_Patch
 	[HarmonyPrefix]
 	internal static bool Prefix(object __instance, TechType item)
 	{
-		//IL_006d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_007a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_004e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_008e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0085: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0059: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0064: Unknown result type (might be due to invalid IL or missing references)
 		if (__instance == null || (Object)(object)Player.main == (Object)null || (Object)(object)Inventory.main == (Object)null)
 		{
 			return true;
@@ -69,10 +62,6 @@ internal static class ResourceMonitor_AttemptToTakeItem_PerLockerPull_Patch
 
 	private static bool TakeAllFromLocker(object logic, TechType tech, StorageContainer locker)
 	{
-		//IL_0063: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0058: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0029: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0079: Unknown result type (might be due to invalid IL or missing references)
 		if (((locker != null) ? locker.container : null) == null)
 		{
 			return false;
@@ -118,8 +107,6 @@ internal static class ResourceMonitor_AttemptToTakeItem_PerLockerPull_Patch
 
 	private static bool TryGetTrackedResource(object logic, TechType item, out object trackedResource)
 	{
-		//IL_0027: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0038: Unknown result type (might be due to invalid IL or missing references)
 		trackedResource = null;
 		if (ResourceMonitorCompat.TrackedResourcesProperty == null)
 		{
@@ -135,7 +122,6 @@ internal static class ResourceMonitor_AttemptToTakeItem_PerLockerPull_Patch
 
 	private static bool TryPickLockerToDrain(object trackedResource, TechType tech, out StorageContainer locker)
 	{
-		//IL_004e: Unknown result type (might be due to invalid IL or missing references)
 		locker = null;
 		if (ResourceMonitorCompat.ContainersProperty == null)
 		{
@@ -159,7 +145,6 @@ internal static class ResourceMonitor_AttemptToTakeItem_PerLockerPull_Patch
 
 	private static bool IsStillTracked(object logic, TechType item)
 	{
-		//IL_0024: Unknown result type (might be due to invalid IL or missing references)
 		if (ResourceMonitorCompat.TrackedResourcesProperty == null)
 		{
 			return false;

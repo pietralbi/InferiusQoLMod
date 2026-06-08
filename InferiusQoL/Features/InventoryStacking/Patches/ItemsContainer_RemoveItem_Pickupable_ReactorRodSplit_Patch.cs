@@ -21,8 +21,6 @@ internal static class ItemsContainer_RemoveItem_Pickupable_ReactorRodSplit_Patch
 	[HarmonyPrefix]
 	private static bool Prefix(ItemsContainer __instance, Pickupable pickupable, bool forced, ref bool __result)
 	{
-		//IL_000f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0016: Invalid comparison between Unknown and I4
 		if (__instance == null || (Object)(object)pickupable == (Object)null)
 		{
 			return true;

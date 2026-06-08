@@ -102,7 +102,7 @@ internal static class HarmonyPatchDiagnostics
 		else
 		{
 			string arg = (patchInfo.Prefixes.Concat(patchInfo.Postfixes).Concat(patchInfo.Transpilers).Concat(patchInfo.Finalizers)
-				.Any((Patch p) => p.owner == global::InferiusQoL.Plugin.HarmonyId) ? "includes InferiusQoL" : "no InferiusQoL owner");
+				.Any((Patch p) => p.owner == Plugin.HarmonyId) ? "includes InferiusQoL" : "no InferiusQoL owner");
 			log.LogInfo((object)$"[InventoryStacking] {label}: {num} patch(es) ({arg})");
 		}
 	}

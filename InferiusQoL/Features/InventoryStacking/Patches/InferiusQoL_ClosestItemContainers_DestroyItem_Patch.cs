@@ -39,7 +39,6 @@ internal static class InferiusQoL_ClosestItemContainers_DestroyItem_Patch
 	[HarmonyPriority(0)]
 	private static bool Prefix(TechType techType, int count, ref bool __result)
 	{
-		//IL_0027: Unknown result type (might be due to invalid IL or missing references)
 		ItemsContainer[] containers = InferiusQoLCompat.GetContainers();
 		if (containers == null || count <= 0)
 		{
@@ -65,7 +64,6 @@ internal static class InferiusQoL_ClosestItemContainers_DestroyItem_Patch
 
 	private static int ConsumeStackUnits(ItemsContainer container, TechType tech, int count)
 	{
-		//IL_0001: Unknown result type (might be due to invalid IL or missing references)
 		IList<InventoryItem> items = container.GetItems(tech);
 		if (items == null || items.Count == 0)
 		{

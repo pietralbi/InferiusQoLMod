@@ -10,20 +10,6 @@ internal static class uGUI_InventoryTab_OnPointerClick_Patch
 {
 	private static bool IsConfiguredKeyHeld(KeyCode key)
 	{
-		//IL_0000: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0005: Unknown result type (might be due to invalid IL or missing references)
-		//IL_000f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0015: Invalid comparison between Unknown and I4
-		//IL_0025: Unknown result type (might be due to invalid IL or missing references)
-		//IL_002b: Invalid comparison between Unknown and I4
-		//IL_003b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0041: Invalid comparison between Unknown and I4
-		//IL_0051: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0057: Invalid comparison between Unknown and I4
-		//IL_0067: Unknown result type (might be due to invalid IL or missing references)
-		//IL_006d: Invalid comparison between Unknown and I4
-		//IL_007d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0083: Invalid comparison between Unknown and I4
 		if ((int)key == 0)
 		{
 			return false;
@@ -75,12 +61,6 @@ internal static class uGUI_InventoryTab_OnPointerClick_Patch
 	[HarmonyPriority(0)]
 	private static bool Prefix(InventoryItem item, int button)
 	{
-		//IL_00a0: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00eb: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0104: Unknown result type (might be due to invalid IL or missing references)
-		//IL_010b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0130: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0137: Unknown result type (might be due to invalid IL or missing references)
 		if (ItemDragManager.isDragging || item == null || (Object)(object)Inventory.main == (Object)null)
 		{
 			return true;

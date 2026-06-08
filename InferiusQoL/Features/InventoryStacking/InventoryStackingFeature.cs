@@ -7,14 +7,15 @@ using InferiusQoL.Config;
 using InferiusQoL.Features.InventoryStacking.Patches;
 using InferiusQoL.Logging;
 using UnityEngine;
+using HostPlugin = global::InferiusQoL.Plugin;
 
 internal static class InventoryStackingFeature
 {
     internal static bool IsEnabled =>
         InferiusConfig.Instance.InventoryStackingEnabled
-        && !global::InferiusQoL.Plugin.HasInventoryStacking;
+        && !HostPlugin.HasInventoryStacking;
 
-    internal static ManualLogSource Log => global::InferiusQoL.Plugin.Logger;
+    internal static ManualLogSource Log => HostPlugin.Logger;
 
     public static void Init()
     {
@@ -23,7 +24,7 @@ internal static class InventoryStackingFeature
         PartialTransferOne.ClearSingleUnitTargetCache();
         MrProtoRegistration.TryRegister(Log);
 
-        var host = global::InferiusQoL.Plugin.Instance;
+        var host = HostPlugin.Instance;
         host.StartCoroutine(CoRetryProtoRegister());
         host.StartCoroutine(CoRetryResourceMonitorPatches());
 
@@ -53,14 +54,16 @@ internal static class InventoryStackingFeature
     private static IEnumerator CoRetryResourceMonitorPatches()
     {
         yield return new WaitForSecondsRealtime(2f);
-        ResourceMonitorCompat.TryApplyLatePatches(global::InferiusQoL.Plugin.Harmony, Log);
+        ResourceMonitorCompat.TryApplyLatePatches(HostPlugin.Harmony, Log);
         HarmonyPatchDiagnostics.LogResourceMonitorPatches(Log);
     }
 }
 
 internal static class Plugin
 {
-    internal static global::InferiusQoL.Plugin Instance => global::InferiusQoL.Plugin.Instance;
+    internal static HostPlugin Instance => HostPlugin.Instance;
 
-    internal static ManualLogSource Log => global::InferiusQoL.Plugin.Logger;
+    internal static ManualLogSource Log => HostPlugin.Logger;
+
+    internal static string HarmonyId => HostPlugin.HarmonyId;
 }

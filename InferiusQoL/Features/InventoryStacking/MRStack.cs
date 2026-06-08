@@ -116,7 +116,6 @@ internal static class MRStack
 
 	public static int TotalStackUnits(ItemsContainer container, TechType tech)
 	{
-		//IL_0006: Unknown result type (might be due to invalid IL or missing references)
 		if (container == null)
 		{
 			return 0;
@@ -141,10 +140,6 @@ internal static class MRStack
 
 	public static bool ContainerHasMergeRoomFor(ItemsContainer container, Pickupable pickupable)
 	{
-		//IL_0017: Unknown result type (might be due to invalid IL or missing references)
-		//IL_001c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_004d: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0052: Unknown result type (might be due to invalid IL or missing references)
 		if (container == null || (Object)(object)pickupable == (Object)null || !StackRules.CanStack(pickupable))
 		{
 			return false;

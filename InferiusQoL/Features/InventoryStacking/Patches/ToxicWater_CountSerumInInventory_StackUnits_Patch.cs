@@ -29,7 +29,6 @@ internal static class ToxicWater_CountSerumInInventory_StackUnits_Patch
 	[HarmonyPriority(0)]
 	private static bool Prefix(TechType targetType, ref int __result)
 	{
-		//IL_0029: Unknown result type (might be due to invalid IL or missing references)
 		if ((Object)(object)Inventory.main == (Object)null || Inventory.main.container == null)
 		{
 			__result = 0;
