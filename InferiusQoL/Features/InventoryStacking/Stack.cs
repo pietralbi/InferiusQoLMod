@@ -154,7 +154,11 @@ internal static class Stack
 		int maxStackSize = StackConfig.MaxStackSize;
 		foreach (InventoryItem item in (IEnumerable<InventoryItem>)container)
 		{
-			if (!((Object)(object)((item != null) ? item.item : null) == (Object)null) && item.item.GetTechType() == techType && StackRules.CanStack(item.item) && CountOf(item.item) < maxStackSize)
+			if (!((Object)(object)((item != null) ? item.item : null) == (Object)null)
+				&& item.item.GetTechType() == techType
+				&& StackRules.CanStack(item.item)
+				&& CountOf(item.item) < maxStackSize
+				&& StackQuality.CanMerge(item.item, pickupable))
 			{
 				return true;
 			}

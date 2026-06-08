@@ -102,7 +102,7 @@ internal static class StackCapEnforcer
 		}
 		TechType tech = source.GetTechType();
 		var spawned = new StackedPrefab<Pickupable>();
-		yield return StackedPrefabFactory.InstantiatePickup(tech, moveCount, spawned);
+		yield return StackedPrefabFactory.InstantiatePickup(tech, moveCount, spawned, source);
 		Pickupable component = spawned.Pickupable;
 		if ((Object)(object)component == (Object)null)
 		{

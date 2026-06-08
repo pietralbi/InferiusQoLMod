@@ -100,7 +100,10 @@ internal static class StackConsolidation
 					StackIconRefresher.Trigger();
 					return;
 				}
-				if (item.item.GetTechType() != techType || !StackRules.CanStack(item.item) || IsMergeProtected(item.item))
+				if (item.item.GetTechType() != techType
+					|| !StackRules.CanStack(item.item)
+					|| IsMergeProtected(item.item)
+					|| !StackQuality.CanMerge(item.item, added.item))
 				{
 					continue;
 				}
@@ -112,6 +115,7 @@ internal static class StackConsolidation
 				int num3 = Mathf.Min(maxStackSize - num2, num);
 				if (num3 > 0)
 				{
+					StackQuality.AverageInto(item.item, num2, added.item, num3);
 					Stack.Add(item.item, num3);
 					num -= num3;
 					flag = true;
@@ -154,7 +158,10 @@ internal static class StackConsolidation
 		int total = 0;
 		foreach (InventoryItem item in items)
 		{
-			if ((Object)(object)((item != null) ? item.item : null) == (Object)null || item.item.GetTechType() != techType || !StackRules.CanStack(item.item))
+			if ((Object)(object)((item != null) ? item.item : null) == (Object)null
+				|| item.item.GetTechType() != techType
+				|| !StackRules.CanStack(item.item)
+				|| !StackQuality.CanMerge(anchor.item, item.item))
 			{
 				continue;
 			}
@@ -166,6 +173,15 @@ internal static class StackConsolidation
 			return false;
 		}
 		rows.Sort((a, b) => CompareMergeRows(anchor, a, b));
+		Pickupable pooledQualitySource = rows[0].item;
+		int pooledQualityUnits = Mathf.Max(1, Stack.CountOf(pooledQualitySource));
+		for (int i = 1; i < rows.Count; i++)
+		{
+			Pickupable rowPickup = rows[i].item;
+			int rowUnits = Mathf.Max(1, Stack.CountOf(rowPickup));
+			StackQuality.AverageInto(pooledQualitySource, pooledQualityUnits, rowPickup, rowUnits);
+			pooledQualityUnits += rowUnits;
+		}
 		int maxStackSize = StackConfig.MaxStackSize;
 		int remaining = total;
 		int removedRows = 0;
@@ -181,6 +197,7 @@ internal static class StackConsolidation
 				int rowsLeft = rows.Count - i;
 				int amount = (rowsLeft == 1) ? remaining : Mathf.Min(maxStackSize, remaining);
 				Stack.SetAmount(row.item, amount);
+				StackQuality.CopyForSplit(pooledQualitySource, row.item);
 				ClearMergeProtection(row.item);
 				remaining -= amount;
 				continue;

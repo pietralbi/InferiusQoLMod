@@ -34,7 +34,7 @@ internal static class ReactorFeedHelper
 			StackIconRefresher.Trigger();
 			if (num2 > 0 && (Object)(object)Player.main != (Object)null)
 			{
-				((MonoBehaviour)Player.main).StartCoroutine(ReturnExtrasToPlayer(techType, num2));
+				((MonoBehaviour)Player.main).StartCoroutine(ReturnExtrasToPlayer(techType, num2, item2));
 			}
 		}
 	}
@@ -61,7 +61,7 @@ internal static class ReactorFeedHelper
 		return true;
 	}
 
-	private static IEnumerator ReturnExtrasToPlayer(TechType tech, int extraCount)
+	private static IEnumerator ReturnExtrasToPlayer(TechType tech, int extraCount, Pickupable source)
 	{
 		if (extraCount <= 0 || (Object)(object)Inventory.main == (Object)null)
 		{
@@ -69,7 +69,7 @@ internal static class ReactorFeedHelper
 		}
 		var spawned = new StackedPrefab<Pickupable>();
 		s_isReturningExtras = true;
-		yield return StackedPrefabFactory.InstantiatePickup(tech, extraCount, spawned);
+		yield return StackedPrefabFactory.InstantiatePickup(tech, extraCount, spawned, source);
 		s_isReturningExtras = false;
 		Pickupable component = spawned.Pickupable;
 		if ((Object)(object)component == (Object)null)

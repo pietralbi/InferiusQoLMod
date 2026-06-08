@@ -24,12 +24,12 @@ internal sealed class StackedPrefab<TComponent>
 
 internal static class StackedPrefabFactory
 {
-    public static IEnumerator InstantiatePickup(TechType tech, int stackCount, StackedPrefab<Pickupable> result)
+    public static IEnumerator InstantiatePickup(TechType tech, int stackCount, StackedPrefab<Pickupable> result, Pickupable qualitySource = null)
     {
-        return Instantiate(tech, stackCount, result);
+        return Instantiate(tech, stackCount, result, qualitySource);
     }
 
-    public static IEnumerator Instantiate<TComponent>(TechType tech, int stackCount, StackedPrefab<TComponent> result)
+    public static IEnumerator Instantiate<TComponent>(TechType tech, int stackCount, StackedPrefab<TComponent> result, Pickupable qualitySource = null)
         where TComponent : Component
     {
         var prefabResult = new TaskResult<GameObject>();
@@ -51,6 +51,7 @@ internal static class StackedPrefabFactory
 
         CrafterLogic.NotifyCraftEnd(gameObject, tech);
         Stack.Ensure(pickupable, stackCount);
+        StackQuality.CopyForSplit(qualitySource, pickupable);
         result.Set(gameObject, component, pickupable);
     }
 

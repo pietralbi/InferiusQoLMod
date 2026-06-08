@@ -95,25 +95,26 @@ internal static class WaterParkStorageScope
 		int num = Stack.CountOf(item.item);
 		if (num > 1)
 		{
-			TechType techType = item.item.GetTechType();
+			Pickupable source = item.item;
+			TechType techType = source.GetTechType();
 			int num2 = num - 1;
 			Stack.Ensure(item.item, 1);
 			StackIconRefresher.Trigger();
 			if (num2 > 0 && (Object)(object)Player.main != (Object)null)
 			{
-				((MonoBehaviour)Player.main).StartCoroutine(ReturnExtrasToPlayer(techType, num2));
+				((MonoBehaviour)Player.main).StartCoroutine(ReturnExtrasToPlayer(techType, num2, source));
 			}
 		}
 	}
 
-	private static IEnumerator ReturnExtrasToPlayer(TechType tech, int extraCount)
+	private static IEnumerator ReturnExtrasToPlayer(TechType tech, int extraCount, Pickupable source)
 	{
 		if (extraCount <= 0 || (Object)(object)Inventory.main == (Object)null)
 		{
 			yield break;
 		}
 		var spawned = new StackedPrefab<Pickupable>();
-		yield return StackedPrefabFactory.InstantiatePickup(tech, extraCount, spawned);
+		yield return StackedPrefabFactory.InstantiatePickup(tech, extraCount, spawned, source);
 		Pickupable component = spawned.Pickupable;
 		if ((Object)(object)component == (Object)null)
 		{

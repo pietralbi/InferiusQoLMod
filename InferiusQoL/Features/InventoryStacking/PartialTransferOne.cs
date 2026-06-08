@@ -156,7 +156,7 @@ internal static class PartialTransferOne
 		TechType tech = srcP.GetTechType();
 		var spawned = new StackedPrefab<Pickupable>();
 		Stack.SuppressMerge = true;
-		yield return StackedPrefabFactory.InstantiatePickup(tech, moveCount, spawned);
+		yield return StackedPrefabFactory.InstantiatePickup(tech, moveCount, spawned, srcP);
 		Pickupable component = spawned.Pickupable;
 		if ((Object)(object)component == (Object)null)
 		{
@@ -336,7 +336,7 @@ internal static class PartialTransferOne
 		TechType tech = srcP.GetTechType();
 		var spawned = new StackedPrefab<Pickupable>();
 		Stack.SuppressMerge = true;
-		yield return StackedPrefabFactory.InstantiatePickup(tech, 1, spawned);
+		yield return StackedPrefabFactory.InstantiatePickup(tech, 1, spawned, srcP);
 		Pickupable component = spawned.Pickupable;
 		if ((Object)(object)component == (Object)null)
 		{
@@ -376,7 +376,7 @@ internal static class PartialTransferOne
 		TechType tech = srcP.GetTechType();
 		var spawned = new StackedPrefab<Pickupable>();
 		Stack.SuppressMerge = true;
-		yield return StackedPrefabFactory.InstantiatePickup(tech, 1, spawned);
+		yield return StackedPrefabFactory.InstantiatePickup(tech, 1, spawned, srcP);
 		Pickupable component = spawned.Pickupable;
 		if ((Object)(object)component == (Object)null)
 		{
@@ -427,7 +427,7 @@ internal static class PartialTransferOne
 		var spawned = new StackedPrefab<Pickupable>();
 		Stack.SuppressMerge = true;
 		int ticket = ++s_mergeSuppressTicket;
-		yield return StackedPrefabFactory.InstantiatePickup(tech, moveCount, spawned);
+		yield return StackedPrefabFactory.InstantiatePickup(tech, moveCount, spawned, srcP);
 		Pickupable component = spawned.Pickupable;
 		if ((Object)(object)component == (Object)null)
 		{
