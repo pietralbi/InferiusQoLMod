@@ -130,6 +130,7 @@
   "InferiusQoL.On": "ON",
   "InferiusQoL.Off": "off",
   "InferiusQoL.ScannerRoom.DrillableSuffix": "deposit",
+  "InferiusQoL.UsedFlare": "Used Flare",
 
   "InferiusSeamothTurboMK1": "Seamoth Turbo Module MK1",
   "Tooltip_InferiusSeamothTurboMK1": "Basic speed boost while sprinting. Holds the Sprint key to activate. Deactivates above the surface.",

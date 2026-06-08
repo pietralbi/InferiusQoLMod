@@ -2,6 +2,7 @@ namespace InferiusQoL.Features.AutoCraft;
 
 using System.Collections.Generic;
 using InferiusQoL.Config;
+using InferiusQoL.UI;
 
 public enum NeighboringStorage { Off, Inside, Range100 }
 public enum ReturnSurplus { Inventory, Lockers }
@@ -48,6 +49,8 @@ internal static class AutoCraftSettings
     /// <summary>Returns the batch crafting multiplier based on the pressed modifier.</summary>
     public static int GetBatchMultiplier()
     {
+        if (HotkeyFocusGuard.ShouldIgnoreHotkey())
+            return 1;
         if (UnityEngine.Input.GetKey(UnityEngine.KeyCode.LeftControl)
             || UnityEngine.Input.GetKey(UnityEngine.KeyCode.RightControl))
             return System.Math.Max(1, InferiusConfig.Instance.AutoCraftCtrlMultiplier);

@@ -3,6 +3,7 @@ namespace InferiusQoL.Features.LockerMover;
 using System;
 using InferiusQoL.Config;
 using InferiusQoL.Logging;
+using InferiusQoL.UI;
 using UnityEngine;
 
 /// <summary>
@@ -38,6 +39,7 @@ public class LockerMoverManager : MonoBehaviour
 
             if (!TryParseKey(cfg.LockerMoverKey, out var key)) return;
             if (!UnityEngine.Input.GetKeyDown(key)) return;
+            if (HotkeyFocusGuard.ShouldIgnoreHotkey()) return;
 
             if (Time.time - _lastActionTime < DUPLICATE_PRESS_COOLDOWN) return;
 

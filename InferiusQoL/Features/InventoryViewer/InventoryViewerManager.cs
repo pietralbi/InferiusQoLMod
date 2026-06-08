@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using InferiusQoL.Config;
 using InferiusQoL.Logging;
+using InferiusQoL.UI;
 using UnityEngine;
 
 /// <summary>
@@ -47,6 +48,7 @@ public class InventoryViewerManager : MonoBehaviour
                 key = KeyCode.I;
 
             if (!UnityEngine.Input.GetKeyDown(key)) return;
+            if (HotkeyFocusGuard.ShouldIgnoreHotkey()) return;
             if (Time.time - _lastToggleTime < TOGGLE_COOLDOWN) return;
             _lastToggleTime = Time.time;
 

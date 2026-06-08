@@ -1,5 +1,6 @@
 #nullable disable
 using HarmonyLib;
+using InferiusQoL.UI;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -66,6 +67,10 @@ internal static class uGUI_InventoryTab_OnPointerClick_Patch
 			return true;
 		}
 		if (IsUsingGamepad())
+		{
+			return true;
+		}
+		if (HotkeyFocusGuard.ShouldIgnoreHotkey())
 		{
 			return true;
 		}

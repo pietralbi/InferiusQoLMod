@@ -1,6 +1,7 @@
 #nullable disable
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
 using UWE;
@@ -14,6 +15,8 @@ internal static class Flare_Throw_StackedSplit_Patch
 {
 	private const float ThrowPushSpeed = 8f;
 
+	private static readonly Dictionary<int, float> s_pendingStackSplitUntilTime = new Dictionary<int, float>();
+
 	private static readonly FieldInfo IsInUseField = AccessTools.Field(typeof(PlayerTool), "_isInUse");
 
 	private static readonly FieldInfo IsThrowingField = AccessTools.Field(typeof(Flare), "isThrowing");
@@ -21,6 +24,25 @@ internal static class Flare_Throw_StackedSplit_Patch
 	private static readonly MethodInfo SetFlareActiveStateMethod = AccessTools.Method(typeof(Flare), "SetFlareActiveState", (Type[])null, (Type[])null);
 
 	private static readonly FieldInfo SequenceField = AccessTools.Field(typeof(Flare), "sequence");
+
+	private static readonly MethodInfo LoopingSoundStopMethod = AccessTools.Method(AccessTools.TypeByName("FMOD_CustomLoopingEmitter"), "Stop");
+
+	internal static void RecordPendingStackSplit(Flare source)
+	{
+		if ((Object)(object)source == (Object)null || (Object)(object)((PlayerTool)source).pickupable == (Object)null)
+		{
+			return;
+		}
+
+		Pickupable pickupable = ((PlayerTool)source).pickupable;
+		if (!StackFlareState.IsUnusedFlare(pickupable) || Stack.CountOf(pickupable) <= 1)
+		{
+			return;
+		}
+
+		float lifetime = Mathf.Max(0.5f, source.throwDuration + 1f);
+		s_pendingStackSplitUntilTime[((Object)((Component)source).gameObject).GetInstanceID()] = Time.time + lifetime;
+	}
 
 	[HarmonyPrefix]
 	private static bool Prefix(Flare __instance)
@@ -30,7 +52,7 @@ internal static class Flare_Throw_StackedSplit_Patch
 			return true;
 		}
 		Pickupable pickupable = ((PlayerTool)__instance).pickupable;
-		if (!StackRules.CanStack(pickupable) || Stack.CountOf(pickupable) <= 1)
+		if (!StackFlareState.IsFlare(pickupable) || Stack.CountOf(pickupable) <= 1 || !TryConsumePendingStackSplit(__instance))
 		{
 			return true;
 		}
@@ -46,6 +68,7 @@ internal static class Flare_Throw_StackedSplit_Patch
 		}
 		Pickupable srcP = ((PlayerTool)source).pickupable;
 		TechType tech = srcP.GetTechType();
+		float fallbackEnergyLeft = source.energyLeft;
 		var spawned = new StackedPrefab<Flare>();
 		Stack.SuppressMerge = true;
 		yield return StackedPrefabFactory.Instantiate(tech, 1, spawned);
@@ -54,14 +77,15 @@ internal static class Flare_Throw_StackedSplit_Patch
 		if ((Object)(object)component == (Object)null || (Object)(object)spawnedPickup == (Object)null)
 		{
 			Stack.SuppressMerge = false;
-			ResetHeldFlareUseState(source);
+			ResetHeldFlareUseState(source, fallbackEnergyLeft);
 			yield break;
 		}
+		float unusedEnergyLeft = component.energyLeft;
 		ThrowSingletonFlare(component, spawnedPickup);
 		Stack.Add(srcP, -1);
 		Stack.SuppressMerge = false;
 		StackIconRefresher.Trigger();
-		ResetHeldFlareUseState(source);
+		ResetHeldFlareUseState(source, unusedEnergyLeft);
 	}
 
 	private static void ThrowSingletonFlare(Flare flare, Pickupable pickupable)
@@ -95,7 +119,24 @@ internal static class Flare_Throw_StackedSplit_Patch
 		}
 	}
 
-	private static void ResetHeldFlareUseState(Flare source)
+	private static bool TryConsumePendingStackSplit(Flare source)
+	{
+		if ((Object)(object)source == (Object)null)
+		{
+			return false;
+		}
+
+		int instanceId = ((Object)((Component)source).gameObject).GetInstanceID();
+		if (!s_pendingStackSplitUntilTime.TryGetValue(instanceId, out float untilTime))
+		{
+			return false;
+		}
+
+		s_pendingStackSplitUntilTime.Remove(instanceId);
+		return Time.time <= untilTime;
+	}
+
+	private static void ResetHeldFlareUseState(Flare source, float unusedEnergyLeft)
 	{
 		if (!((Object)(object)source == (Object)null))
 		{
@@ -107,7 +148,27 @@ internal static class Flare_Throw_StackedSplit_Patch
 			{
 				IsThrowingField.SetValue(source, false);
 			}
+			StopLoopingSound(source);
+			if ((Object)(object)source.fxControl != (Object)null && source.fxIsPlaying)
+			{
+				source.fxControl.StopAndDestroy(1, 0f);
+				source.fxIsPlaying = false;
+			}
 			SetFlareActiveStateMethod?.Invoke(source, new object[1] { false });
+			source.hasBeenThrown = false;
+			source.flareActiveState = false;
+			source.flareActivateTime = 0f;
+			source.energyLeft = unusedEnergyLeft;
+			if ((Object)(object)source.capRenderer != (Object)null)
+			{
+				source.capRenderer.enabled = true;
+			}
+			if ((Object)(object)source.light != (Object)null)
+			{
+				source.light.intensity = 0f;
+				source.light.range = 0f;
+				source.light.enabled = false;
+			}
 			object obj = SequenceField?.GetValue(source);
 			Sequence sequence = (Sequence)((obj is Sequence) ? obj : null);
 			if (sequence != null)
@@ -115,5 +176,38 @@ internal static class Flare_Throw_StackedSplit_Patch
 				sequence.Reset();
 			}
 		}
+	}
+
+	private static void StopLoopingSound(Flare source)
+	{
+		object loopingSound = source.loopingSound;
+		if (loopingSound == null)
+		{
+			return;
+		}
+
+		MethodInfo stopMethod = LoopingSoundStopMethod ?? loopingSound.GetType().GetMethod("Stop", BindingFlags.Instance | BindingFlags.Public);
+		if (stopMethod == null)
+		{
+			return;
+		}
+
+		ParameterInfo[] parameters = stopMethod.GetParameters();
+		object[] args = new object[parameters.Length];
+		for (int i = 0; i < parameters.Length; i++)
+		{
+			args[i] = parameters[i].HasDefaultValue ? parameters[i].DefaultValue : Type.Missing;
+		}
+		stopMethod.Invoke(loopingSound, args);
+	}
+}
+
+[HarmonyPatch(typeof(Flare), "OnToolUseAnim")]
+internal static class Flare_OnToolUseAnim_StackedSplitMarker_Patch
+{
+	[HarmonyPrefix]
+	private static void Prefix(Flare __instance)
+	{
+		Flare_Throw_StackedSplit_Patch.RecordPendingStackSplit(__instance);
 	}
 }

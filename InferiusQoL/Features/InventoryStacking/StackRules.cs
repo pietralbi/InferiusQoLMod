@@ -24,6 +24,9 @@ internal static class StackRules
 		if ((Object)(object)pickupable == (Object)null)
 			return false;
 
+		if (StackFlareState.IsFlare(pickupable))
+			return StackFlareState.IsUnusedFlare(pickupable);
+
 		int configSignature = GetConfigSignature();
 		int instanceId = ((Object)((Component)pickupable).gameObject).GetInstanceID();
 		if (s_canStackCache.TryGetValue(instanceId, out var entry)

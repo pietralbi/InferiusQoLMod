@@ -1,6 +1,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using InferiusQoL.UI;
 using TMPro;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -113,16 +114,17 @@ internal sealed class StackRestorePreviewUi : MonoBehaviour
 		{
 			return;
 		}
-		if (GameInput.GetButtonDown(GameInput.Button.UICancel))
+		bool ignoreHotkeys = HotkeyFocusGuard.ShouldIgnoreHotkey();
+		if (!ignoreHotkeys && GameInput.GetButtonDown(GameInput.Button.UICancel))
 		{
 			Close();
 			GameInput.ClearInput(0);
 		}
-		else if (Input.GetKeyDown((KeyCode)276) || Input.GetKeyDown((KeyCode)97))
+		else if (!ignoreHotkeys && (Input.GetKeyDown((KeyCode)276) || Input.GetKeyDown((KeyCode)97)))
 		{
 			SelectOlderBackup();
 		}
-		else if (Input.GetKeyDown((KeyCode)275) || Input.GetKeyDown((KeyCode)100))
+		else if (!ignoreHotkeys && (Input.GetKeyDown((KeyCode)275) || Input.GetKeyDown((KeyCode)100)))
 		{
 			SelectNewerBackup();
 		}

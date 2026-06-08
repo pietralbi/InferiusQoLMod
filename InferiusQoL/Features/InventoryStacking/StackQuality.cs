@@ -33,6 +33,11 @@ internal static class StackQuality
 
 	public static bool CanMerge(Pickupable a, Pickupable b)
 	{
+		if (!StackFlareState.CanMerge(a, b))
+		{
+			return false;
+		}
+
 		Eatable eatableA = GetEatable(a);
 		Eatable eatableB = GetEatable(b);
 		if ((Object)(object)eatableA == (Object)null || (Object)(object)eatableB == (Object)null)
