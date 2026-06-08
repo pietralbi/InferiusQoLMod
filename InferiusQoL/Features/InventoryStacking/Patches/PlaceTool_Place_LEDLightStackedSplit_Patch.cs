@@ -30,7 +30,7 @@ internal static class PlaceTool_Place_LEDLightStackedSplit_Patch
 			return true;
 		}
 		Pickupable pickupable = ((PlayerTool)ledLight).pickupable;
-		if (!StackRules.CanStack(pickupable) || MRStack.CountOf(pickupable) <= 1)
+		if (!StackRules.CanStack(pickupable) || Stack.CountOf(pickupable) <= 1)
 		{
 			return true;
 		}
@@ -56,13 +56,13 @@ internal static class PlaceTool_Place_LEDLightStackedSplit_Patch
 		Pickupable srcP = ((PlayerTool)source).pickupable;
 		TechType tech = srcP.GetTechType();
 		var spawned = new StackedPrefab<LEDLight>();
-		MRStack.SuppressMerge = true;
+		Stack.SuppressMerge = true;
 		yield return StackedPrefabFactory.Instantiate(tech, 1, spawned);
 		LEDLight component = spawned.Component;
 		Pickupable spawnedPickup = spawned.Pickupable;
 		if ((Object)(object)component == (Object)null || (Object)(object)spawnedPickup == (Object)null)
 		{
-			MRStack.SuppressMerge = false;
+			Stack.SuppressMerge = false;
 			yield break;
 		}
 		spawnedPickup.Drop(position, Vector3.zero, false);
@@ -91,8 +91,8 @@ internal static class PlaceTool_Place_LEDLightStackedSplit_Patch
 		{
 			UsedThisFrameField.SetValue(sourcePlace, false);
 		}
-		MRStack.Add(srcP, -1);
-		MRStack.SuppressMerge = false;
+		Stack.Add(srcP, -1);
+		Stack.SuppressMerge = false;
 		StackIconRefresher.Trigger();
 	}
 }

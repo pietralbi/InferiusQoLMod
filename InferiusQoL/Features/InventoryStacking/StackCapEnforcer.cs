@@ -68,9 +68,9 @@ internal static class StackCapEnforcer
 			yield break;
 		}
 		int guard = 0;
-		while (MRStack.CountOf(source) > cap && guard++ < 256)
+		while (Stack.CountOf(source) > cap && guard++ < 256)
 		{
-			int num = MRStack.CountOf(source);
+			int num = Stack.CountOf(source);
 			int num2 = Mathf.Min(cap, num - cap);
 			if (num2 < 1)
 			{
@@ -95,7 +95,7 @@ internal static class StackCapEnforcer
 		{
 			yield break;
 		}
-		int have = MRStack.CountOf(source);
+		int have = Stack.CountOf(source);
 		if (moveCount >= have)
 		{
 			yield break;
@@ -113,7 +113,7 @@ internal static class StackCapEnforcer
 			Object.Destroy((Object)(object)spawned.GameObject);
 			yield break;
 		}
-		MRStack.SetAmount(source, have - moveCount);
+		Stack.SetAmount(source, have - moveCount);
 		done(obj: true);
 	}
 }

@@ -69,7 +69,7 @@ internal static class ToxicWaterCompat
 		{
 			if (!((Object)(object)((item != null) ? item.item : null) == (Object)null) && ResolvePickupTechType(item.item) == targetType)
 			{
-				num += ((!StackRules.CanStack(item.item)) ? 1 : MRStack.CountOf(item.item));
+				num += ((!StackRules.CanStack(item.item)) ? 1 : Stack.CountOf(item.item));
 			}
 		}
 		return num;
@@ -81,7 +81,7 @@ internal static class ToxicWaterCompat
 		{
 			EnsureReflection();
 			_activateSerumMethod?.Invoke(toxicWater, new object[3] { duration, cleanPercent, tier });
-			MRStack.Add(pickupable, -1);
+			Stack.Add(pickupable, -1);
 			if (_serumUseCooldownTimerField != null)
 			{
 				_serumUseCooldownTimerField.SetValue(toxicWater, 5f);

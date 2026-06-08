@@ -39,7 +39,7 @@ internal static class InferiusQoLCraftingPatches
 		{
 			if (val != null)
 			{
-				num += MRStack.TotalStackUnits(val, techType);
+				num += Stack.TotalStackUnits(val, techType);
 			}
 		}
 		__result = num;

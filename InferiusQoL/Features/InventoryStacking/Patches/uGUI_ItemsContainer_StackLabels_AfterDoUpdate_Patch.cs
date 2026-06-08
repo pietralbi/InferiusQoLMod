@@ -1,5 +1,4 @@
 #nullable disable
-using System.Collections.Generic;
 using HarmonyLib;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -17,21 +16,6 @@ internal static class uGUI_ItemsContainer_StackLabels_AfterDoUpdate_Patch
 		{
 			return;
 		}
-		ItemsContainer value = Traverse.Create((object)__instance).Field<ItemsContainer>("container").Value;
-		if (value == null)
-		{
-			return;
-		}
-		foreach (InventoryItem item in (IEnumerable<InventoryItem>)value)
-		{
-			if (!((Object)(object)((item != null) ? item.item : null) == (Object)null))
-			{
-				uGUI_ItemIcon icon = __instance.GetIcon(item);
-				if ((Object)(object)icon != (Object)null)
-				{
-					StackIconHelper.UpdateForPickup(icon, item.item);
-				}
-			}
-		}
+		StackIconRefresher.RefreshViewFromDoUpdate(__instance);
 	}
 }

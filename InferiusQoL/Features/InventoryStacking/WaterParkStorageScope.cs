@@ -92,12 +92,12 @@ internal static class WaterParkStorageScope
 		{
 			return;
 		}
-		int num = MRStack.CountOf(item.item);
+		int num = Stack.CountOf(item.item);
 		if (num > 1)
 		{
 			TechType techType = item.item.GetTechType();
 			int num2 = num - 1;
-			MRStack.Ensure(item.item, 1);
+			Stack.Ensure(item.item, 1);
 			StackIconRefresher.Trigger();
 			if (num2 > 0 && (Object)(object)Player.main != (Object)null)
 			{

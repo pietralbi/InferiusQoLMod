@@ -2,16 +2,66 @@
 namespace InferiusQoL.Features.InventoryStacking;
 
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 internal static class StackRules
 {
+	private const int MaxCanStackCacheEntries = 4096;
+
+	private static readonly Dictionary<int, CanStackCacheEntry> s_canStackCache = new Dictionary<int, CanStackCacheEntry>();
+
+	private struct CanStackCacheEntry
+	{
+		public int ConfigSignature;
+
+		public bool Result;
+	}
+
 	public static bool CanStack(Pickupable pickupable)
 	{
 		if ((Object)(object)pickupable == (Object)null)
 			return false;
 
+		int configSignature = GetConfigSignature();
+		int instanceId = ((Object)((Component)pickupable).gameObject).GetInstanceID();
+		if (s_canStackCache.TryGetValue(instanceId, out var entry)
+			&& entry.ConfigSignature == configSignature)
+		{
+			return entry.Result;
+		}
+
+		bool result = CanStackUncached(pickupable);
+		if (s_canStackCache.Count > MaxCanStackCacheEntries)
+		{
+			s_canStackCache.Clear();
+		}
+
+		s_canStackCache[instanceId] = new CanStackCacheEntry
+		{
+			ConfigSignature = configSignature,
+			Result = result
+		};
+		return result;
+	}
+
+	private static int GetConfigSignature()
+	{
+		int signature = 0;
+		if (StackConfig.ConsumablesStackable)
+		{
+			signature |= 1;
+		}
+		if (StackConfig.VehicleUpgradesStackable)
+		{
+			signature |= 2;
+		}
+		return signature;
+	}
+
+	private static bool CanStackUncached(Pickupable pickupable)
+	{
 		var techType = pickupable.GetTechType();
 		var techId = (int)techType;
 

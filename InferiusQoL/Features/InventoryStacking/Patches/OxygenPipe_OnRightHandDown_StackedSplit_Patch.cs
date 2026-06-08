@@ -33,7 +33,7 @@ internal static class OxygenPipe_OnRightHandDown_StackedSplit_Patch
 		{
 			return true;
 		}
-		if (MRStack.CountOf(pickupable) <= 1)
+		if (Stack.CountOf(pickupable) <= 1)
 		{
 			return true;
 		}
@@ -59,13 +59,13 @@ internal static class OxygenPipe_OnRightHandDown_StackedSplit_Patch
 		Pickupable srcP = ((PlayerTool)source).pickupable;
 		TechType tech = srcP.GetTechType();
 		var spawned = new StackedPrefab<OxygenPipe>();
-		MRStack.SuppressMerge = true;
+		Stack.SuppressMerge = true;
 		yield return StackedPrefabFactory.Instantiate(tech, 1, spawned);
 		OxygenPipe component = spawned.Component;
 		Pickupable spawnedPickup = spawned.Pickupable;
 		if ((Object)(object)component == (Object)null || (Object)(object)spawnedPickup == (Object)null)
 		{
-			MRStack.SuppressMerge = false;
+			Stack.SuppressMerge = false;
 			yield break;
 		}
 		((Component)component).transform.position = placePos;
@@ -84,8 +84,8 @@ internal static class OxygenPipe_OnRightHandDown_StackedSplit_Patch
 		{
 			((Component)ghostPipe).gameObject.SetActive(false);
 		}
-		MRStack.Add(srcP, -1);
-		MRStack.SuppressMerge = false;
+		Stack.Add(srcP, -1);
+		Stack.SuppressMerge = false;
 		StackIconRefresher.Trigger();
 	}
 }

@@ -28,7 +28,7 @@ internal static class ToxicWater_UseSerumPickup_StackConsume_Patch
 		{
 			return true;
 		}
-		if (MRStack.CountOf(pickupable) <= 1)
+		if (Stack.CountOf(pickupable) <= 1)
 		{
 			return true;
 		}

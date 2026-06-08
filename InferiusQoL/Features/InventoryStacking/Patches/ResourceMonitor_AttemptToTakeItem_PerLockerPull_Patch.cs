@@ -68,7 +68,7 @@ internal static class ResourceMonitor_AttemptToTakeItem_PerLockerPull_Patch
 		}
 		ItemsContainer container = locker.container;
 		bool flag = false;
-		MRStack.SuppressMerge = true;
+		Stack.SuppressMerge = true;
 		ResourceMonitorCompat.BeginBulkPull();
 		try
 		{
@@ -91,7 +91,7 @@ internal static class ResourceMonitor_AttemptToTakeItem_PerLockerPull_Patch
 		finally
 		{
 			ResourceMonitorCompat.EndBulkPull(logic, tech, flag);
-			MRStack.SuppressMerge = false;
+			Stack.SuppressMerge = false;
 		}
 		if (!flag)
 		{

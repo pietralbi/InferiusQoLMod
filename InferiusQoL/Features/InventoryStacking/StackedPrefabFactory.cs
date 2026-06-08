@@ -50,7 +50,7 @@ internal static class StackedPrefabFactory
         }
 
         CrafterLogic.NotifyCraftEnd(gameObject, tech);
-        MRStack.Ensure(pickupable, stackCount);
+        Stack.Ensure(pickupable, stackCount);
         result.Set(gameObject, component, pickupable);
     }
 

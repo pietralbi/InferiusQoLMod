@@ -22,6 +22,7 @@ internal static class ItemsContainerViewRegistry
 		{
 			s_views.Add(view);
 		}
+		StackIconRefresher.MarkViewDirty(view);
 	}
 
 	public static void Unregister(uGUI_ItemsContainer view)

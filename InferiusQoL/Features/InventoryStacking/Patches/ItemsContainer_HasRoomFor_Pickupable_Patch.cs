@@ -14,7 +14,7 @@ internal static class ItemsContainer_HasRoomFor_Pickupable_Patch
 	[HarmonyPriority(0)]
 	private static void Postfix(Pickupable pickupable, ItemsContainer __instance, ref bool __result)
 	{
-		if ((!((Object)(object)Inventory.main != (Object)null) || __instance != Inventory.main.container || !uGUI.isIntro) && !LockerMoverClipboard.IsClipboardContainer(__instance) && !LifepodStorageScope.IsLifepodOrTimeCapsuleStorage(__instance) && !WaterParkStorageScope.IsCreatureHabitatContainer(__instance) && !__result && (Object)(object)pickupable != (Object)null && MRStack.ContainerHasMergeRoomFor(__instance, pickupable))
+		if ((!((Object)(object)Inventory.main != (Object)null) || __instance != Inventory.main.container || !uGUI.isIntro) && !LockerMoverClipboard.IsClipboardContainer(__instance) && !LifepodStorageScope.IsLifepodOrTimeCapsuleStorage(__instance) && !WaterParkStorageScope.IsCreatureHabitatContainer(__instance) && !__result && (Object)(object)pickupable != (Object)null && Stack.ContainerHasMergeRoomFor(__instance, pickupable))
 		{
 			__result = true;
 		}

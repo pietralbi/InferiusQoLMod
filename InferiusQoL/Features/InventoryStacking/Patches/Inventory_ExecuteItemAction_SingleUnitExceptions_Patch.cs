@@ -24,7 +24,7 @@ internal static class Inventory_ExecuteItemAction_SingleUnitExceptions_Patch
 		{
 			return true;
 		}
-		if (MRStack.CountOf(item.item) <= 1)
+		if (Stack.CountOf(item.item) <= 1)
 		{
 			return true;
 		}

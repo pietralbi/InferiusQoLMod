@@ -43,9 +43,9 @@ internal static class Inventory_DestroyItem_ReactorRodSingleUnit_Patch
 			Pickupable val2 = ((obj != null) ? obj.item : null);
 			if (!((Object)(object)val2 == (Object)null))
 			{
-				if (MRStack.CountOf(val2) > 1)
+				if (Stack.CountOf(val2) > 1)
 				{
-					MRStack.Add(val2, -1);
+					Stack.Add(val2, -1);
 					__result = true;
 					return false;
 				}

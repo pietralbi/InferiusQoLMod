@@ -68,12 +68,12 @@ internal static class StackConsolidation
 
 	internal static void TryMerge(InventoryItem added, ItemsContainer container)
 	{
-		if (MRStack.SuppressMerge || (Object)(object)((added != null) ? added.item : null) == (Object)null || !StackRules.CanStack(added.item) || container == null || IsMergeProtected(added.item) || ShouldSkipContainerMerge(container))
+		if (Stack.SuppressMerge || (Object)(object)((added != null) ? added.item : null) == (Object)null || !StackRules.CanStack(added.item) || container == null || IsMergeProtected(added.item) || ShouldSkipContainerMerge(container))
 		{
 			return;
 		}
 		TechType techType = added.item.GetTechType();
-		int num = MRStack.CountOf(added.item);
+		int num = Stack.CountOf(added.item);
 		if (num < 1)
 		{
 			return;
@@ -104,7 +104,7 @@ internal static class StackConsolidation
 				{
 					continue;
 				}
-				int num2 = MRStack.CountOf(item.item);
+				int num2 = Stack.CountOf(item.item);
 				if (num2 >= maxStackSize)
 				{
 					continue;
@@ -112,7 +112,7 @@ internal static class StackConsolidation
 				int num3 = Mathf.Min(maxStackSize - num2, num);
 				if (num3 > 0)
 				{
-					MRStack.Add(item.item, num3);
+					Stack.Add(item.item, num3);
 					num -= num3;
 					flag = true;
 					if (num <= 0)
@@ -121,7 +121,7 @@ internal static class StackConsolidation
 						StackIconRefresher.Trigger();
 						return;
 					}
-					MRStack.SetAmount(added.item, num);
+					Stack.SetAmount(added.item, num);
 					StackIconRefresher.Trigger();
 					break;
 				}
@@ -159,7 +159,7 @@ internal static class StackConsolidation
 				continue;
 			}
 			rows.Add(item);
-			total += Mathf.Max(1, MRStack.CountOf(item.item));
+			total += Mathf.Max(1, Stack.CountOf(item.item));
 		}
 		if (rows.Count <= 1 || total <= 0)
 		{
@@ -180,7 +180,7 @@ internal static class StackConsolidation
 			{
 				int rowsLeft = rows.Count - i;
 				int amount = (rowsLeft == 1) ? remaining : Mathf.Min(maxStackSize, remaining);
-				MRStack.SetAmount(row.item, amount);
+				Stack.SetAmount(row.item, amount);
 				ClearMergeProtection(row.item);
 				remaining -= amount;
 				continue;

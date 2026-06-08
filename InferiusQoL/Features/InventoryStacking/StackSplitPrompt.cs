@@ -26,7 +26,7 @@ internal static class StackSplitPrompt
 		{
 			return;
 		}
-		int num = MRStack.CountOf(source.item);
+		int num = Stack.CountOf(source.item);
 		if (num <= 1)
 		{
 			return;

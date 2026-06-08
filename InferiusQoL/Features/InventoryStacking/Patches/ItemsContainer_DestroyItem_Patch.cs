@@ -38,9 +38,9 @@ internal static class ItemsContainer_DestroyItem_Patch
 				Pickupable item = val2.item;
 				if (StackRules.CanStack(item))
 				{
-					if (MRStack.CountOf(item) > 1)
+					if (Stack.CountOf(item) > 1)
 					{
-						MRStack.Add(item, -1);
+						Stack.Add(item, -1);
 						__result = true;
 						return false;
 					}

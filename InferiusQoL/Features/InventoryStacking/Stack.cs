@@ -5,9 +5,11 @@ using Object = UnityEngine.Object;
 
 namespace InferiusQoL.Features.InventoryStacking;
 
-internal static class MRStack
+internal static class Stack
 {
 	public static volatile bool SuppressMerge;
+
+	private static readonly List<StackData> s_stackDataScratch = new List<StackData>(2);
 
 	public static int CountOf(Pickupable p)
 	{
@@ -15,33 +17,37 @@ internal static class MRStack
 		{
 			return 0;
 		}
-		MRStackData[] components = ((Component)p).gameObject.GetComponents<MRStackData>();
-		if (components == null || components.Length == 0)
+
+		StackData data = ((Component)p).gameObject.GetComponent<StackData>();
+		if ((Object)(object)data == (Object)null)
 		{
 			return 1;
 		}
-		if (components.Length > 1)
+
+		if (data.amount >= 1)
 		{
-			MRStackData mRStackData = components[0];
-			if ((Object)(object)mRStackData != (Object)null && mRStackData.amount >= 1)
-			{
-				return mRStackData.amount;
-			}
+			return data.amount;
 		}
-		if (components.Length == 1)
+
+		return CountOfFallback(p);
+	}
+
+	private static int CountOfFallback(Pickupable p)
+	{
+		s_stackDataScratch.Clear();
+		((Component)p).gameObject.GetComponents(s_stackDataScratch);
+		if (s_stackDataScratch.Count == 0)
 		{
-			if (!((Object)(object)components[0] == (Object)null) && components[0].amount >= 1)
-			{
-				return components[0].amount;
-			}
 			return 1;
 		}
+
 		int num = 1;
-		foreach (MRStackData mRStackData2 in components)
+		for (int i = 0; i < s_stackDataScratch.Count; i++)
 		{
-			if (!((Object)(object)mRStackData2 == (Object)null))
+			StackData data = s_stackDataScratch[i];
+			if (!((Object)(object)data == (Object)null))
 			{
-				int amount = mRStackData2.amount;
+				int amount = data.amount;
 				if (amount >= 1)
 				{
 					num = Mathf.Max(num, amount);
@@ -62,31 +68,14 @@ internal static class MRStack
 		{
 			num = Mathf.Min(num, StackConfig.MaxStackSize);
 		}
-		MRStackData[] components = ((Component)p).gameObject.GetComponents<MRStackData>();
-		MRStackData mRStackData = null;
-		if (components != null && components.Length != 0)
+		GameObject gameObject = ((Component)p).gameObject;
+		StackData data = gameObject.GetComponent<StackData>();
+		if ((Object)(object)data == (Object)null)
 		{
-			mRStackData = components[0];
-			if (components.Length > 1)
-			{
-				for (int i = 1; i < components.Length; i++)
-				{
-					if ((Object)(object)components[i] != (Object)null)
-					{
-						Object.Destroy((Object)(object)components[i]);
-					}
-				}
-			}
+			data = gameObject.AddComponent<StackData>();
 		}
-		if ((Object)(object)mRStackData == (Object)null)
-		{
-			mRStackData = ((Component)p).gameObject.GetComponent<MRStackData>();
-		}
-		if ((Object)(object)mRStackData == (Object)null)
-		{
-			mRStackData = ((Component)p).gameObject.AddComponent<MRStackData>();
-		}
-		mRStackData.amount = num;
+		data.amount = num;
+		RemoveDuplicateData(gameObject, data);
 	}
 
 	public static void Ensure(Pickupable p, int count, bool clampToConfigMax = true)
@@ -98,9 +87,7 @@ internal static class MRStack
 	{
 		if (!((Object)(object)p == (Object)null))
 		{
-			MRStackData[] components = ((Component)p).gameObject.GetComponents<MRStackData>();
-			int num = 1;
-			num = ((components == null || components.Length == 0 || !((Object)(object)components[0] != (Object)null) || components[0].amount < 1) ? CountOf(p) : components[0].amount);
+			int num = CountOf(p);
 			int num2 = num + delta;
 			if (num2 < 1)
 			{
@@ -111,6 +98,25 @@ internal static class MRStack
 				num2 = Mathf.Min(num2, StackConfig.MaxStackSize);
 			}
 			SetAmount(p, num2);
+		}
+	}
+
+	private static void RemoveDuplicateData(GameObject gameObject, StackData keep)
+	{
+		s_stackDataScratch.Clear();
+		gameObject.GetComponents(s_stackDataScratch);
+		if (s_stackDataScratch.Count <= 1)
+		{
+			return;
+		}
+
+		for (int i = 0; i < s_stackDataScratch.Count; i++)
+		{
+			StackData data = s_stackDataScratch[i];
+			if (!((Object)(object)data == (Object)null) && data != keep)
+			{
+				Object.Destroy((Object)(object)data);
+			}
 		}
 	}
 

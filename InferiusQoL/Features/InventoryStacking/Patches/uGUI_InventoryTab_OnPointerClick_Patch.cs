@@ -81,7 +81,7 @@ internal static class uGUI_InventoryTab_OnPointerClick_Patch
 			return true;
 		}
 		IItemsContainer oppositeContainer = Inventory.main.GetOppositeContainer(item);
-		if (button == 0 && (Object)(object)item.item != (Object)null && MRStack.CountOf(item.item) > 1 && PartialTransferOne.IsSingleUnitInsertTarget(oppositeContainer) && !ReactorFeedHelper.IsReactorContainer(oppositeContainer))
+		if (button == 0 && (Object)(object)item.item != (Object)null && Stack.CountOf(item.item) > 1 && PartialTransferOne.IsSingleUnitInsertTarget(oppositeContainer) && !ReactorFeedHelper.IsReactorContainer(oppositeContainer))
 		{
 			if (PartialTransferOne.TryStart(item))
 			{
@@ -89,7 +89,7 @@ internal static class uGUI_InventoryTab_OnPointerClick_Patch
 			}
 			return true;
 		}
-		if ((button == 0 || button == 1) && (Object)(object)item.item != (Object)null && MRStack.CountOf(item.item) > 1 && ReactorFeedHelper.IsReactorContainer(oppositeContainer))
+		if ((button == 0 || button == 1) && (Object)(object)item.item != (Object)null && Stack.CountOf(item.item) > 1 && ReactorFeedHelper.IsReactorContainer(oppositeContainer))
 		{
 			if (PartialTransferOne.TryStart(item))
 			{
@@ -100,7 +100,7 @@ internal static class uGUI_InventoryTab_OnPointerClick_Patch
 		bool flag = splitPromptHeld;
 		if (button == 0 && flag)
 		{
-			if ((Object)(object)item.item != (Object)null && (object)item.container == Inventory.main.container && MRStack.CountOf(item.item) > 1)
+			if ((Object)(object)item.item != (Object)null && (object)item.container == Inventory.main.container && Stack.CountOf(item.item) > 1)
 			{
 				StackSplitPrompt.TryOpen(item);
 				return false;
@@ -110,7 +110,7 @@ internal static class uGUI_InventoryTab_OnPointerClick_Patch
 		bool flag2 = moveHalfHeld;
 		if (button == 0 && flag2 && ((int)Inventory.main.GetAllItemActions(item) & 0x20) != 0)
 		{
-			if (MRStack.CountOf(item.item) > 1)
+			if (Stack.CountOf(item.item) > 1)
 			{
 				PartialTransferOne.TryStartHalf(item);
 			}
@@ -124,7 +124,7 @@ internal static class uGUI_InventoryTab_OnPointerClick_Patch
 		{
 			return true;
 		}
-		if (MRStack.CountOf(item.item) <= 1)
+		if (Stack.CountOf(item.item) <= 1)
 		{
 			if (StackRules.CanStack(item.item))
 			{

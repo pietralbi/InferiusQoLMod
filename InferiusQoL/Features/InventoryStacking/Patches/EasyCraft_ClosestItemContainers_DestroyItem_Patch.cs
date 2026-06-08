@@ -83,7 +83,7 @@ internal static class EasyCraft_ClosestItemContainers_DestroyItem_Patch
 			{
 				continue;
 			}
-			int num2 = ((!StackRules.CanStack(val2)) ? 1 : MRStack.CountOf(val2));
+			int num2 = ((!StackRules.CanStack(val2)) ? 1 : Stack.CountOf(val2));
 			int num3 = count - num;
 			if (num2 <= num3)
 			{
@@ -94,7 +94,7 @@ internal static class EasyCraft_ClosestItemContainers_DestroyItem_Patch
 			}
 			else
 			{
-				MRStack.SetAmount(val2, num2 - num3);
+				Stack.SetAmount(val2, num2 - num3);
 				num += num3;
 				StackIconRefresher.Trigger();
 			}

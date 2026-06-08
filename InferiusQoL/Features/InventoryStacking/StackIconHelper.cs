@@ -1,5 +1,7 @@
 #nullable disable
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using HarmonyLib;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -15,7 +17,28 @@ internal static class StackIconHelper
 
 	private const string LegacyUiTextChild = "StackCount";
 
+	private const int IconCacheVerificationIntervalFrames = 30;
+
+	private const int MaxIconCacheEntries = 512;
+
+	private static readonly FieldInfo NotificationLabelTextField = AccessTools.Field(typeof(uGUI_NotificationLabel), "text");
+
+	private static readonly Dictionary<int, IconState> s_iconStates = new Dictionary<int, IconState>();
+
+	private static readonly Dictionary<Type, PropertyInfo> s_colorProperties = new Dictionary<Type, PropertyInfo>();
+
 	private static Font s_fallbackFont;
+
+	private struct IconState
+	{
+		public int PickupId;
+
+		public bool CanStack;
+
+		public int Count;
+
+		public int FullUpdateFrame;
+	}
 
 	private static Font FallbackFont
 	{
@@ -87,15 +110,15 @@ internal static class StackIconHelper
 		}
 	}
 
-	private static void SyncVanillaStackLabel(uGUI_ItemIcon icon, Pickupable p)
+	private static void SyncVanillaStackLabel(uGUI_ItemIcon icon, bool canStack, int count)
 	{
-		if (!((Object)(object)icon == (Object)null) && !((Object)(object)p == (Object)null) && uGUI.isInitialized)
+		if (!((Object)(object)icon == (Object)null) && uGUI.isInitialized)
 		{
-			if (!StackRules.CanStack(p))
+			if (!canStack)
 			{
 				icon.SetNotificationAlpha(0f);
 			}
-			else if (MRStack.CountOf(p) > 1)
+			else if (count > 1)
 			{
 				icon.SetNotificationAlpha(0f);
 			}
@@ -121,11 +144,7 @@ internal static class StackIconHelper
 		uGUI_NotificationLabel component = ((Component)badgeRoot).GetComponent<uGUI_NotificationLabel>();
 		if ((Object)(object)component != (Object)null)
 		{
-			object value = Traverse.Create((object)component).Field("text").GetValue();
-			if (value != null)
-			{
-				Traverse.Create(value).Property("color", (object[])null).SetValue((object)Color.white);
-			}
+			SetNotificationTextColor(component, Color.white);
 			component.SetText(text);
 			component.SetAlpha(1f);
 		}
@@ -187,35 +206,44 @@ internal static class StackIconHelper
 		((Shadow)obj3).effectDistance = new Vector2(1f, -1f);
 	}
 
-	public static void UpdateForPickup(uGUI_ItemIcon icon, Pickupable p)
+	public static void UpdateForPickup(uGUI_ItemIcon icon, Pickupable p, bool force = false)
 	{
 		if ((Object)(object)icon == (Object)null || (Object)(object)p == (Object)null)
 		{
 			return;
 		}
-		DestroyLegacyChildren(icon);
-		if (!StackRules.CanStack(p))
+
+		bool canStack = StackRules.CanStack(p);
+		int count = canStack ? Stack.CountOf(p) : 1;
+		if (!force && IsIconStateCurrent(icon, p, canStack, count))
 		{
-			Clear(icon);
-			SyncVanillaStackLabel(icon, p);
+			SyncVanillaStackLabel(icon, canStack, count);
 			return;
 		}
-		int num = MRStack.CountOf(p);
-		if (num <= 1)
+
+		RememberIconState(icon, p, canStack, count);
+		DestroyLegacyChildren(icon);
+		if (!canStack)
 		{
 			DestroyBadge(icon);
-			SyncVanillaStackLabel(icon, p);
+			SyncVanillaStackLabel(icon, canStack, count);
+			return;
+		}
+		if (count <= 1)
+		{
+			DestroyBadge(icon);
+			SyncVanillaStackLabel(icon, canStack, count);
 			return;
 		}
 		Transform val = FindChildByName(((Component)icon).transform, "StackCountBadge");
 		if ((Object)(object)val != (Object)null)
 		{
-			ApplyCountToBadge(val, num);
+			ApplyCountToBadge(val, count);
 			((Component)val).gameObject.SetActive(true);
 			val.localScale = Vector3.one;
 			BringStackBadgeToFront(icon);
 			LayoutRebuilder.MarkLayoutForRebuild(((Graphic)icon).rectTransform);
-			SyncVanillaStackLabel(icon, p);
+			SyncVanillaStackLabel(icon, canStack, count);
 		}
 		else
 		{
@@ -229,26 +257,93 @@ internal static class StackIconHelper
 				val2.SetAnchor((UIAnchor)2);
 				val2.SetOffset(new Vector2(-4f, 4f));
 				val2.SetBackgroundColor(new Color(0.06f, 0.06f, 0.06f, 0.92f));
-				object value = Traverse.Create((object)val2).Field("text").GetValue();
-				if (value != null)
-				{
-					Traverse.Create(value).Property("color", (object[])null).SetValue((object)Color.white);
-				}
-				val2.SetText(num.ToString());
+				SetNotificationTextColor(val2, Color.white);
+				val2.SetText(count.ToString());
 				val2.SetAlpha(1f);
 				((Component)val2).gameObject.SetActive(true);
 				((Component)val2).transform.localScale = Vector3.one;
 				BringStackBadgeToFront(icon);
 				LayoutRebuilder.MarkLayoutForRebuild(((Graphic)icon).rectTransform);
-				SyncVanillaStackLabel(icon, p);
+				SyncVanillaStackLabel(icon, canStack, count);
 			}
 			else
 			{
-				CreateFallbackTextBadge(icon, num);
+				CreateFallbackTextBadge(icon, count);
 				BringStackBadgeToFront(icon);
 				LayoutRebuilder.MarkLayoutForRebuild(((Graphic)icon).rectTransform);
-				SyncVanillaStackLabel(icon, p);
+				SyncVanillaStackLabel(icon, canStack, count);
 			}
+		}
+	}
+
+	private static bool IsIconStateCurrent(uGUI_ItemIcon icon, Pickupable pickupable, bool canStack, int count)
+	{
+		int iconId = GetObjectId(icon);
+		if (iconId == 0 || !s_iconStates.TryGetValue(iconId, out var state))
+		{
+			return false;
+		}
+
+		if (Time.frameCount - state.FullUpdateFrame >= IconCacheVerificationIntervalFrames)
+		{
+			return false;
+		}
+
+		return state.PickupId == GetObjectId(pickupable)
+			&& state.CanStack == canStack
+			&& state.Count == count;
+	}
+
+	private static void RememberIconState(uGUI_ItemIcon icon, Pickupable pickupable, bool canStack, int count)
+	{
+		if (s_iconStates.Count > MaxIconCacheEntries)
+		{
+			s_iconStates.Clear();
+		}
+
+		int iconId = GetObjectId(icon);
+		if (iconId == 0)
+		{
+			return;
+		}
+
+		s_iconStates[iconId] = new IconState
+		{
+			PickupId = GetObjectId(pickupable),
+			CanStack = canStack,
+			Count = count,
+			FullUpdateFrame = Time.frameCount
+		};
+	}
+
+	private static int GetObjectId(Component component)
+	{
+		return ((Object)(object)component == (Object)null)
+			? 0
+			: ((Object)((Component)component).gameObject).GetInstanceID();
+	}
+
+	private static void SetNotificationTextColor(uGUI_NotificationLabel label, Color color)
+	{
+		object text = NotificationLabelTextField?.GetValue(label);
+		if (text != null)
+		{
+			SetColorProperty(text, color);
+		}
+	}
+
+	private static void SetColorProperty(object target, Color color)
+	{
+		Type type = target.GetType();
+		if (!s_colorProperties.TryGetValue(type, out var property))
+		{
+			property = type.GetProperty("color", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+			s_colorProperties[type] = property;
+		}
+
+		if (property != null && property.CanWrite)
+		{
+			property.SetValue(target, color, null);
 		}
 	}
 }

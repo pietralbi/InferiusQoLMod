@@ -46,7 +46,7 @@ internal static class CraftingCounts
 		int num = 0;
 		if (inventory.container != null)
 		{
-			num += MRStack.TotalStackUnits(inventory.container, tech);
+			num += Stack.TotalStackUnits(inventory.container, tech);
 		}
 		int usedStorageCount = inventory.GetUsedStorageCount();
 		for (int i = 0; i < usedStorageCount; i++)
@@ -55,7 +55,7 @@ internal static class CraftingCounts
 			ItemsContainer val = (ItemsContainer)(object)((usedStorage is ItemsContainer) ? usedStorage : null);
 			if (val != null)
 			{
-				num += MRStack.TotalStackUnits(val, tech);
+				num += Stack.TotalStackUnits(val, tech);
 			}
 		}
 		return num + CraftFromContainersCompat.NearbyUnits(tech);
@@ -83,7 +83,7 @@ internal static class CraftingCounts
 		{
 			return value;
 		}
-		int num = MRStack.TotalStackUnits(container, tech);
+		int num = Stack.TotalStackUnits(container, tech);
 		_cache[key] = num;
 		return num;
 	}

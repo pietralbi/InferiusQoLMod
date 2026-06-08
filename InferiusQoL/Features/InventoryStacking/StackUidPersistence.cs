@@ -282,7 +282,7 @@ internal static class StackUidPersistence
 			Pickupable val = ((item != null) ? item.item : null);
 			if ((Object)(object)val != (Object)null)
 			{
-				num += MRStack.CountOf(val);
+				num += Stack.CountOf(val);
 			}
 		}
 		return num;
@@ -520,9 +520,9 @@ internal static class StackUidPersistence
 
 	private static void ApplyExactCountFromSidecar(Pickupable p, int jsonCount)
 	{
-		if (!((Object)(object)p == (Object)null) && jsonCount > 1 && MRStack.CountOf(p) != jsonCount)
+		if (!((Object)(object)p == (Object)null) && jsonCount > 1 && Stack.CountOf(p) != jsonCount)
 		{
-			MRStack.SetAmount(p, jsonCount);
+			Stack.SetAmount(p, jsonCount);
 		}
 	}
 
@@ -634,7 +634,7 @@ internal static class StackUidPersistence
 		{
 			return;
 		}
-		int num = MRStack.CountOf(val);
+		int num = Stack.CountOf(val);
 		if (num > 1)
 		{
 			string text = BuildSlotKey(container, ii);
@@ -663,7 +663,7 @@ internal static class StackUidPersistence
 			{
 				continue;
 			}
-			int num = MRStack.CountOf(val);
+			int num = Stack.CountOf(val);
 			if (num > 1)
 			{
 				string key = ((int)val.GetTechType()).ToString();
@@ -1008,7 +1008,7 @@ internal static class StackUidPersistence
 			{
 				continue;
 			}
-			list2.Sort((Pickupable a, Pickupable b) => MRStack.CountOf(b).CompareTo(MRStack.CountOf(a)));
+			list2.Sort((Pickupable a, Pickupable b) => Stack.CountOf(b).CompareTo(Stack.CountOf(a)));
 			int num = Math.Min(list2.Count, value.Count);
 			for (int num2 = 0; num2 < num; num2++)
 			{
@@ -1016,9 +1016,9 @@ internal static class StackUidPersistence
 				int num3 = value[num2];
 				if (num3 > 1)
 				{
-					if (MRStack.CountOf(val2) != num3)
+					if (Stack.CountOf(val2) != num3)
 					{
-						MRStack.SetAmount(val2, num3);
+						Stack.SetAmount(val2, num3);
 					}
 					s_sidecarConsumedPickupIds.Add(((Object)((Component)val2).gameObject).GetInstanceID());
 				}
@@ -1076,7 +1076,7 @@ internal static class StackUidPersistence
 			}
 			Pickupable item = item3.item;
 			int instanceID = ((Object)((Component)item).gameObject).GetInstanceID();
-			if (!s_sidecarConsumedPickupIds.Contains(instanceID) && MRStack.CountOf(item) <= 1)
+			if (!s_sidecarConsumedPickupIds.Contains(instanceID) && Stack.CountOf(item) <= 1)
 			{
 				int key = (int)item.GetTechType();
 				if (dictionary.TryGetValue(key, out var value2) && value2.Count != 0)
@@ -1136,25 +1136,25 @@ internal static class StackUidPersistence
 		{
 			return;
 		}
-		int num = MRStack.CountOf(p);
+		int num = Stack.CountOf(p);
 		if (num > 1)
 		{
 			if (jsonCount < num)
 			{
-				MRStack.SetAmount(p, jsonCount);
+				Stack.SetAmount(p, jsonCount);
 			}
 		}
 		else
 		{
-			MRStack.SetAmount(p, jsonCount);
+			Stack.SetAmount(p, jsonCount);
 		}
 	}
 
 	private static void ApplyExactCountForPlayer(Pickupable p, int jsonCount)
 	{
-		if (!((Object)(object)p == (Object)null) && jsonCount > 1 && MRStack.CountOf(p) != jsonCount)
+		if (!((Object)(object)p == (Object)null) && jsonCount > 1 && Stack.CountOf(p) != jsonCount)
 		{
-			MRStack.SetAmount(p, jsonCount);
+			Stack.SetAmount(p, jsonCount);
 		}
 	}
 

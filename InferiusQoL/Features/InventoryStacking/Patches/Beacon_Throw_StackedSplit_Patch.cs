@@ -25,7 +25,7 @@ internal static class Beacon_Throw_StackedSplit_Patch
 			return true;
 		}
 		Pickupable pickupable = ((PlayerTool)__instance).pickupable;
-		if (!StackRules.CanStack(pickupable) || MRStack.CountOf(pickupable) <= 1)
+		if (!StackRules.CanStack(pickupable) || Stack.CountOf(pickupable) <= 1)
 		{
 			return true;
 		}
@@ -44,13 +44,13 @@ internal static class Beacon_Throw_StackedSplit_Patch
 		Pickupable srcP = ((PlayerTool)source).pickupable;
 		TechType tech = srcP.GetTechType();
 		var spawned = new StackedPrefab<Beacon>();
-		MRStack.SuppressMerge = true;
+		Stack.SuppressMerge = true;
 		yield return StackedPrefabFactory.Instantiate(tech, 1, spawned);
 		Beacon component = spawned.Component;
 		Pickupable spawnedPickup = spawned.Pickupable;
 		if ((Object)(object)component == (Object)null || (Object)(object)spawnedPickup == (Object)null)
 		{
-			MRStack.SuppressMerge = false;
+			Stack.SuppressMerge = false;
 			ResetHeldBeaconUseState(source);
 			yield break;
 		}
@@ -65,8 +65,8 @@ internal static class Beacon_Throw_StackedSplit_Patch
 		{
 			component.beaconOnLoop.Play();
 		}
-		MRStack.Add(srcP, -1);
-		MRStack.SuppressMerge = false;
+		Stack.Add(srcP, -1);
+		Stack.SuppressMerge = false;
 		StackIconRefresher.Trigger();
 		ResetHeldBeaconUseState(source);
 	}

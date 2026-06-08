@@ -38,11 +38,11 @@ internal static class ItemsContainer_RemoveItem_Pickupable_ReactorRodSplit_Patch
 			__result = false;
 			return false;
 		}
-		if (MRStack.CountOf(pickupable) <= 1)
+		if (Stack.CountOf(pickupable) <= 1)
 		{
 			return true;
 		}
-		MRStack.Add(pickupable, -1);
+		Stack.Add(pickupable, -1);
 		__result = true;
 		return false;
 	}

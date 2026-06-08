@@ -40,21 +40,21 @@ internal static class MrProtoRegistration
 						{
 							methodInfo.Invoke(obj, new object[2]
 							{
-								typeof(MRStackData),
+								typeof(StackData),
 								true
 							});
-							log.LogInfo((object)"MRStackData registered for protobuf save data.");
+							log.LogInfo((object)"StackData registered for protobuf save data.");
 							s_registered = true;
 							return;
 						}
 					}
 				}
 			}
-			log.LogWarning((object)"Could not register MRStackData with protobuf-net (assembly/API). Stack counts may not persist until registration succeeds.");
+			log.LogWarning((object)"Could not register StackData with protobuf-net (assembly/API). Stack counts may not persist until registration succeeds.");
 		}
 		catch (Exception ex)
 		{
-			log.LogWarning((object)("MRStackData protobuf registration failed: " + ex.Message));
+			log.LogWarning((object)("StackData protobuf registration failed: " + ex.Message));
 		}
 	}
 }

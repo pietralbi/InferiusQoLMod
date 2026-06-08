@@ -5,7 +5,7 @@ using UnityEngine;
 namespace InferiusQoL.Features.InventoryStacking;
 
 [ProtoContract]
-public sealed class MRStackData : MonoBehaviour, IProtoEventListener
+public sealed class StackData : MonoBehaviour, IProtoEventListener
 {
 	[ProtoMember(1)]
 	public int amount = 1;
