@@ -44,6 +44,41 @@ internal static class StackConsolidation
 		TryMerge(added, container);
 	}
 
+	public static void AfterInventoryPickup(Pickupable pickupable)
+	{
+		if (Stack.SuppressMerge
+			|| (Object)(object)pickupable == (Object)null
+			|| (Object)(object)Inventory.main == (Object)null
+			|| Inventory.main.container == null
+			|| !StackRules.IsConsumableStackingCandidate(pickupable))
+		{
+			return;
+		}
+
+		InventoryItem added = FindItemForPickup(Inventory.main.container, pickupable);
+		if (added != null)
+		{
+			TryMerge(added, Inventory.main.container);
+		}
+	}
+
+	private static InventoryItem FindItemForPickup(ItemsContainer container, Pickupable pickupable)
+	{
+		if (container == null || (Object)(object)pickupable == (Object)null)
+		{
+			return null;
+		}
+
+		foreach (InventoryItem item in (IEnumerable<InventoryItem>)container)
+		{
+			if (item != null && (Object)(object)item.item == (Object)(object)pickupable)
+			{
+				return item;
+			}
+		}
+		return null;
+	}
+
 	private static bool ShouldSkipPlayerPocketMerge(ItemsContainer container)
 	{
 		if ((Object)(object)Inventory.main != (Object)null && container == Inventory.main.container)

@@ -16,6 +16,10 @@ internal static class Inventory_Pickup_RedirectMergedNotification_Patch
 	[HarmonyPostfix]
 	private static void Postfix(Pickupable pickupable, bool noMessage, bool __result)
 	{
+		if (__result)
+		{
+			StackConsolidation.AfterInventoryPickup(pickupable);
+		}
 		StackNotificationFix.AfterInventoryPickup(pickupable, __result, noMessage);
 	}
 }

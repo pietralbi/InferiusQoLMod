@@ -49,6 +49,22 @@ internal static class StackRules
 		return result;
 	}
 
+	internal static bool IsConsumableStackingCandidate(Pickupable pickupable)
+	{
+		if ((Object)(object)pickupable == (Object)null || !StackConfig.ConsumablesStackable)
+		{
+			return false;
+		}
+
+		TechType techType = pickupable.GetTechType();
+		if (IsVanillaSmallCatchFishTech(techType) || IsVanillaConsumableWaterTech(techType))
+		{
+			return true;
+		}
+
+		return (Object)(object)((Component)pickupable).GetComponentInChildren<Eatable>(true) != (Object)null;
+	}
+
 	private static int GetConfigSignature()
 	{
 		int signature = 0;

@@ -110,21 +110,6 @@ internal static class StackIconHelper
 		}
 	}
 
-	private static void SyncVanillaStackLabel(uGUI_ItemIcon icon, bool canStack, int count)
-	{
-		if (!((Object)(object)icon == (Object)null) && uGUI.isInitialized)
-		{
-			if (!canStack)
-			{
-				icon.SetNotificationAlpha(0f);
-			}
-			else if (count > 1)
-			{
-				icon.SetNotificationAlpha(0f);
-			}
-		}
-	}
-
 	public static void BringStackBadgeToFront(uGUI_ItemIcon icon)
 	{
 		Transform val = (((Object)(object)icon == (Object)null) ? null : FindChildByName(((Component)icon).transform, "StackCountBadge"));
@@ -217,7 +202,6 @@ internal static class StackIconHelper
 		int count = canStack ? Stack.CountOf(p) : 1;
 		if (!force && IsIconStateCurrent(icon, p, canStack, count))
 		{
-			SyncVanillaStackLabel(icon, canStack, count);
 			return;
 		}
 
@@ -226,13 +210,11 @@ internal static class StackIconHelper
 		if (!canStack)
 		{
 			DestroyBadge(icon);
-			SyncVanillaStackLabel(icon, canStack, count);
 			return;
 		}
 		if (count <= 1)
 		{
 			DestroyBadge(icon);
-			SyncVanillaStackLabel(icon, canStack, count);
 			return;
 		}
 		Transform val = FindChildByName(((Component)icon).transform, "StackCountBadge");
@@ -243,7 +225,6 @@ internal static class StackIconHelper
 			val.localScale = Vector3.one;
 			BringStackBadgeToFront(icon);
 			LayoutRebuilder.MarkLayoutForRebuild(((Graphic)icon).rectTransform);
-			SyncVanillaStackLabel(icon, canStack, count);
 		}
 		else
 		{
@@ -264,14 +245,12 @@ internal static class StackIconHelper
 				((Component)val2).transform.localScale = Vector3.one;
 				BringStackBadgeToFront(icon);
 				LayoutRebuilder.MarkLayoutForRebuild(((Graphic)icon).rectTransform);
-				SyncVanillaStackLabel(icon, canStack, count);
 			}
 			else
 			{
 				CreateFallbackTextBadge(icon, count);
 				BringStackBadgeToFront(icon);
 				LayoutRebuilder.MarkLayoutForRebuild(((Graphic)icon).rectTransform);
-				SyncVanillaStackLabel(icon, canStack, count);
 			}
 		}
 	}
