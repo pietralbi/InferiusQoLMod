@@ -10,6 +10,7 @@ using InferiusQoL.Console;
 using InferiusQoL.Features.Backpacks;
 using InferiusQoL.Features.Batteries;
 using InferiusQoL.Features.Compressor;
+using InferiusQoL.Features.Flares;
 using InferiusQoL.Features.InventoryStacking;
 using InferiusQoL.Features.InventoryViewer;
 using InferiusQoL.Features.LockerMover;
@@ -132,6 +133,7 @@ public class Plugin : BaseUnityPlugin
         // Start() runs after every other plugin's Awake(), so Chainloader.PluginInfos
         // is complete. Detection in Awake is incomplete because some plugins load later.
         DetectExternalMods();
+        FlareLifetimeFeature.Init();
         InventoryStackingFeature.Init();
 
         // Per-class try/catch instead of one large Harmony.PatchAll.

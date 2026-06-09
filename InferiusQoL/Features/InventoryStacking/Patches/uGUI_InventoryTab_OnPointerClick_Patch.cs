@@ -83,6 +83,10 @@ internal static class uGUI_InventoryTab_OnPointerClick_Patch
 			{
 				return false;
 			}
+			if ((Object)(object)item.item != (Object)null && StackRules.IsConsumableStackingCandidate(item.item))
+			{
+				return false;
+			}
 			return true;
 		}
 		IItemsContainer oppositeContainer = Inventory.main.GetOppositeContainer(item);
