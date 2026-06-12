@@ -19,7 +19,8 @@ public enum Category
     Oxygen,
     LockerMover,
     AutoCraft,
-    ScannerRoom
+    ScannerRoom,
+    BaseGlass
 }
 
 public enum Verbosity

@@ -24,6 +24,7 @@
   "  Carryall height": "  Výška cestovní tašky",
   "  Vehicle storage width": "  Šířka úložiště vozidla",
   "  Vehicle storage height": "  Výška úložiště vozidla",
+  "Glass hull penalty multiplier": "Násobitel penalty integrity skla",
 
   "Enable backpacks": "Povolit batohy",
   "  Small backpack extra rows": "  Řádky navíc (Malý batoh)",
@@ -108,6 +109,7 @@
   "InferiusQoL.Status.InventoryResize": "Zvětšení inventáře:",
   "InferiusQoL.Status.ScrollableInventory": "ScrollableInventory:",
   "InferiusQoL.Status.LockerResize": "Zvětšení skříní:",
+  "InferiusQoL.Status.BaseGlass": "Sklo základny:",
   "InferiusQoL.Status.Backpacks": "Batohy:",
   "InferiusQoL.Status.SeamothTurbo": "Seamoth Turbo:",
   "InferiusQoL.Status.Retriever": "Retriever:",

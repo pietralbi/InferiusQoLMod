@@ -39,6 +39,7 @@ public static class ConsoleCommands
         sb.AppendLine($"  {L.Get("InferiusQoL.Status.ScrollableInventory"),-18} {(Plugin.HasAdvancedInventory ? "external AdvancedInventory" : OnOff(true))} (max visible rows {c.ScrollableInventoryMaxVisibleRows})");
         sb.AppendLine($"  {L.Get("InferiusQoL.Status.InventoryStacking"),-18} {(Plugin.HasInventoryStacking ? "external MR_InventoryStacking" : OnOff(c.InventoryStackingEnabled))} (max stack {c.InventoryStackingMaxStackSize})");
         sb.AppendLine($"  {L.Get("InferiusQoL.Status.LockerResize"),-18} {OnOff(c.LockerResizeEnabled)} ({c.LockerWidth}x{c.LockerHeight}, wall {c.WallLockerWidth}x{c.WallLockerHeight})");
+        sb.AppendLine($"  {L.Get("InferiusQoL.Status.BaseGlass"),-18} {c.BaseGlassHullPenaltyMultiplier:0.##}x penalty");
         sb.AppendLine($"  {L.Get("InferiusQoL.Status.Backpacks"),-18} {OnOff(c.BackpacksEnabled)} (S/M/L rows = {c.BackpackSmallRows}/{c.BackpackMediumRows}/{c.BackpackLargeRows})");
         sb.AppendLine($"  {L.Get("InferiusQoL.Status.SeamothTurbo"),-18} {OnOff(c.SeamothTurboEnabled)} (MK1 {c.SeamothTurboMK1SpeedMultiplier:0.0}x/{c.SeamothTurboMK1EnergyMultiplier:0.0}x, MK2 {c.SeamothTurboMK2SpeedMultiplier:0.0}x/{c.SeamothTurboMK2EnergyMultiplier:0.0}x, MK3 {c.SeamothTurboMK3SpeedMultiplier:0.0}x/{c.SeamothTurboMK3EnergyMultiplier:0.0}x)");
         sb.AppendLine($"  {L.Get("InferiusQoL.Status.Retriever"),-18} {OnOff(c.RetrieverEnabled)} ({c.RetrieverActionCostJoules} J/item, min {c.RetrieverMinBasePowerPercent}% power)");

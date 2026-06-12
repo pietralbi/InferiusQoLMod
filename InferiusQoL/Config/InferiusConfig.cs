@@ -107,6 +107,13 @@ public class InferiusConfig : ConfigFile
     public int VehicleStorageHeight = 6;
 
     // =====================================================================
+    // Base glass integrity
+    // =====================================================================
+
+    [Slider("Glass hull penalty multiplier", 0f, 1f, DefaultValue = 0.5f, Step = 0.05f, Order = 250)]
+    public float BaseGlassHullPenaltyMultiplier = 0.5f;
+
+    // =====================================================================
     // Backpacks
     // =====================================================================
 

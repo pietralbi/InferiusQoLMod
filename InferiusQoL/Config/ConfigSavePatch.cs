@@ -2,6 +2,7 @@ namespace InferiusQoL.Config;
 
 using System.Reflection;
 using HarmonyLib;
+using InferiusQoL.Features.BaseGlassHull;
 using InferiusQoL.Features.InventoryStacking;
 using InferiusQoL.Features.InventoryResize;
 using InferiusQoL.Features.LockerResize;
@@ -62,6 +63,7 @@ public static class ConfigSavePatch
             ScrollableInventoryFeature.ApplyRuntime();
             StorageContainer_Awake_Patch.ApplyRuntime();
             OxygenRefillFeature.ApplyRuntime();
+            BaseGlassHullFeature.ApplyRuntime(singleton);
         }
         catch (System.Exception ex)
         {

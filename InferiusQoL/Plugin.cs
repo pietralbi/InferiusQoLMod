@@ -7,6 +7,7 @@ using BepInEx.Logging;
 using HarmonyLib;
 using InferiusQoL.Config;
 using InferiusQoL.Console;
+using InferiusQoL.Features.BaseGlassHull;
 using InferiusQoL.Features.Backpacks;
 using InferiusQoL.Features.Batteries;
 using InferiusQoL.Features.Compressor;
@@ -59,6 +60,8 @@ public class Plugin : BaseUnityPlugin
 
         L.LoadAll();
         QoLLog.Info(Category.Config, "Localization loaded");
+
+        BaseGlassHullFeature.Init();
 
         if (cfg.ScannerRoomDrillableScanEnabled)
             DrillableScanFeature.EnsureTimeCapsuleWorldEntity();
