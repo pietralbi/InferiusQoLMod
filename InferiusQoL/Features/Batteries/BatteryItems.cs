@@ -241,10 +241,10 @@ public static class BatteryItems
         }
         else
         {
-            // Reinforced tier = standard Fabricator, Resources/Electronics, next
+            // Reinforced tier = standard Modification Station, Resources/Electronics, next
             // to vanilla Battery/PowerCell. Vanilla tabs are always OK.
-            crafting.WithFabricatorType(CraftTree.Type.Fabricator)
-                .WithStepsToFabricatorTab("Resources", "Electronics");
+            crafting.WithFabricatorType(CraftTree.Type.Workbench);
+                //.WithStepsToFabricatorTab("Resources", "Electronics");
         }
 
         prefab.Register();
