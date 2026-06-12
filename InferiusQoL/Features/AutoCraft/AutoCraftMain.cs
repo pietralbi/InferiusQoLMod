@@ -37,15 +37,17 @@ public static class AutoCraftMain
 
     public static bool IsGhostCrafterCraftTree(CraftTree.Type type)
     {
-        // Skip: None(0), Rocket(8), Constructor(2), SeamothUpgrades(10),
-        // Workbench? actually 4 and 5 are probably Cyclops modules. Keep the
-        // EasyCraft blacklist identical.
+        // Constructor has a dedicated path; Rocket and Cyclops fabricator are
+        // intentionally left to their vanilla/specialized flows.
         return type != CraftTree.Type.None
             && type != CraftTree.Type.Rocket
             && type != CraftTree.Type.Constructor
-            && type != CraftTree.Type.SeamothUpgrades
-            && type != CraftTree.Type.MapRoom
             && type != CraftTree.Type.CyclopsFabricator;
+    }
+
+    public static bool IsCraftingTreeSupported(CraftTree.Type type)
+    {
+        return type == CraftTree.Type.Constructor || IsGhostCrafterCraftTree(type);
     }
 
     /// <summary>
@@ -139,10 +141,11 @@ public static class AutoCraftMain
     /// </summary>
     public static void GhostCraft(GhostCrafter crafter, TechType techType, float duration)
     {
+        using var searchOrigin = AutoCraftHelpers.PushSearchOrigin(crafter);
         QoLLog.Debug(Category.AutoCraft, $"Craft {techType}");
         if (crafter == null) return;
 
-        var powerRelay = crafter.powerRelay;
+        var powerRelay = crafter.GetPowerRelay();
         float animDelay = crafter.spawnAnimationDelay;
         float animDuration = crafter.spawnAnimationDuration;
         var crafterLogic = crafter.logic;
@@ -204,8 +207,7 @@ public static class AutoCraftMain
 
         if (AutoCraftSettings.AutoCraft && crafted.Count > 1)
         {
-            if (AutoCraftSettings.UseStorage == NeighboringStorage.Off)
-                ClosestFabricators.Add(crafter);
+            ClosestFabricators.Add(crafter);
             if (!ConsumeEnergyInternal(crafted, speedMult)) return;
         }
         else
@@ -246,6 +248,7 @@ public static class AutoCraftMain
 
     public static void ConstructorCraft(ConstructorInput crafter, TechType techType, float duration)
     {
+        using var searchOrigin = AutoCraftHelpers.PushSearchOrigin(crafter);
         QoLLog.Debug(Category.AutoCraft, $"Constructor Craft {techType}");
         if (crafter == null) return;
 
@@ -324,10 +327,11 @@ public static class AutoCraftMain
 
     public static bool Construct(Constructable construct)
     {
+        using var searchOrigin = AutoCraftHelpers.PushSearchOrigin(construct);
         if (construct == null) return false;
-        var resourceMap = (List<TechType>)typeof(Constructable)
+        var resourceMap = typeof(Constructable)
             .GetField("resourceMap", BindingFlags.Instance | BindingFlags.NonPublic)
-            ?.GetValue(construct);
+            ?.GetValue(construct) as List<TechType>;
         var getResourceId = typeof(Constructable)
             .GetMethod("GetResourceID", BindingFlags.Instance | BindingFlags.NonPublic);
         var updateMaterial = typeof(Constructable)
@@ -434,16 +438,10 @@ public static class AutoCraftMain
                 effective[kvp.Key] = Mathf.CeilToInt(kvp.Value * speedMult);
         }
 
-        if (!ClosestFabricators.HasEnergy(effective, out var needEnergy))
+        if (!ClosestFabricators.TryConsumeEnergy(effective, out var consumed, out var needEnergy))
         {
             if (ShowMessage(Language.main.Get("NoPower")))
                 QoLLog.Debug(Category.AutoCraft, $"Not enough energy {needEnergy}");
-            return false;
-        }
-        if (!ClosestFabricators.ConsumeEnergy(effective, out var consumed))
-        {
-            if (ShowMessage(Language.main.Get("NoPower")))
-                QoLLog.Debug(Category.AutoCraft, "Not enough energy (mid)");
             return false;
         }
         QoLLog.Debug(Category.AutoCraft, $"Consume energy {consumed} (speed x{speedMult:0.0})");

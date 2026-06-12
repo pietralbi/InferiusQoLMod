@@ -17,14 +17,19 @@ public static class ClosestItemContainers
     private static float _cacheExpired = 0f;
     private const float CACHE_DURATION = 0.5f;
     private static ItemsContainer[] _cached = new ItemsContainer[0];
+    private static Transform? _cachedOrigin;
 
     public static ItemsContainer[] Containers
     {
         get
         {
-            if (_cacheExpired < Time.unscaledTime || _cacheExpired > Time.unscaledTime + CACHE_DURATION)
+            var origin = AutoCraftHelpers.SearchOriginTransform;
+            if (_cachedOrigin != origin
+                || _cacheExpired < Time.unscaledTime
+                || _cacheExpired > Time.unscaledTime + CACHE_DURATION)
             {
                 _cached = Find();
+                _cachedOrigin = origin;
                 _cacheExpired = Time.unscaledTime + CACHE_DURATION;
             }
             return _cached;
@@ -51,26 +56,26 @@ public static class ClosestItemContainers
         }
         else if (useStorage == NeighboringStorage.Range100)
         {
-            var playerPos = Player.main != null ? Player.main.transform.position : Vector3.zero;
+            var originPos = AutoCraftHelpers.SearchOriginPosition;
             var rangeM = AutoCraftSettings.RangeMeters;
             var rangeSq = AutoCraftSettings.RangeMetersSquared;
 
             if (EscapePod.main != null)
             {
-                var diff = playerPos - EscapePod.main.transform.position;
+                var diff = originPos - EscapePod.main.transform.position;
                 if (diff.sqrMagnitude < rangeSq)
                     storages = EscapePod.main.GetComponentsInChildren<StorageContainer>();
             }
             foreach (var vehicle in Object.FindObjectsOfType<Vehicle>())
             {
                 if (vehicle == null) continue;
-                if (vehicle.liveMixin != null && vehicle.liveMixin.IsAlive() && vehicle.GetDistanceToPlayer() < rangeM)
+                if (vehicle.liveMixin != null && vehicle.liveMixin.IsAlive() && vehicle.GetDistanceTo(originPos) < rangeM)
                     storages = storages.Concat(vehicle.GetComponentsInChildren<StorageContainer>()).ToArray();
             }
             foreach (var subRoot in Object.FindObjectsOfType<SubRoot>())
             {
                 if (subRoot == null) continue;
-                if (subRoot.GetDistanceToPlayer() < rangeM)
+                if (subRoot.GetDistanceTo(originPos) < rangeM)
                     storages = storages.Concat(subRoot.GetComponentsInChildren<StorageContainer>()).ToArray();
             }
             foreach (var smallStorage in Object.FindObjectsOfType<SmallStorage>())
@@ -78,7 +83,7 @@ public static class ClosestItemContainers
                 if (smallStorage == null) continue;
                 var comp = smallStorage.GetComponent<StorageContainer>();
                 if (comp == null || comp.container?.containerType != 0) continue;
-                var diff = playerPos - smallStorage.transform.position;
+                var diff = originPos - smallStorage.transform.position;
                 if (diff.sqrMagnitude < rangeSq)
                     result.Add(comp.container);
             }
@@ -100,10 +105,10 @@ public static class ClosestItemContainers
             result.Add(sc.container);
         }
 
-        var playerPosFinal = Player.main != null ? Player.main.transform.position : Vector3.zero;
+        var originPosFinal = AutoCraftHelpers.SearchOriginPosition;
         return result
             .Distinct()
-            .OrderBy(x => (playerPosFinal - x.tr.position).sqrMagnitude)
+            .OrderBy(x => (originPosFinal - x.tr.position).sqrMagnitude)
             .ToArray();
     }
 

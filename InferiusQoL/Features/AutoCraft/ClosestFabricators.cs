@@ -13,17 +13,23 @@ using UnityEngine;
 public static class ClosestFabricators
 {
     private const float CACHE_DURATION = 0.5f;
+    private const float ENERGY_EPSILON = 0.001f;
     private static float _cacheExpired = 0f;
     private static GhostCrafter[] _cached = new GhostCrafter[0];
+    private static Transform? _cachedOrigin;
     private static readonly Dictionary<CraftTree.Type, List<TechType>> _craftable = new Dictionary<CraftTree.Type, List<TechType>>();
 
     public static GhostCrafter[] Fabricators
     {
         get
         {
-            if (_cacheExpired < Time.unscaledTime || _cacheExpired > Time.unscaledTime + CACHE_DURATION)
+            var origin = AutoCraftHelpers.SearchOriginTransform;
+            if (_cachedOrigin != origin
+                || _cacheExpired < Time.unscaledTime
+                || _cacheExpired > Time.unscaledTime + CACHE_DURATION)
             {
                 _cached = Find();
+                _cachedOrigin = origin;
                 _cacheExpired = Time.unscaledTime + CACHE_DURATION;
             }
             return _cached;
@@ -32,9 +38,13 @@ public static class ClosestFabricators
 
     public static void Add(GhostCrafter crafter)
     {
-        if (_cached.Any(x => x == crafter)) return;
+        if (crafter == null) return;
+        var current = Fabricators;
+        if (current.Any(x => x == crafter)) return;
         Array.Resize(ref _cached, _cached.Length + 1);
         _cached[_cached.Length - 1] = crafter;
+        _cachedOrigin = AutoCraftHelpers.SearchOriginTransform;
+        _cacheExpired = Time.unscaledTime + CACHE_DURATION;
     }
 
     private static GhostCrafter[] Find()
@@ -54,24 +64,24 @@ public static class ClosestFabricators
         }
         else if (useStorage == NeighboringStorage.Range100)
         {
-            var playerPos = Player.main != null ? Player.main.transform.position : Vector3.zero;
+            var originPos = AutoCraftHelpers.SearchOriginPosition;
             var rangeM = AutoCraftSettings.RangeMeters;
             var rangeSq = AutoCraftSettings.RangeMetersSquared;
 
             if (EscapePod.main != null)
             {
-                var diff = playerPos - EscapePod.main.transform.position;
+                var diff = originPos - EscapePod.main.transform.position;
                 if (diff.sqrMagnitude < rangeSq)
                     found = EscapePod.main.GetComponentsInChildren<GhostCrafter>();
             }
             foreach (var vehicle in UnityEngine.Object.FindObjectsOfType<Vehicle>())
             {
-                if (vehicle?.liveMixin != null && vehicle.liveMixin.IsAlive() && vehicle.GetDistanceToPlayer() < rangeM)
+                if (vehicle?.liveMixin != null && vehicle.liveMixin.IsAlive() && vehicle.GetDistanceTo(originPos) < rangeM)
                     found = found.Concat(vehicle.GetComponentsInChildren<GhostCrafter>()).ToArray();
             }
             foreach (var subRoot in UnityEngine.Object.FindObjectsOfType<SubRoot>())
             {
-                if (subRoot != null && subRoot.GetDistanceToPlayer() < rangeM)
+                if (subRoot != null && subRoot.GetDistanceTo(originPos) < rangeM)
                     found = found.Concat(subRoot.GetComponentsInChildren<GhostCrafter>()).ToArray();
             }
         }
@@ -85,9 +95,9 @@ public static class ClosestFabricators
             result.Add(gc);
         }
 
-        var playerPosFinal = Player.main != null ? Player.main.transform.position : Vector3.zero;
+        var originPosFinal = AutoCraftHelpers.SearchOriginPosition;
         return result
-            .OrderBy(x => (playerPosFinal - x.transform.position).sqrMagnitude)
+            .OrderBy(x => (originPosFinal - x.transform.position).sqrMagnitude)
             .ToArray();
     }
 
@@ -188,5 +198,82 @@ public static class ClosestFabricators
             if (remaining > 0f) return false;
         }
         return true;
+    }
+
+    public static bool TryConsumeEnergy(Dictionary<TechType, int> crafted, out float consumedTotal, out float missingEnergy)
+    {
+        consumedTotal = 0f;
+        if (!TryCreateEnergyPlan(crafted, out var plan, out missingEnergy))
+            return false;
+
+        foreach (var draw in plan)
+        {
+            float consumed;
+            PowerSystem.ConsumeEnergy(draw.Relay, draw.Amount, out consumed);
+            consumedTotal += consumed;
+            if (consumed + ENERGY_EPSILON < draw.Amount)
+            {
+                missingEnergy += draw.Amount - consumed;
+                return false;
+            }
+        }
+
+        missingEnergy = 0f;
+        return true;
+    }
+
+    private static bool TryCreateEnergyPlan(
+        Dictionary<TechType, int> crafted,
+        out List<EnergyDraw> plan,
+        out float missingEnergy)
+    {
+        if (_craftable.Count == 0) GenerateTechTypeList();
+
+        plan = new List<EnergyDraw>();
+        missingEnergy = 0f;
+        var relayReserved = new Dictionary<PowerRelay, float>();
+        var fabricators = Fabricators;
+
+        foreach (var kvp in crafted)
+        {
+            float recipeEnergyCost = AutoCraftMain.DefaultRecipeEnergyCost;
+            TechData.GetEnergyCost(kvp.Key, out recipeEnergyCost);
+            if (recipeEnergyCost <= 0) recipeEnergyCost = AutoCraftMain.DefaultRecipeEnergyCost;
+            float remaining = recipeEnergyCost * kvp.Value;
+
+            foreach (var fab in fabricators)
+            {
+                if (!_craftable.TryGetValue(fab.craftTree, out var list) || !list.Contains(kvp.Key)) continue;
+                var relay = fab.GetPowerRelay();
+                if (relay == null) continue;
+
+                relayReserved.TryGetValue(relay, out var already);
+                float available = Mathf.Max(0f, relay.GetPower() - already);
+                if (available <= ENERGY_EPSILON) continue;
+
+                float draw = Mathf.Min(available, remaining);
+                plan.Add(new EnergyDraw(relay, draw));
+                relayReserved.Inc(relay, draw);
+                remaining -= draw;
+                if (remaining <= ENERGY_EPSILON) break;
+            }
+
+            if (remaining > ENERGY_EPSILON)
+                missingEnergy += remaining;
+        }
+
+        return missingEnergy <= ENERGY_EPSILON;
+    }
+
+    private readonly struct EnergyDraw
+    {
+        public readonly PowerRelay Relay;
+        public readonly float Amount;
+
+        public EnergyDraw(PowerRelay relay, float amount)
+        {
+            Relay = relay;
+            Amount = amount;
+        }
     }
 }

@@ -57,12 +57,12 @@ internal static class AutoCraft_Constructable_Construct_Patch
 [HarmonyPatch]
 internal static class AutoCraft_uGUI_CraftingMenu_ActionAvailable_Patch
 {
-    private static readonly Type _nodeType = typeof(uGUI_CraftingMenu).GetNestedType("Node", BindingFlags.NonPublic);
-    private static readonly FieldInfo _idField = typeof(uGUI_CraftingMenu).GetField("id", BindingFlags.Instance | BindingFlags.NonPublic);
-    private static readonly FieldInfo _actionField = _nodeType?.GetField("action");
-    private static readonly FieldInfo _techTypeField = _nodeType?.GetField("techType");
+    private static readonly Type? _nodeType = typeof(uGUI_CraftingMenu).GetNestedType("Node", BindingFlags.NonPublic);
+    private static readonly FieldInfo? _idField = typeof(uGUI_CraftingMenu).GetField("id", BindingFlags.Instance | BindingFlags.NonPublic);
+    private static readonly FieldInfo? _actionField = _nodeType?.GetField("action");
+    private static readonly FieldInfo? _techTypeField = _nodeType?.GetField("techType");
 
-    private static MethodInfo TargetMethod()
+    private static MethodInfo? TargetMethod()
     {
         return typeof(uGUI_CraftingMenu).GetMethod("ActionAvailable", BindingFlags.Instance | BindingFlags.NonPublic);
     }
@@ -74,9 +74,11 @@ internal static class AutoCraft_uGUI_CraftingMenu_ActionAvailable_Patch
 
         var id = _idField?.GetValue(__instance) as string;
         if (id == "Centrifuge" || id == "Rocket") return true;
+        if (!AutoCraftMain.IsCraftingTreeSupported(__instance.treeType)) return true;
 
         var action = (TreeAction)(_actionField?.GetValue(sender) ?? TreeAction.None);
         var tt = (TechType)(_techTypeField?.GetValue(sender) ?? TechType.None);
+        using var searchOrigin = AutoCraftHelpers.PushSearchOrigin(__instance.client as UnityEngine.Component);
         __result = action == TreeAction.Expand
             || (action == TreeAction.Craft
                 && CrafterLogic.IsCraftRecipeUnlocked(tt)
