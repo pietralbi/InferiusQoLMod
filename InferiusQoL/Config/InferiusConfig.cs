@@ -114,6 +114,13 @@ public class InferiusConfig : ConfigFile
     public float BaseGlassHullPenaltyMultiplier = 0.5f;
 
     // =====================================================================
+    // Coral regeneration
+    // =====================================================================
+
+    [Slider("Coral shell plate regrowth (days)", 1, 10, DefaultValue = 3, Step = 1, Order = 275)]
+    public int CoralShellPlateRegrowthDays = 3;
+
+    // =====================================================================
     // Backpacks
     // =====================================================================
 
@@ -229,26 +236,17 @@ public class InferiusConfig : ConfigFile
     [Toggle("Enable battery rework", Order = 800)]
     public bool BatteryReworkEnabled = true;
 
-    [Slider("  Vanilla Battery capacity", 25, 200, DefaultValue = 50, Step = 5, Order = 801)]
-    public int VanillaBatteryCapacity = 50;
-
-    [Slider("  Vanilla Power Cell capacity", 50, 400, DefaultValue = 100, Step = 10, Order = 802)]
-    public int VanillaPowerCellCapacity = 100;
-
-    [Slider("  Reinforced Battery capacity", 100, 500, DefaultValue = 250, Step = 10, Order = 803)]
+    [Slider("  Reinforced Battery capacity", 100, 500, DefaultValue = 250, Step = 10, Order = 801)]
     public int ReinforcedBatteryCapacity = 250;
 
-    [Slider("  Reinforced Power Cell capacity", 200, 1000, DefaultValue = 500, Step = 20, Order = 804)]
+    [Slider("  Reinforced Power Cell capacity", 200, 1000, DefaultValue = 500, Step = 20, Order = 802)]
     public int ReinforcedPowerCellCapacity = 500;
 
-    [Slider("  Hyper Battery capacity", 1000, 3000, DefaultValue = 1500, Step = 50, Order = 805)]
+    [Slider("  Hyper Battery capacity", 1000, 3000, DefaultValue = 1500, Step = 50, Order = 803)]
     public int HyperBatteryCapacity = 1500;
 
-    [Slider("  Hyper Power Cell capacity", 2000, 6000, DefaultValue = 3000, Step = 100, Order = 806)]
+    [Slider("  Hyper Power Cell capacity", 2000, 6000, DefaultValue = 3000, Step = 100, Order = 804)]
     public int HyperPowerCellCapacity = 3000;
-
-    [Toggle("  Migrate old saves (clamp charge)", Order = 807)]
-    public bool BatteryMigrateOldSaves = true;
 
     // =====================================================================
     // Teleport Beacon

@@ -3,6 +3,8 @@ namespace InferiusQoL.Config;
 using System.Reflection;
 using HarmonyLib;
 using InferiusQoL.Features.BaseGlassHull;
+using InferiusQoL.Features.Batteries;
+using InferiusQoL.Features.CoralShellRegen;
 using InferiusQoL.Features.InventoryStacking;
 using InferiusQoL.Features.InventoryResize;
 using InferiusQoL.Features.LockerResize;
@@ -64,6 +66,8 @@ public static class ConfigSavePatch
             StorageContainer_Awake_Patch.ApplyRuntime();
             OxygenRefillFeature.ApplyRuntime();
             BaseGlassHullFeature.ApplyRuntime(singleton);
+            BatteryItems.ApplyRuntime(singleton);
+            CoralShellRegenFeature.ApplyRuntime();
         }
         catch (System.Exception ex)
         {

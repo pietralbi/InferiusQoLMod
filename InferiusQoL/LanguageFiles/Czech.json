@@ -56,13 +56,10 @@
   "  Tier 4 multiplier (%)": "  Tier 4 násobitel (%)",
 
   "Enable battery rework": "Povolit rework baterií",
-  "  Vanilla Battery capacity": "  Kapacita vanilla Baterie",
-  "  Vanilla Power Cell capacity": "  Kapacita vanilla Power Cell",
   "  Reinforced Battery capacity": "  Kapacita Reinforced Baterie",
   "  Reinforced Power Cell capacity": "  Kapacita Reinforced Power Cell",
   "  Hyper Battery capacity": "  Kapacita Hyper Baterie",
   "  Hyper Power Cell capacity": "  Kapacita Hyper Power Cell",
-  "  Migrate old saves (clamp charge)": "  Migrovat staré save (ořezat nabití)",
 
   "Enable Teleport Beacon": "Povolit Teleport Beacon",
   "  Source base cost (J)": "  Cena na zdrojové základně (J)",

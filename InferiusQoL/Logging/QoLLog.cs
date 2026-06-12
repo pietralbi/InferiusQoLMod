@@ -20,7 +20,8 @@ public enum Category
     LockerMover,
     AutoCraft,
     ScannerRoom,
-    BaseGlass
+    BaseGlass,
+    Coral
 }
 
 public enum Verbosity

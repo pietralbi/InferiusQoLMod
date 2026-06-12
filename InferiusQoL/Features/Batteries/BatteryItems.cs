@@ -16,9 +16,8 @@ using UnityEngine;
 ///   Hyper Battery (late-game cap)
 ///   Hyper Power Cell
 ///
-/// Capacity is set when the prefab spawns through CloneTemplate.ModifyPrefab,
-/// using the same pattern as merged tanks. A Harmony Awake patch on Battery is
-/// not reliable for cloned prefabs.
+/// Capacity is set from the current config when custom prefabs are prepared,
+/// and re-applied to loaded custom battery instances when the config changes.
 ///
 /// Recept:
 ///   Reinforced Battery: vanilla Battery + Ruby x2 + Magnetite + WiringKit
@@ -56,8 +55,6 @@ public static class BatteryItems
 
     public static void Register()
     {
-        var cfg = InferiusConfig.Instance;
-
         // ============================================================
         // Reinforced Battery (intermediate tier between Battery and Ion Battery)
         // ============================================================
@@ -67,7 +64,6 @@ public static class BatteryItems
             description: "Higher-capacity battery.",
             cloneFrom: TechType.Battery,
             unlockAfter: TechType.Battery,
-            capacity: cfg.ReinforcedBatteryCapacity,
             isPowerCell: false,
             isHyper: false,
             recipe: new RecipeData
@@ -88,7 +84,6 @@ public static class BatteryItems
             description: "Higher-capacity power cell.",
             cloneFrom: TechType.PowerCell,
             unlockAfter: TechType.PowerCell,
-            capacity: cfg.ReinforcedPowerCellCapacity,
             isPowerCell: true,
             isHyper: false,
             recipe: new RecipeData
@@ -112,7 +107,6 @@ public static class BatteryItems
             description: "Advanced battery. Highest capacity available.",
             cloneFrom: TechType.PrecursorIonBattery,
             unlockAfter: TechType.PrecursorIonBattery,
-            capacity: cfg.HyperBatteryCapacity,
             isPowerCell: false,
             isHyper: true,
             recipe: new RecipeData
@@ -133,7 +127,6 @@ public static class BatteryItems
             description: "Advanced power cell. Highest capacity available.",
             cloneFrom: TechType.PrecursorIonPowerCell,
             unlockAfter: TechType.PrecursorIonPowerCell,
-            capacity: cfg.HyperPowerCellCapacity,
             isPowerCell: true,
             isHyper: true,
             recipe: new RecipeData
@@ -152,6 +145,26 @@ public static class BatteryItems
             $"Registered Batteries: Reinforced {ReinforcedBattery}/{ReinforcedPowerCell}, Hyper {HyperBattery}/{HyperPowerCell}");
 
         InjectIntoChargers();
+    }
+
+    public static void ApplyRuntime(InferiusConfig? cfg = null)
+    {
+        cfg ??= InferiusConfig.Instance;
+        if (!cfg.BatteryReworkEnabled) return;
+
+        int changed = 0;
+        foreach (var battery in Resources.FindObjectsOfTypeAll<Battery>())
+        {
+            if (battery == null) continue;
+
+            var pickupable = battery.GetComponent<Pickupable>();
+            var techType = pickupable != null ? pickupable.GetTechType() : TechType.None;
+            if (ApplyConfiguredCapacity(battery, techType, cfg, fullyCharge: false))
+                changed++;
+        }
+
+        if (changed > 0)
+            QoLLog.Info(Category.Battery, $"ApplyRuntime: updated {changed} custom battery instances");
     }
 
     /// <summary>
@@ -182,7 +195,6 @@ public static class BatteryItems
         string description,
         TechType cloneFrom,
         TechType unlockAfter,
-        int capacity,
         bool isPowerCell,
         RecipeData recipe,
         bool isHyper)
@@ -204,7 +216,7 @@ public static class BatteryItems
 
         var cloneTemplate = new CloneTemplate(info, cloneFrom)
         {
-            ModifyPrefab = (obj) => ConfigureBatteryPrefab(obj, classId, capacity),
+            ModifyPrefab = (obj) => ConfigureBatteryPrefab(obj, classId, info.TechType),
         };
         prefab.SetGameObject(cloneTemplate);
 
@@ -250,7 +262,7 @@ public static class BatteryItems
         return info.TechType;
     }
 
-    private static void ConfigureBatteryPrefab(GameObject obj, string classId, int newCapacity)
+    private static void ConfigureBatteryPrefab(GameObject obj, string classId, TechType techType)
     {
         var battery = obj.GetComponent<Battery>();
         if (battery == null)
@@ -259,10 +271,51 @@ public static class BatteryItems
             return;
         }
 
+        if (ApplyConfiguredCapacity(battery, techType, InferiusConfig.Instance, fullyCharge: true))
+            QoLLog.Info(Category.Battery,
+                $"ModifyPrefab {classId}: capacity set to {battery._capacity:0.0}");
+        else
+            QoLLog.Warning(Category.Battery, $"ModifyPrefab {classId}: no configured capacity for {techType}");
+    }
+
+    internal static bool ApplyConfiguredCapacity(Battery battery, TechType techType, InferiusConfig cfg, bool fullyCharge)
+    {
+        if (!TryGetConfiguredCapacity(techType, cfg, out var newCapacity))
+            return false;
+
         var oldCapacity = battery._capacity;
+        var oldCharge = battery._charge;
+
         battery._capacity = newCapacity;
-        battery._charge = newCapacity; // fully charged on craft
-        QoLLog.Info(Category.Battery,
-            $"ModifyPrefab {classId}: capacity {oldCapacity:0.0} -> {newCapacity}");
+        battery._charge = fullyCharge ? newCapacity : Mathf.Min(battery._charge, newCapacity);
+
+        return oldCapacity != battery._capacity || oldCharge != battery._charge;
+    }
+
+    private static bool TryGetConfiguredCapacity(TechType techType, InferiusConfig cfg, out int capacity)
+    {
+        if (techType == ReinforcedBattery)
+        {
+            capacity = cfg.ReinforcedBatteryCapacity;
+            return true;
+        }
+        if (techType == ReinforcedPowerCell)
+        {
+            capacity = cfg.ReinforcedPowerCellCapacity;
+            return true;
+        }
+        if (techType == HyperBattery)
+        {
+            capacity = cfg.HyperBatteryCapacity;
+            return true;
+        }
+        if (techType == HyperPowerCell)
+        {
+            capacity = cfg.HyperPowerCellCapacity;
+            return true;
+        }
+
+        capacity = 0;
+        return false;
     }
 }
