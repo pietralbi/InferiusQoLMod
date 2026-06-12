@@ -110,8 +110,10 @@ public class InferiusConfig : ConfigFile
     // Base glass integrity
     // =====================================================================
 
-    [Slider("Glass hull penalty multiplier", 0f, 1f, DefaultValue = 0.5f, Step = 0.05f, Order = 250)]
-    public float BaseGlassHullPenaltyMultiplier = 0.5f;
+    [Slider("Glass hull penalty (%)", 0, 100, DefaultValue = 50, Step = 1, Order = 250)]
+    public int BaseGlassHullPenaltyPercent = 50;
+
+    [JsonIgnore] public float BaseGlassHullPenaltyMultiplier => BaseGlassHullPenaltyPercent / 100f;
 
     // =====================================================================
     // Coral regeneration
