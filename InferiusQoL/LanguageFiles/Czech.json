@@ -148,13 +148,13 @@
   "Tooltip_InferiusBackpackLarge": "Endgame batoh s nejvíce extra řádky. Craft ve Vylepšovací stanici, spotřebuje Střední batoh. Osaď do Chip slotu.",
 
   "InferiusMergedTankT1": "Spojená Ultra lahev T1",
-  "Tooltip_InferiusMergedTankT1": "Spojená kyslíková lahev. Kapacita = 2x Plasteel Tank x T1 násobitel. Konfigurovatelné v nastavení modu.",
+  "Tooltip_InferiusMergedTankT1": "Spojená kyslíková lahev ze dvou Plasteel Tanků. Násobitel kapacity lze upravit v nastavení modu.",
   "InferiusMergedTankT2": "Spojená Ultra lahev T2",
-  "Tooltip_InferiusMergedTankT2": "Vylepšená spojená lahev s vyšší kapacitou. Recept odemknut po craftu T1.",
+  "Tooltip_InferiusMergedTankT2": "Vylepšená spojená lahev s vyšší kapacitou. Recept se odemkne z T1 a spotřebuje T1 lahev.",
   "InferiusMergedTankT3": "Spojená Ultra lahev T3",
-  "Tooltip_InferiusMergedTankT3": "Endgame spojená lahev s nejvyšší kapacitou. Recept odemknut po craftu T2.",
+  "Tooltip_InferiusMergedTankT3": "Endgame spojená lahev s nejvyšší kapacitou. Recept se odemkne z T2 a spotřebuje T2 lahev.",
   "InferiusMergedTankT4": "Odlehčená spojená lahev T4",
-  "Tooltip_InferiusMergedTankT4": "Odlehčená endgame spojená lahev - stejná kapacita jako T3, ale bez penalty na rychlost plavání. Recept odemknut po craftu T3, spotřebuje T3 lahev.",
+  "Tooltip_InferiusMergedTankT4": "Odlehčená endgame spojená lahev - stejná kapacita jako T3, ale bez penalty na rychlost plavání. Recept se odemkne z T3 a spotřebuje T3 lahev.",
 
   "InferiusReinforcedBattery": "Vylepšená baterie",
   "Tooltip_InferiusReinforcedBattery": "Baterie s vyšší kapacitou. Craft ve Vylepšovací stanici z vanilla baterie + Ruby + Magnetite + Wiring Kit.",

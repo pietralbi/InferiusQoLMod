@@ -34,7 +34,7 @@ A modular Quality-of-Life package for Subnautica. One mod, many improvements - a
 
 [b]Merged Oxygen Tanks[/b] (4 tiers)
 [list]
-[*]Craft in Modification Station. 2x Plasteel Tank -> one merged tank with combined capacity x multiplier.
+[*]Craft in Modification Station. T1 combines 2x Plasteel Tank; T2/T3/T4 upgrade the previous merged tank.
 [*]T1/T2/T3: inherit vanilla Plasteel speed penalty (weight).
 [*][b]T4 Lightweight[/b]: same capacity as T3 but no speed penalty.
 [/list]
@@ -157,7 +157,7 @@ Built on top of BepInEx, Nautilus and Harmony. Localization contributors welcome
 
 [b]Spojene kyslikove lahve[/b] (4 tiery)
 [list]
-[*]Craft ve Vylepsovaci stanici. 2x Plasteel Tank -> jedna spojena lahev s kombinovanou kapacitou x nasobitel.
+[*]Craft ve Vylepsovaci stanici. T1 spoji 2x Plasteel Tank; T2/T3/T4 vylepsuji predchozi spojenou lahev.
 [*]T1/T2/T3: dedi vanilla Plasteel penalty na rychlost plavani (vaha).
 [*][b]T4 Odlehcena[/b]: stejna kapacita jako T3 bez jakehokoliv penalty.
 [/list]

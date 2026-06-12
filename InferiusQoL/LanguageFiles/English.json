@@ -150,13 +150,13 @@
   "Tooltip_InferiusBackpackLarge": "Advanced backpack with the most extra rows. Crafted in the Modification Station; consumes a Medium Backpack. Equip in a Chip slot.",
 
   "InferiusMergedTankT1": "Merged Ultra Tank T1",
-  "Tooltip_InferiusMergedTankT1": "Combined oxygen tank. Capacity = 2x Plasteel Tank x T1 multiplier. Configurable in mod options.",
+  "Tooltip_InferiusMergedTankT1": "Combined oxygen tank made from two Plasteel Tanks. Capacity multiplier is configurable in mod options.",
   "InferiusMergedTankT2": "Merged Ultra Tank T2",
-  "Tooltip_InferiusMergedTankT2": "Higher-capacity merged tank. Recipe unlocked after crafting T1.",
+  "Tooltip_InferiusMergedTankT2": "Higher-capacity merged tank. Recipe unlocks from T1 and consumes a T1 tank.",
   "InferiusMergedTankT3": "Merged Ultra Tank T3",
-  "Tooltip_InferiusMergedTankT3": "Advanced merged tank with the highest capacity. Recipe unlocked after crafting T2.",
+  "Tooltip_InferiusMergedTankT3": "Advanced merged tank with the highest capacity. Recipe unlocks from T2 and consumes a T2 tank.",
   "InferiusMergedTankT4": "Lightweight Merged Tank T4",
-  "Tooltip_InferiusMergedTankT4": "Lightweight advanced merged tank - same capacity as T3 but without swim speed penalty. Recipe unlocked after crafting T3; consumes a T3 tank.",
+  "Tooltip_InferiusMergedTankT4": "Lightweight advanced merged tank - same capacity as T3 but without swim speed penalty. Recipe unlocks from T3 and consumes a T3 tank.",
 
   "InferiusReinforcedBattery": "Reinforced Battery",
   "Tooltip_InferiusReinforcedBattery": "Higher-capacity battery. Crafted in the Modification Station from a vanilla Battery + Ruby + Magnetite + Wiring Kit.",

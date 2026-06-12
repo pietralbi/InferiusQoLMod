@@ -27,7 +27,7 @@ A modular Quality-of-Life package for Subnautica. One mod, many improvements - a
 - Each tier has its own speed/drain multiplier in config.
 
 **Merged Oxygen Tanks** (4 tiers)
-- Craft in Modification Station. 2× Plasteel Tank → one merged tank with combined capacity × multiplier.
+- Craft in Modification Station. T1 combines 2× Plasteel Tank; T2/T3/T4 upgrade the previous merged tank.
 - T1/T2/T3: inherit vanilla Plasteel speed penalty (weight).
 - **T4 Lightweight**: same capacity as T3 but no speed penalty.
 
@@ -122,7 +122,7 @@ Built on top of BepInEx, Nautilus and Harmony. Localization contributors welcome
 - Každý tier má vlastní multiplikátor rychlosti a spotřeby v Options.
 
 **Spojené kyslíkové lahve** (4 tiery)
-- Craft ve Vylepšovací stanici. 2× Plasteel Tank → jedna spojená lahev s kombinovanou kapacitou × násobitel.
+- Craft ve Vylepšovací stanici. T1 spojí 2× Plasteel Tank; T2/T3/T4 vylepšují předchozí spojenou lahev.
 - T1/T2/T3: dědí vanilla Plasteel penalty na rychlost plavání (váha).
 - **T4 Odlehčená**: stejná kapacita jako T3 bez jakéhokoliv penalty.
 

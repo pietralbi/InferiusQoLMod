@@ -10,7 +10,7 @@ Modularni QoL balicek pro Subnauticu. Jeden mod obsahuje vsechna zlepseni nize -
 | **Inventory resize** | Pridava konfigurovatelny pocet radku/sloupcu do inventare hrace. Runtime update. |
 | **Batohy (3 tiery)** | Osazuji se do Chip slotu, kazdy tier pridava N radku extra. Progressive recipe chain. |
 | **Seamoth Turbo (3 tiery)** | Upgrade modul pro Seamoth. Sprint key + modul = boost rychlosti s vyssi spotrebou. Surface falloff, Power Upgrade Module discount. |
-| **Merged Tanks (4 tiery)** | Kyslikove lahve klonovane z Plasteel s nasobenou kapacitou. T4 je lightweight bez speed penalty. |
+| **Merged Tanks (4 tiery)** | Kyslikove lahve klonovane z Plasteel. T1 spoji 2 lahve, dalsi tiery jsou sequential upgrade chain. T4 je lightweight bez speed penalty. |
 | **Reinforced + Hyper baterie** | Nove tiery baterii/power cellu s vyssi kapacitou (default 250/500 mid, 1500/3000 endgame). |
 | **Inventory Compressor chip** *(Experimental, od v0.3.1 docasne skryty z craftingu)* | Chip v Chip slotu - zmensi vsechny ne-blacklistovane items na 1x1. Per-instance persistent marker, funguje napric save/load a napric kontejnery. **Docasne skryt z craftingu** - lze zapnout v Options (`Craftable (Experimental)` toggle) nebo spawnout `spawn InferiusCompressor` v konzoli. **Pozor**: po osazeni a kompresii polozek se vytvori persistentni markery (`compressed-items.json`). Pri uninstalu modu bez predchoziho `qol_compressor_decompress_all` muze dojit k nepredvidatelnemu chovani/ztrate polozek. Pokud chip nikdy neosadis, zadna persistentni data se nevytvori - bezpecne uninstallovatelne. |
 | **Teleport Beacon** | Buildable teleport zarizeni. UI menu s pojmenovanim, vyberem cile, vzdalenosti, cenou. 3 efficiency chipy pro snizeni energy cost. Model mini-Aurory. |

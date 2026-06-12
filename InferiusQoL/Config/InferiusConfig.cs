@@ -212,17 +212,17 @@ public class InferiusConfig : ConfigFile
     public bool TankWelderEnabled = true;
 
     // Integer percentage to avoid Nautilus float serialization bug.
-    [Slider("  Tier 1 multiplier (%)", 100, 300, DefaultValue = 150, Step = 10, Order = 701)]
-    public int TankWelderT1Percent = 150;
+    [Slider("  Tier 1 multiplier (%)", 100, 250, DefaultValue = 100, Step = 10, Order = 701)]
+    public int TankWelderT1Percent = 100;
 
-    [Slider("  Tier 2 multiplier (%)", 100, 300, DefaultValue = 200, Step = 10, Order = 702)]
-    public int TankWelderT2Percent = 200;
+    [Slider("  Tier 2 multiplier (%)", 100, 250, DefaultValue = 125, Step = 5, Order = 702)]
+    public int TankWelderT2Percent = 125;
 
-    [Slider("  Tier 3 multiplier (%)", 100, 300, DefaultValue = 230, Step = 10, Order = 703)]
-    public int TankWelderT3Percent = 230;
+    [Slider("  Tier 3 multiplier (%)", 100, 250, DefaultValue = 150, Step = 5, Order = 703)]
+    public int TankWelderT3Percent = 150;
 
-    [Slider("  Tier 4 multiplier (%)", 100, 400, DefaultValue = 230, Step = 10, Order = 704)]
-    public int TankWelderT4Percent = 230;
+    [Slider("  Tier 4 multiplier (%)", 100, 250, DefaultValue = 150, Step = 5, Order = 704)]
+    public int TankWelderT4Percent = 150;
 
     [JsonIgnore] public float TankWelderT1Multiplier => TankWelderT1Percent / 100f;
     [JsonIgnore] public float TankWelderT2Multiplier => TankWelderT2Percent / 100f;
