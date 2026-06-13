@@ -8,6 +8,7 @@ Vsechny zmeny v Inferius Quality of Life modu.
 - **Inventory Viewer** - aggregate prehled vsech polozek napric Inventory + StorageContainery (lockery, carryally vc. drzenych v inventari) v dosahu. Hotkey toggle (default `I`, konfigurovatelny v Options). IMGUI okno s filtrem, refreshem, pocty per TechType + pocty containeru. Iteruje pres `Resources.FindObjectsOfTypeAll<StorageContainer>` aby zachytil i inactive instances.
 - **Teleport zdarma v Creative/Freedom modu** - automaticky detekuje pres `GameModeUtils.RequiresPower()`, skip energy check + drain. Take novy toggle `Always free (no energy cost)` v Options pro Survival/Hardcore (default OFF).
 - **Scanner Room drillable deposits + Time Capsules** - integrovany DrillableScan jako samostatne konfigurovatelna feature. Skenerova mistnost rozlisuje male sbiratelne suroviny od velkych vrtatelnych lozisek, umi vyhledavat Time Capsules a pouziva vlastni ikony.
+- **Mobile Resource Scanner** - integrovany chip podle MobileResourceScanner modu. Po equipnuti umozni vybrat resource pres konfigurovatelny mod input (default leve tlacitko mysi), ale menu i samotny tracking funguji jen kdyz hrac drzi Scanner; pri kazdem refreshi spotrebovava jeho baterii. Options obsahuji range, interval, energy use 0-200%, modifier, require-scanned filtr a volbu zobrazit vsechny TechTypes.
 
 ### Opraveno
 - **Teleport Beacon byl navic v Mobile Vehicle Bay** - smazan `WithFabricatorType(CraftTree.Type.Constructor)` ktery duplikoval beacon do MVB craft tree. Habitat Builder zahrnuti zustava pres `TechGroup.InteriorPieces`.

@@ -66,6 +66,12 @@ A modular Quality-of-Life package for Subnautica. One mod, many improvements - a
 - Search filter, item counts per TechType, container counts.
 - Range configurable (0 = no limit).
 
+**Mobile Resource Scanner**
+- Craft and equip a Chip that lets the HUD resource tracker scan around your current position while you hold a powered Scanner.
+- Draw the Scanner and open the resource menu with the configurable mod input (default **left mouse button**), then choose the resource to track.
+- Active tracking drains the held Scanner battery on each refresh; energy use is configurable from 0-200%.
+- Range, scan interval, energy use, modifier, scanned-only filter and full-TechType listing are configurable.
+
 ### Compatibility
 
 The mod detects and respects these other mods:
@@ -160,6 +166,12 @@ Built on top of BepInEx, Nautilus and Harmony. Localization contributors welcome
 - Hotkey toggleable overlay (default `I`) - **agregovaný seznam všech položek** napříč Inventářem + okolními StorageContainery (lockery, carryally včetně držených v inventáři).
 - Search filter, počty per TechType, počty kontejnerů.
 - Konfigurovatelný dosah (0 = bez limitu).
+
+**Mobile Resource Scanner**
+- Vyrob a osaď Chip, který dovolí HUD resource trackeru skenovat okolo aktuální pozice hráče, pokud držíš nabitý Scanner.
+- Vezmi Scanner do ruky a menu otevři přes konfigurovatelný mod input (default **levé tlačítko myši**), potom vybereš sledovanou surovinu.
+- Aktivní tracking spotřebovává baterii drženého Scanneru při každém refreshi; spotřeba je konfigurovatelná od 0 do 200%.
+- Dosah, interval skenu, spotřeba, modifier, filtr jen naskenovaných položek a zobrazení všech TechTypes jsou konfigurovatelné.
 
 ### Kompatibilita
 

@@ -20,6 +20,7 @@ public enum Category
     LockerMover,
     AutoCraft,
     ScannerRoom,
+    MobileScanner,
     BaseGlass,
     Coral
 }

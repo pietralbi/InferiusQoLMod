@@ -15,6 +15,7 @@ using InferiusQoL.Features.Flares;
 using InferiusQoL.Features.InventoryStacking;
 using InferiusQoL.Features.InventoryViewer;
 using InferiusQoL.Features.LockerMover;
+using InferiusQoL.Features.MobileResourceScanner;
 using InferiusQoL.Features.ScannerRoom;
 using InferiusQoL.Features.SeamothTurbo;
 using InferiusQoL.Features.TankWelder;
@@ -62,6 +63,7 @@ public class Plugin : BaseUnityPlugin
         QoLLog.Info(Category.Config, "Localization loaded");
 
         BaseGlassHullFeature.Init();
+        MobileResourceScannerInput.Register();
 
         if (cfg.ScannerRoomDrillableScanEnabled)
             DrillableScanFeature.EnsureTimeCapsuleWorldEntity();
@@ -118,6 +120,12 @@ public class Plugin : BaseUnityPlugin
             TeleportEfficiencyChips.Register();
         }
 
+        if (cfg.MobileResourceScannerEnabled)
+        {
+            MobileResourceScannerFeature.Init();
+            MobileResourceScannerItem.Register();
+        }
+
         if (cfg.LockerMoverEnabled)
         {
             LockerMoverFeature.Init();
@@ -129,6 +137,11 @@ public class Plugin : BaseUnityPlugin
         }
 
         QoLLog.Info(Category.Core, "Awake completed (external mod detection will run in Start())");
+    }
+
+    private void Update()
+    {
+        MobileResourceScannerFeature.Update();
     }
 
     private void Start()

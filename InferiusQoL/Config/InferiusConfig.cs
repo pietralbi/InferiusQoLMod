@@ -382,6 +382,43 @@ public class InferiusConfig : ConfigFile
     public bool ScannerRoomDrillableScanEnabled = true;
 
     // =====================================================================
+    // Mobile Resource Scanner
+    // =====================================================================
+
+    [Toggle("Enable Mobile Resource Scanner", Order = 1450)]
+    public bool MobileResourceScannerEnabled = true;
+
+    [Toggle("  Require PDA scan entries", Order = 1451)]
+    public bool MobileResourceScannerRequireScanned = false;
+
+    [Toggle("  Show every TechType", Order = 1452)]
+    public bool MobileResourceScannerShowAllTechTypes = false;
+
+    [Slider("  Range (m)", 10, 1000, DefaultValue = 500, Step = 10, Order = 1453)]
+    public int MobileResourceScannerRangeMeters = 500;
+
+    [Slider("  Scan interval (s)", 1, 60, DefaultValue = 10, Step = 1, Order = 1454)]
+    public int MobileResourceScannerIntervalSeconds = 10;
+
+    [Slider("  Scanner energy use (%)", 0, 200, DefaultValue = 100, Step = 5, Order = 1455)]
+    public int MobileResourceScannerEnergyUsePercent = 100;
+
+    [Choice("  Open menu modifier",
+        new[] { "None", "Shift", "Ctrl", "Alt", "LeftShift", "RightShift", "LeftCtrl", "RightCtrl", "LeftAlt", "RightAlt" },
+        Order = 1456)]
+    public string MobileResourceScannerMenuModifier = "None";
+
+    [Button("  Reset selected resource", Order = 1457)]
+    public void ResetMobileResourceScannerResource(ButtonClickedEventArgs e)
+    {
+        MobileResourceScannerCurrentResource = TechType.None.ToString();
+        Save();
+        InferiusQoL.Features.MobileResourceScanner.MobileResourceScannerFeature.SetCurrentResource(TechType.None);
+    }
+
+    public string MobileResourceScannerCurrentResource = "None";
+
+    // =====================================================================
     // Singleton
     // =====================================================================
 

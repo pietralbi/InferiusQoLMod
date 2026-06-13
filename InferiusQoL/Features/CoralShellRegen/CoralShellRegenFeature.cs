@@ -105,6 +105,41 @@ internal static class CoralShellRegenFeature
             renderers[i].SetPropertyBlock(propertyBlock);
         }
     }
+
+    public static bool BlocksHarvest(GameObject target)
+    {
+        var liveMixin = ResolveCoralLiveMixin(target);
+        var data = Ensure(liveMixin);
+        return (Object)(object)data != (Object)null && data.BlocksHarvest;
+    }
+
+    public static bool BlocksDamage(LiveMixin liveMixin)
+    {
+        var data = Ensure(liveMixin);
+        return (Object)(object)data != (Object)null && data.BlocksHarvest;
+    }
+
+    private static LiveMixin ResolveCoralLiveMixin(GameObject target)
+    {
+        if ((Object)(object)target == (Object)null)
+        {
+            return null;
+        }
+
+        var liveMixin = target.GetComponentInParent<LiveMixin>();
+        if ((Object)(object)liveMixin != (Object)null && IsCoralShellPlate(liveMixin.gameObject))
+        {
+            return liveMixin;
+        }
+
+        var ancestor = target.FindAncestor<LiveMixin>();
+        if ((Object)(object)ancestor != (Object)null && IsCoralShellPlate(ancestor.gameObject))
+        {
+            return ancestor;
+        }
+
+        return null;
+    }
 }
 
 [ProtoContract]
@@ -120,6 +155,8 @@ public sealed class CoralShellRegenData : MonoBehaviour, IProtoEventListener
     public float healthAtStart;
 
     private LiveMixin liveMixin;
+
+    public bool BlocksHarvest => isRegenerating;
 
     public void Bind(LiveMixin mixin)
     {
@@ -242,5 +279,32 @@ internal static class CoralBlendWhite_OnKill_CoralShellRegen_Patch
         {
             data.MarkHarvested(liveMixin);
         }
+    }
+}
+
+[HarmonyPatch(typeof(LiveMixin), nameof(LiveMixin.TakeDamage))]
+internal static class LiveMixin_TakeDamage_CoralShellRegen_Patch
+{
+    [HarmonyPrefix]
+    private static bool Prefix(LiveMixin __instance, ref bool __result)
+    {
+        if (CoralShellRegenFeature.BlocksDamage(__instance))
+        {
+            __result = false;
+            return false;
+        }
+
+        return true;
+    }
+}
+
+[HarmonyPatch(typeof(Knife), "GiveResourceOnDamage")]
+internal static class Knife_GiveResourceOnDamage_CoralShellRegen_Patch
+{
+    [HarmonyPriority(Priority.First)]
+    [HarmonyPrefix]
+    private static bool Prefix(GameObject target)
+    {
+        return !CoralShellRegenFeature.BlocksHarvest(target);
     }
 }

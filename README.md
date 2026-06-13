@@ -19,6 +19,7 @@ Modularni QoL balicek pro Subnauticu. Jeden mod obsahuje vsechna zlepseni nize -
 | **Oxygen Auto-Refill** *(od v0.3.0)* | Rychlejsi doplneni O2 tanku pri vynoru nad hladinu nebo v moonpoolu/habitatu. Konfigurovatelna rate (vanilla 30/s, default 120/s). Toggle pro refill vsech lahvi v inventari (ne jen equipnute). |
 | **Inventory Viewer** *(od v0.4.1)* | Aggregate prehled napric inventarem + okolnimi skrinemi. Hotkey toggle (default `I`). Filter, count per TechType, count containeru. Iteruje i inactive Carryally drzene v inventari. |
 | **Scanner Room drillables + Time Capsules** | Integrace DrillableScan: skenerova mistnost rozlisuje male sbiratelne suroviny od 14 velkych vrtatelnych lozisek, vcetne Kyanite, a umi vyhledavat Time Capsules. |
+| **Mobile Resource Scanner** | Equipnutelny Chip pro mobilni resource tracking. S drzenym Scannerem otevri menu pres konfigurovatelny mod input (default leve tlacitko mysi), vyber resource, pak drz v ruce nabity Scanner - HUD tracker skenuje kolem hrace a spotrebovava baterii Scanneru. Konfigurovatelny range, interval, energy use %, modifier, seznam tech typu a require-scanned filtr. |
 
 ## Detekce konfliktu
 
@@ -81,6 +82,7 @@ Subnautica podporuje vice jazyku. Vsechny texty modu (nazvy itemu, tooltipy, kon
 | AutoCraft | [AutoCraftMain.cs](InferiusQoL/Features/AutoCraft/AutoCraftMain.cs), [AutoCraftPatches.cs](InferiusQoL/Features/AutoCraft/AutoCraftPatches.cs), [ClosestItemContainers.cs](InferiusQoL/Features/AutoCraft/ClosestItemContainers.cs), [ClosestFabricators.cs](InferiusQoL/Features/AutoCraft/ClosestFabricators.cs) |
 | Oxygen Refill | [OxygenRefillPatch.cs](InferiusQoL/Features/OxygenRefill/OxygenRefillPatch.cs) |
 | Scanner Room drillables | [DrillableScanFeature.cs](InferiusQoL/Features/ScannerRoom/DrillableScanFeature.cs) |
+| Mobile Resource Scanner | [MobileResourceScannerFeature.cs](InferiusQoL/Features/MobileResourceScanner/MobileResourceScannerFeature.cs), [MobileResourceScannerItem.cs](InferiusQoL/Features/MobileResourceScanner/MobileResourceScannerItem.cs) |
 
 ## Changelog
 
